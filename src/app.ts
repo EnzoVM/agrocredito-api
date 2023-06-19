@@ -17,7 +17,7 @@ app.get('/', (_request: Request, response: Response) => {
   new ResponseModel({
     statusCode: ResponseStatusCodes.SUCCESS_REQUEST,
     code: ResponseCodes.SUCCESS_REQUEST,
-    message: 'Hello world'
+    message: 'Hello world funciona'
   }).send(response)
 })
 
