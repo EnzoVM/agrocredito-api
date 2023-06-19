@@ -9,9 +9,9 @@ dotenv.config()
 const app = express()
 
 app.use(express.json())
-app.use(morgan(process.env.ENV === 'dev' ? 'dev' : 'common'))
+app.use(morgan('dev'))
 
-app.set('PORT', process.env.PORT)
+app.set('PORT', process.env.PORT || 3000)
 
 app.get('/', (_request: Request, response: Response) => {
   new ResponseModel({
