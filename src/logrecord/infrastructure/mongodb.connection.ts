@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 
 dotenv.config()
 
-if (!process.env.DATABASE_MONGODB) {
+if (process.env.DATABASE_MONGODB == null) {
   throw new Error('Error')
 }
 

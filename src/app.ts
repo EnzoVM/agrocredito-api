@@ -1,11 +1,11 @@
 import dotenv from 'dotenv'
-import express, { Request, Response } from 'express'
+import express, { type Request, type Response } from 'express'
 import morgan from 'morgan'
 import ResponseModel from './utils/response.model'
 import { ResponseCodes } from './utils/response.codes'
 import { ResponseStatusCodes } from './utils/response.status.codes'
-import LogRecord from './logrecord/infrastructure/mongodb/log.record.model'
-import '../src/logrecord/infrastructure/mongodb/mongodb.connection'
+import LogRecord from './logrecord/infrastructure/log.record.model'
+import './logrecord/infrastructure/mongodb.connection'
 
 dotenv.config()
 const app = express()
@@ -14,7 +14,7 @@ app.use(morgan('dev'))
 
 app.set('PORT', process.env.PORT ?? 3000)
 
-app.get('/', async (_request: Request, response: Response) => {
+const controller = async (_request: Request, response: Response): Promise<void> => {
   const newLogRecord = new LogRecord({
     resource: 'exampleResource',
     method: 'GET',
@@ -23,11 +23,11 @@ app.get('/', async (_request: Request, response: Response) => {
 
   try {
     const recordSaved = await newLogRecord.save()
-  
+
     new ResponseModel({
       statusCode: ResponseStatusCodes.SUCCESS_REQUEST,
       code: ResponseCodes.SUCCESS_REQUEST,
-      message: 'Hello world funciona',
+      message: 'Hello world works',
       data: recordSaved
     }).send(response)
   } catch (error) {
@@ -36,8 +36,11 @@ app.get('/', async (_request: Request, response: Response) => {
       code: ResponseCodes.UNCONTROLLER_ERROR,
       message: 'Hello world not working'
     }).send(response)
-  }  
-})
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+app.get('/', controller)
 
 app.listen(app.get('PORT'), () => {
   console.log(`Server is running on port ${String(app.get('PORT'))}`)
