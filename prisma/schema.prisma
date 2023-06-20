@@ -1,0 +1,146 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model farmer {
+  farmer_id                     String                      @id @unique @db.VarChar(255)
+  property_sector_id            Int     
+  property_project_id           Int 
+  correlative                   Int         
+  farmer_quality_id             Int
+  farmer_type                   String                      @db.VarChar(255)
+  social_reason                 String?                     @db.VarChar(255)
+  full_names                    String?                     @db.VarChar(255)
+  dni                           String?                     @db.VarChar(8) @unique
+  ruc                           String?                     @db.VarChar(11) @unique
+  property_location             String                      @db.VarChar(255)
+  property_legal_condition_id   Int  
+  cadastral_registry            String                      @db.VarChar(255)
+  farmer_address                String                      @db.VarChar(255)
+  farmer_project_id             Int 
+  property_hectare_quantity     Int
+
+  property_project              project                     @relation(name: "FarmerPropertyProject", fields: [property_project_id], references: [project_id])
+  farmer_project                project                     @relation(name: "FarmerFarmerProject", fields: [farmer_project_id], references: [project_id])
+  farmer_quality                farmer_quality              @relation(fields: [farmer_quality_id], references: [farmer_quality_id])
+  property_legal_condition      property_legal_condition    @relation(fields: [property_legal_condition_id], references: [property_legal_condition_id])
+  credit_requests               credit_request[]
+}
+
+model sector {
+  sector_id             Int       @id @unique
+  sector_description    String    @db.VarChar(255)
+
+  projects              project[]
+}
+
+model project {
+  project_id            Int         @id @unique
+  project_description   String      @db.VarChar(255)
+  sector_id             Int  
+
+  farmers_property      farmer[]    @relation(name: "FarmerPropertyProject")
+  farmers_address       farmer[]    @relation(name: "FarmerFarmerProject")
+  sector                sector      @relation(fields: [sector_id], references: [sector_id])   
+}
+
+model farmer_quality {
+  farmer_quality_id             Int       @id @unique
+  farmer_quality_description    String    @db.VarChar(255)
+
+  farmers                       farmer[]
+}
+
+model property_legal_condition {
+  property_legal_condition_id             Int       @id @unique
+  property_legal_condition_description    String    @db.VarChar(255)
+
+  farmers                                 farmer[]
+}
+
+model credit_request {
+  credit_request_id           String      @id @unique @db.VarChar(255)
+  farmer_id                   String      @db.VarChar(255)
+  campaing_id                 String      @db.VarChar(35)
+  hectare_number              Int       
+  credit_reason               String      @db.VarChar(255)
+  credit_amount               Decimal     @db.Decimal(19, 4)
+  guarantee_description       String      @db.VarChar(255)
+  guarantee_amount            Decimal     @db.Decimal(19, 4)
+  tecnique_id                 Int
+  credit_request_status       Boolean     @default(false)
+  credit_request_observation  String      @db.VarChar(255)
+
+  farmer                      farmer      @relation(fields: [farmer_id], references: [farmer_id])
+  tecnique                    tecnique    @relation(fields: [tecnique_id], references: [tecnique_id])
+  campaing                    campaing    @relation(fields: [campaing_id], references: [campaing_id])
+}
+
+model tecnique {
+  tecnique_id           Int                 @id @unique
+  assistance_type_id    Int
+  tecnique_name         String              @db.VarChar(255)
+
+  credit_requests       credit_request[]
+  assistance_type       assistance_type     @relation(fields: [assistance_type_id], references: [assistance_type_id])
+}
+
+model assistance_type {
+  assistance_type_id            Int       @id @unique
+  assistance_type_description   String    @db.VarChar(30)
+
+  tecniques                     tecnique[]
+}
+
+model campaing {
+  campaing_id           String                @id @unique @db.VarChar(255)
+  campaing_description  String                @db.VarChar(255)
+  campaing_type_id      Int
+  campaing_year         String                @db.VarChar(10)
+  period_name           String                @db.VarChar(255)
+  start_date            String                @db.VarChar(255)
+  finish_date           String                @db.VarChar(255)
+
+  credit_requests       credit_request[]
+  campaing_type         campaing_type          @relation(fields: [campaing_type_id], references: [campaing_type_id])
+  delivery_plan_model   delivery_plan_model?
+}
+
+model campaing_type {
+  campaing_type_id            Int       @id @unique
+  campaing_type_description   String    @db.VarChar(255)
+  period_quantity             Int
+
+  campaings                   campaing[]
+}
+
+model delivery_plan_model {
+  delivery_plan_model_id            Int                   @id @unique
+  campaing_id                       String                @db.VarChar(255) @unique
+  delivery_plan_model_description   String                @db.VarChar(255)
+
+  campaing                          campaing              @relation(fields: [campaing_id], references: [campaing_id])
+  departure_detail                  departure_detail[]
+}
+
+model departure_detail {
+  departure_detail_id                 Int                   @id @unique
+  delivery_plan_model_id              Int   
+  departure_detail_description        String                @db.VarChar(255)
+  departure_type                      String                @db.VarChar(35)
+  resource                            String                @db.VarChar(35)
+  amount_per_hectare                  Decimal               @db.Decimal(19, 4)
+
+  delivery_plan_model                 delivery_plan_model   @relation(fields: [delivery_plan_model_id], references: [delivery_plan_model_id])
+}
+
+model user {
+  email       String        @id @unique @db.VarChar(255) 
+  password    String        @db.VarChar(255)
+}
