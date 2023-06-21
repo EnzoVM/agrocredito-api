@@ -143,5 +143,5 @@ model departure_detail {
 model user {
   email           String        @id @unique @db.VarChar(255) 
   password        String        @db.VarChar(255)
-  access_token    String        @db.VarChar(255)
+  access_token    String?        @db.VarChar(255)
 }
