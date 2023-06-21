@@ -4,8 +4,8 @@ import morgan from 'morgan'
 import ResponseModel from './utils/response.model'
 import { ResponseCodes } from './utils/response.codes'
 import { ResponseStatusCodes } from './utils/response.status.codes'
-import LogRecord from './logrecord/infrastructure/log.record.model'
-import './logrecord/infrastructure/mongodb.connection'
+import LogRecord from './core/logrecord/infrastructure/model/log.record.model'
+import './core/logrecord/infrastructure/mongodb.connection'
 
 dotenv.config()
 const app = express()

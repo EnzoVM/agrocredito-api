@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import ConnectionError from '../utils/connection.error'
 
 export default class PrismaConnection {
   private readonly prisma: PrismaClient
@@ -15,7 +16,7 @@ export default class PrismaConnection {
     try {
       await this.prisma.$disconnect()
     } catch (error: any) {
-      throw new Error(error.message)
+      throw new ConnectionError({ message: error.message, core: 'any' })
     }
   }
 }

@@ -1,12 +1,12 @@
-{ 
-    "AWSEBDockerrunVersion": "1", 
-    "Image": { 
-        "Name": "public.ecr.aws/u1b8i1g0/agrocredito:latest",
-        "Update": "true"
-    }, 
-    "Ports": [ 
-        { 
-            "ContainerPort": 3000
-        } 
-    ] 
+{
+  "AWSEBDockerrunVersion": "1",
+  "Image": {
+    "Name": "public.ecr.aws/u1b8i1g0/agrocredito:latest",
+    "Update": "true"
+  },
+  "Ports": [
+    {
+      "ContainerPort": 3000
+    }
+  ]
 }
