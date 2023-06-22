@@ -24,8 +24,47 @@ export default class AuthUseCase {
       throw new UnauthorizateError({ core: 'user', message: 'Email or password are invalid' })
     }
 
-    const refreshToken = this.tokenRepository.generateToken({ payload: { email: userFound.email }, expiresIn: '1 days' })
-    const accessToken = this.tokenRepository.generateToken({ payload: { refreshToken }, expiresIn: '7 days' })
+    const accessToken = this.tokenRepository.generateToken({ tokenType: 'access', payload: { email: userFound.email }, expiresIn: '1 days' })
+    const refreshToken = this.tokenRepository.generateToken({ tokenType: 'refresh', payload: { email: userFound.email }, expiresIn: '7 days' })
+
+    return {
+      accessToken,
+      refreshToken
+    }
+  }
+
+  async validateAccessToken ({ accessToken }: { accessToken: string }): Promise<boolean> {
+    const { payload, expired } = this.tokenRepository.decodeToken({ tokenType: 'access', token: accessToken })
+
+    if (expired) {
+      throw new UnauthorizateError({ core: 'user', message: 'Token expired' })
+    }
+    
+    const userFound = await this.userRepository.findUserByEmail(payload.email)
+
+    if (!userFound && expired) {
+      return false
+    }
+
+    return true
+  }
+
+  async generateNewAccessToken ({ refreshToken }: { refreshToken: string }): Promise<{ refreshToken: string, accessToken: string }> {
+    const { payload, expired } = this.tokenRepository.decodeToken({ tokenType: 'refresh', token: refreshToken })
+
+    if (expired) {
+      throw new UnauthorizateError({ core: 'user', message: 'You must to login again' })
+    }
+
+    const { email } = payload
+
+    const userFound = await this.userRepository.findUserByEmail(email)
+
+    if (!userFound) {
+      throw new NotFoundError({ core: 'user', message: 'Email or password are invalid' })
+    }
+
+    const accessToken = this.tokenRepository.generateToken({ tokenType: 'access', payload: { email: userFound.email }, expiresIn: '1 days' })
 
     return {
       accessToken,
