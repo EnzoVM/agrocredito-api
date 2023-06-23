@@ -69,8 +69,8 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0 
-      - name: Generate deployment package                  # Only use if a new version is required
-        run: zip -r deploy.zip ./Dockerrun.aws.json        # Only use if a new version is required 
+      #- name: Generate deployment package                  # Only use if a new version is required
+      #  run: zip -r deploy.zip ./Dockerrun.aws.json        # Only use if a new version is required 
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
         with:
@@ -80,5 +80,5 @@ jobs:
           environment_name: ${{ env.AWS_ENVIROMENT_NAME }}
           version_label: ${{ env.AWS_VERSION_LABEL }}
           region: ${{ env.AWS_REGION }}
-          deployment_package: deploy.zip                    # Only use if a new version is required
+      #    deployment_package: deploy.zip                    # Only use if a new version is required
           use_existing_version_if_available: true
