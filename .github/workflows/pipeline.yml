@@ -6,13 +6,16 @@ on:
     types: [opened, synchronize, reopened]
 
 env:
-  AWS_APPLICATION_NAME: agrocredito-api
-  AWS_ENVIROMENT_NAME: AgroCredito-api-env
-  AWS_VERSION_LABEL: agrocredito-api-source
-  AWS_REGION: us-east-1
-  DOCKER_IMAGE_NAME: agrocredito-api
-  AWS_ECR_LINK: public.ecr.aws/u1b8i1g0/agrocredito
-  AWS_ECR_PATH: public.ecr.aws/u1b8i1g0
+  AWS_APPLICATION_NAME: ${{ secrets.AWS_APPLICATION_NAME }}
+  AWS_ENVIROMENT_NAME: ${{ secrets.AWS_ENVIROMENT_NAME }}
+  AWS_VERSION_LABEL: ${{ secrets.AWS_VERSION_LABEL }}
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_IMAGE_NAME }}
+  AWS_ECR_LINK: ${{ secrets.AWS_ECR_LINK }}
+  AWS_ECR_PATH: ${{ secrets.AWS_ECR_PATH }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
 jobs:
   sonarcloud:
@@ -32,7 +35,7 @@ jobs:
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
 
   docker-image-ECR:
     name: Build Docker Image and Push to ECR
@@ -49,8 +52,8 @@ jobs:
       - name: Configure AWS CLI
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
       - name: Login to ECR
         run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ env.AWS_ECR_PATH }}
@@ -74,8 +77,8 @@ jobs:
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
         with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_access_key: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           application_name: ${{ env.AWS_APPLICATION_NAME }}
           environment_name: ${{ env.AWS_ENVIROMENT_NAME }}
           version_label: ${{ env.AWS_VERSION_LABEL }}
