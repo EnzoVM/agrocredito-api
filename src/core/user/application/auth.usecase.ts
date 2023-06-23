@@ -25,7 +25,7 @@ export default class AuthUseCase {
       throw new UnauthorizateError({ core: 'user', message: 'Email or password are invalid' })
     }
 
-    const accessToken = this.tokenRepository.generateToken({ tokenType: 'access', payload: { email: userFound.email }, expiresIn: 10 })
+    const accessToken = this.tokenRepository.generateToken({ tokenType: 'access', payload: { email: userFound.email }, expiresIn: '1 days' })
     const refreshToken = this.tokenRepository.generateToken({ tokenType: 'refresh', payload: { email: userFound.email }, expiresIn: '7 days' })
 
     return {
@@ -65,7 +65,7 @@ export default class AuthUseCase {
       throw new NotFoundError({ core: 'user', message: 'Email or password are invalid' })
     }
 
-    const accessToken = this.tokenRepository.generateToken({ tokenType: 'access', payload: { email: userFound.email }, expiresIn: 10 })
+    const accessToken = this.tokenRepository.generateToken({ tokenType: 'access', payload: { email: userFound.email }, expiresIn: '1 days' })
 
     return {
       accessToken,
