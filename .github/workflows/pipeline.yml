@@ -8,7 +8,7 @@ on:
 env:
   AWS_APPLICATION_NAME: agrocredito-api
   AWS_ENVIROMENT_NAME: AgroCredito-api-env
-  AWS_VERSION_LABEL: agrocredito-api-source1
+  AWS_VERSION_LABEL: agrocredito-api-source
   AWS_REGION: us-east-1
   DOCKER_IMAGE_NAME: agrocredito-api
   AWS_ECR_LINK: public.ecr.aws/u1b8i1g0/agrocredito
