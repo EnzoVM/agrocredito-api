@@ -1,12 +1,14 @@
 import { type Response } from 'express'
+import { ResponseStatusCodes } from './response.status.codes'
+import { ResponseCodes } from './response.codes'
 
 export default class ResponseModel {
-  statusCode: number
-  code: string
+  statusCode: ResponseStatusCodes
+  code: ResponseCodes
   message: string
   data: any
 
-  constructor ({ statusCode, code, message, data }: { statusCode: number, code: string, message: string, data?: any }) {
+  constructor ({ statusCode, code, message, data }: { statusCode: ResponseStatusCodes, code: ResponseCodes, message: string, data?: any }) {
     this.statusCode = statusCode
     this.code = code
     this.message = message
