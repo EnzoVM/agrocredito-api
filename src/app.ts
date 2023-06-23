@@ -15,7 +15,7 @@ app.use(express.json())
 app.use(morgan('dev'))
 app.use(cookieParser())
 
-app.set('PORT', process.env.PORT ?? 3000)
+app.set('PORT', process.env.PORT || 3000)
 
 const home = async (_request: Request, response: Response): Promise<void> => {
   new ResponseModel({
