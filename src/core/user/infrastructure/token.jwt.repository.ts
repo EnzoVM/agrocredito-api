@@ -25,7 +25,6 @@ export default class TokenJWTRepository implements TokenRespository {
         expired: false 
       } 
     } catch (error: any) {
-      console.log('Error aqui', error.message)
       return {
         payload: null,
         expired: true

@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import ConnectionError from '../utils/connection.error'
+import ConnectionError from '../utils/custom-errors/infrastructure-errors/unavailable.error'
 
 export default class PrismaConnection {
   private readonly prisma: PrismaClient

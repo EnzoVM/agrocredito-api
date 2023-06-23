@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
-import ConnectionError from '../../../utils/connection.error'
+import ConnectionError from '../../../utils/custom-errors/infrastructure-errors/unavailable.error'
 
 dotenv.config()
 

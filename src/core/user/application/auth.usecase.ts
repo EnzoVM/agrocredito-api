@@ -1,5 +1,5 @@
-import NotFoundError from "../../../utils/not.found.error";
-import UnauthorizateError from "../../../utils/unauthorizate.error";
+import NotFoundError from "../../../utils/custom-errors/application-errors/not.found.error";
+import UnauthorizateError from "../../../utils/custom-errors/application-errors/unauthorizate.error";
 import EncryptRespository from "../domain/encrypt.repository";
 import TokenRespository from "../domain/token.repository";
 import UserRespository from "../domain/user.repository";
@@ -12,6 +12,7 @@ export default class AuthUseCase {
   ) {}
 
   async login ({ email, password }: { email: string, password: string }): Promise<{ refreshToken: string, accessToken: string }> {
+    
     const userFound = await this.userRepository.findUserByEmail(email)
 
     if (!userFound) {
@@ -24,7 +25,7 @@ export default class AuthUseCase {
       throw new UnauthorizateError({ core: 'user', message: 'Email or password are invalid' })
     }
 
-    const accessToken = this.tokenRepository.generateToken({ tokenType: 'access', payload: { email: userFound.email }, expiresIn: '1 days' })
+    const accessToken = this.tokenRepository.generateToken({ tokenType: 'access', payload: { email: userFound.email }, expiresIn: 10 })
     const refreshToken = this.tokenRepository.generateToken({ tokenType: 'refresh', payload: { email: userFound.email }, expiresIn: '7 days' })
 
     return {
@@ -39,7 +40,7 @@ export default class AuthUseCase {
     if (expired) {
       throw new UnauthorizateError({ core: 'user', message: 'Token expired' })
     }
-    
+ 
     const userFound = await this.userRepository.findUserByEmail(payload.email)
 
     if (!userFound && expired) {
@@ -64,7 +65,7 @@ export default class AuthUseCase {
       throw new NotFoundError({ core: 'user', message: 'Email or password are invalid' })
     }
 
-    const accessToken = this.tokenRepository.generateToken({ tokenType: 'access', payload: { email: userFound.email }, expiresIn: '1 days' })
+    const accessToken = this.tokenRepository.generateToken({ tokenType: 'access', payload: { email: userFound.email }, expiresIn: 10 })
 
     return {
       accessToken,
