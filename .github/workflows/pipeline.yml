@@ -21,7 +21,7 @@ jobs:
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'pull_request' && github.base_ref == 'develop'}}
+    if: ${{ github.event_name == 'pull_request' && github.base_ref == 'main'}}
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
@@ -50,13 +50,11 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 18
+          node-version: 14
       - name: Install dependencies
         run: npm i
       - name: Build app
         run: npm run build
-      - name: Generate deployment package                  # Only use if a new version is required
-        run: zip -r deploy.zip ./build                     # Only use if a new version is required 
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
         with:
@@ -66,5 +64,3 @@ jobs:
           environment_name: ${{ env.AWS_ENVIROMENT_NAME }}
           version_label: ${{ env.AWS_VERSION_LABEL }}
           region: ${{ env.AWS_REGION }}
-          deployment_package: deploy.zip                    # Only use if a new version is required
-          #use_existing_version_if_available: true
