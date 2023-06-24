@@ -2,6 +2,7 @@ import dotenv from 'dotenv'
 import express, { type Request, type Response } from 'express'
 import morgan from 'morgan'
 import cookieParser from 'cookie-parser'
+import cors from 'cors'
 import ResponseModel from './utils/standar-response/response.model'
 import { ResponseCodes } from './utils/standar-response/response.codes'
 import { ResponseStatusCodes } from './utils/standar-response/response.status.codes'
@@ -14,6 +15,7 @@ const app = express()
 app.use(express.json())
 app.use(morgan('dev'))
 app.use(cookieParser())
+app.use(cors())
 
 app.set('PORT', process.env.PORT ?? 3000)
 
