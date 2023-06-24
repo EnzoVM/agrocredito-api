@@ -1,7 +1,7 @@
-import Campaing from "../domain/campaing.model";
-import CampaingPersistanceRepository from "../domain/campaing.persistance.repository";
-import PrismaConnection from "../../../prisma/prisma.connection"
-import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error";
+import Campaing from "../../domain/campaing.model";
+import CampaingPersistanceRepository from "../../domain/campaing.persistance.repository";
+import PrismaConnection from "../../../../prisma/prisma.connection"
+import UnavailableError from "../../../../utils/custom-errors/infrastructure-errors/unavailable.error";
 
 const prisma = new PrismaConnection().connection
 
