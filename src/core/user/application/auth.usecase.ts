@@ -43,7 +43,7 @@ export default class AuthUseCase {
  
     const userFound = await this.userRepository.findUserByEmail(payload.email)
 
-    if (!userFound && expired) {
+    if (!userFound || expired) {
       return false
     }
 
