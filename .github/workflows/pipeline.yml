@@ -43,7 +43,7 @@ jobs:
   docker-image-ECR:
     name: Build Docker Image and Push to ECR
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' && github.base_ref == 'develop' }}
+    if: ${{ github.event_name == 'push' && github.base_ref == 'refs/heads/develop' }}
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
@@ -67,7 +67,7 @@ jobs:
     name: Deploy Elastic Beanstalk
     runs-on: ubuntu-latest
     needs: docker-image-ECR
-    if:  ${{ github.event_name == 'push' && github.base_ref == 'develop' }}
+    if:  ${{ github.event_name == 'push' && github.base_ref == 'refs/heads/develop' }}
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
