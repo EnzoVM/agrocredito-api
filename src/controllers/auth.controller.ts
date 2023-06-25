@@ -19,6 +19,7 @@ export const loginController = async (request: Request, response: Response, next
   try {
     const { accessToken, refreshToken } = await authUseCase.login({ email, password })
 
+    response.cookie('accessToken', accessToken)
     response.cookie('refreshToken', refreshToken)
 
     new ResponseModel({
@@ -28,6 +29,25 @@ export const loginController = async (request: Request, response: Response, next
       data: {
         accessToken,
         refreshToken
+      }
+    }).send(response)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const loginByAccessToken = async (request: Request, response: Response, next: NextFunction) => {
+  const accessTokenFromCookie = request.cookies.accessToken
+
+  try {
+    const isTokenValid = await authUseCase.validateAccessToken({ accessToken: accessTokenFromCookie })
+
+    new ResponseModel({
+      statusCode: ResponseStatusCodes.SUCCESS_REQUEST,
+      code: ResponseCodes.SUCCESS_REQUEST,
+      message: 'Token was authenticated successfuly',
+      data: {
+        isTokenValid
       }
     }).send(response)
   } catch (error) {
