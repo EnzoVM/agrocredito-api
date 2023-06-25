@@ -37,10 +37,27 @@ export const loginController = async (request: Request, response: Response, next
 }
 
 export const loginByAccessToken = async (request: Request, response: Response, next: NextFunction) => {
-  const accessTokenFromCookie = request.cookies.accessToken
+  const authorization = request.headers.authorization
 
   try {
-    const isTokenValid = await authUseCase.validateAccessToken({ accessToken: accessTokenFromCookie })
+    if (!authorization) {
+      new ResponseModel({
+        statusCode: ResponseStatusCodes.UNAUTHORIZED,
+        code: ResponseCodes.UNAUTHORIZED,
+        message: 'You must to specify a token'
+      }).send(response)
+    }
+  
+    if(authorization?.split(' ')[0].toLowerCase() !== 'bearer') {
+      new ResponseModel({
+        statusCode: ResponseStatusCodes.UNAUTHORIZED,
+        code: ResponseCodes.UNAUTHORIZED,
+        message: 'Token provided is malformet'
+      }).send(response)
+    }
+  
+    const accessToken = authorization!.split(' ')[1]
+    const isTokenValid = await authUseCase.validateAccessToken({ accessToken })
 
     new ResponseModel({
       statusCode: ResponseStatusCodes.SUCCESS_REQUEST,
