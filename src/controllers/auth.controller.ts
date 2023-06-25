@@ -19,9 +19,6 @@ export const loginController = async (request: Request, response: Response, next
   try {
     const { accessToken, refreshToken } = await authUseCase.login({ email, password })
 
-    response.cookie('accessToken', accessToken)
-    response.cookie('refreshToken', refreshToken)
-
     new ResponseModel({
       statusCode: ResponseStatusCodes.SUCCESS_REQUEST,
       code: ResponseCodes.SUCCESS_REQUEST,
