@@ -73,18 +73,35 @@ export const loginByAccessToken = async (request: Request, response: Response, n
 }
 
 export const getNewAccessToken = async (request: Request, response: Response, next: NextFunction) => {
-  const refreshTokenFromCookie = request.cookies.refreshToken
+  const authorization = request.headers.authorization
 
   try {
-    const { accessToken, refreshToken } = await authUseCase.generateNewAccessToken({ refreshToken: refreshTokenFromCookie })
+    if (!authorization) {
+      new ResponseModel({
+        statusCode: ResponseStatusCodes.UNAUTHORIZED,
+        code: ResponseCodes.UNAUTHORIZED,
+        message: 'You must to specify a token'
+      }).send(response)
+    }
+  
+    if(authorization?.split(' ')[0].toLowerCase() !== 'bearer') {
+      new ResponseModel({
+        statusCode: ResponseStatusCodes.UNAUTHORIZED,
+        code: ResponseCodes.UNAUTHORIZED,
+        message: 'Token provided is malformet'
+      }).send(response)
+    }
+  
+    const refreshToken = authorization!.split(' ')[1]
+    const { accessToken: newAccessToken, refreshToken: newRefeshToken } = await authUseCase.generateNewAccessToken({ refreshToken })
 
     new ResponseModel({
       statusCode: ResponseStatusCodes.SUCCESS_REQUEST,
       code: ResponseCodes.SUCCESS_REQUEST,
       message: 'Access token generated',
       data: {
-        accessToken,
-        refreshToken
+        accessToken: newAccessToken,
+        refreshToken: newRefeshToken
       }
     }).send(response)
   } catch (error: any) {
