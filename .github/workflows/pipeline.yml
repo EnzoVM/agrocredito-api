@@ -1,5 +1,8 @@
 name: Pipeline
 on:
+  push:
+    branches:
+      - develop
   pull_request:
     branches:
       - develop
@@ -21,7 +24,7 @@ jobs:
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'pull_request' && github.base_ref == 'main'}}
+    if: ${{ github.event_name == 'pull_request' && github.base_ref == 'develop' }}
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
@@ -37,23 +40,42 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
 
-  elastic-beanstalk:
-    name: Deploy Elastic Beanstalk
+  docker-image-ECR:
+    name: Build Docker Image and Push to ECR
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'pull_request' && github.base_ref == 'develop'}}
+    needs: sonarcloud
+    if: ${{ github.event_name == 'push' && github.base_ref == 'develop' }}
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+          fetch-depth: 0 
+      - name: Build Docker Image
+        run: docker build --no-cache --progress=plain -t ${{ env.DOCKER_IMAGE_NAME }} .
+      - name: Configure AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          node-version: 14
-      - name: Install dependencies
-        run: npm i
-      - name: Build app
-        run: npm run build
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Push to ECR
+        run: |
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ env.AWS_ECR_PATH }}
+          docker tag ${{ env.DOCKER_IMAGE_NAME }}:latest ${{ env.AWS_ECR_LINK }}:latest
+          docker push ${{ env.AWS_ECR_LINK }}:latest
+
+  elastic-beanstalk:
+    name: Deploy Elastic Beanstalk
+    runs-on: ubuntu-latest
+    needs: docker-image-ECR
+    if:  ${{ github.event_name == 'push' && github.base_ref == 'develop' }}
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 
+      - name: Generate deployment package                  # Only use if a new version is required
+        run: zip -r deploy.zip ./Dockerrun.aws.json        # Only use if a new version is required 
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
         with:
@@ -63,3 +85,5 @@ jobs:
           environment_name: ${{ env.AWS_ENVIROMENT_NAME }}
           version_label: ${{ env.AWS_VERSION_LABEL }}
           region: ${{ env.AWS_REGION }}
+          deployment_package: deploy.zip                    # Only use if a new version is required
+          #use_existing_version_if_available: true
