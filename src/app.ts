@@ -6,9 +6,11 @@ import cors from 'cors'
 import ResponseModel from './utils/standar-response/response.model'
 import { ResponseCodes } from './utils/standar-response/response.codes'
 import { ResponseStatusCodes } from './utils/standar-response/response.status.codes'
-import authRouter from './routes/auth.routes'
 import notFound from './middlewares/notFound'
 import responseError from './middlewares/responseError'
+import authRouter from './routes/auth.routes'
+import campaignRouter from './routes/campaign.routes'
+import campaignTypeRouter from './routes/campaign.types.routes'
 
 dotenv.config()
 const app = express()
@@ -30,6 +32,8 @@ const home = async (_request: Request, response: Response): Promise<void> => {
 app.get('/', home)
 
 app.use('/api/v1/auth', authRouter)
+app.use('/api/v1/campaign', campaignRouter)
+app.use('/api/v1/campaign-type', campaignTypeRouter)
 
 app.use(notFound)
 app.use(responseError)

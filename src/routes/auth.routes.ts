@@ -1,15 +1,9 @@
 import { Router } from 'express'
-import { loginController, getNewAccessToken, loginByAccessToken } from '../controllers/auth.controller'
-import isAuthenticated from '../middlewares/isAuthenticated'
+import { loginHandler, getNewAccessTokenHandler, loginByAccessTokenHandler } from '../controllers/auth.controller'
 const authRouter = Router()
 
-authRouter.post('/login', loginController)
-authRouter.post('/login-token', loginByAccessToken)
-authRouter.get('/refresh-token', getNewAccessToken)
-authRouter.get('/protected-data', isAuthenticated, (request, response) => {
-  response.json({
-    message: 'User logged'
-  })
-})
+authRouter.post('/login', loginHandler)
+authRouter.post('/login-token', loginByAccessTokenHandler)
+authRouter.get('/refresh-token', getNewAccessTokenHandler)
 
 export default authRouter

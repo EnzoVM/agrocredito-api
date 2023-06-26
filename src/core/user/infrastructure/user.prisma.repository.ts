@@ -1,7 +1,7 @@
-import PrismaConnection from "../../../prisma/prisma.connection";
-import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error";
-import User from "../domain/user.model";
-import UserRespository from "../domain/user.repository";
+import PrismaConnection from "../../../prisma/prisma.connection"
+import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error"
+import User from "../domain/user.model"
+import UserRespository from "../domain/user.repository"
 
 const prismaConnection = new PrismaConnection()
 const prisma = prismaConnection.connection
