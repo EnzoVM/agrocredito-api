@@ -1,8 +1,8 @@
-import NotFoundError from "../../../utils/custom-errors/application-errors/not.found.error";
-import UnauthorizateError from "../../../utils/custom-errors/application-errors/unauthorizate.error";
-import EncryptRespository from "../domain/encrypt.repository";
-import TokenRespository from "../domain/token.repository";
-import UserRespository from "../domain/user.repository";
+import NotFoundError from "../../../utils/custom-errors/application-errors/not.found.error"
+import UnauthorizateError from "../../../utils/custom-errors/application-errors/unauthorizate.error"
+import EncryptRespository from "../domain/encrypt.repository"
+import TokenRespository from "../domain/token.repository"
+import UserRespository from "../domain/user.repository"
 
 export default class AuthUseCase {
   constructor (

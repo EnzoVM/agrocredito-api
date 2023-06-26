@@ -67,7 +67,7 @@ model property_legal_condition {
 model credit_request {
   credit_request_id           String      @id @unique @db.VarChar(255)
   farmer_id                   String      @db.VarChar(255)
-  campaing_id                 String      @db.VarChar(35)
+  campaign_id                 String      @db.VarChar(35)
   hectare_number              Int       
   credit_reason               String      @db.VarChar(255)
   credit_amount               Decimal     @db.Decimal(19, 4)
@@ -79,7 +79,7 @@ model credit_request {
 
   farmer                      farmer      @relation(fields: [farmer_id], references: [farmer_id])
   tecnique                    tecnique    @relation(fields: [tecnique_id], references: [tecnique_id])
-  campaing                    campaing    @relation(fields: [campaing_id], references: [campaing_id])
+  campaign                    campaign    @relation(fields: [campaign_id], references: [campaign_id])
 }
 
 model tecnique {
@@ -98,34 +98,34 @@ model assistance_type {
   tecniques                     tecnique[]
 }
 
-model campaing {
-  campaing_id           String                @id @unique @db.VarChar(255)
-  campaing_description  String                @db.VarChar(255)
-  campaing_type_id      Int
-  campaing_year         String                @db.VarChar(10)
+model campaign {
+  campaign_id           String                @id @unique @db.VarChar(255)
+  campaign_description  String                @db.VarChar(255)
+  campaign_type_id      Int
+  campaign_year         String                @db.VarChar(10)
   period_name           String                @db.VarChar(255)
   start_date            String                @db.VarChar(255)
   finish_date           String                @db.VarChar(255)
 
   credit_requests       credit_request[]
-  campaing_type         campaing_type          @relation(fields: [campaing_type_id], references: [campaing_type_id])
+  campaign_type         campaign_type          @relation(fields: [campaign_type_id], references: [campaign_type_id])
   delivery_plan_model   delivery_plan_model?
 }
 
-model campaing_type {
-  campaing_type_id            Int       @id @unique
-  campaing_type_description   String    @db.VarChar(255)
+model campaign_type {
+  campaign_type_id            Int       @id @unique
+  campaign_type_description   String    @db.VarChar(255)
   period_quantity             Int
 
-  campaings                   campaing[]
+  campaigns                   campaign[]
 }
 
 model delivery_plan_model {
   delivery_plan_model_id            Int                   @id @unique
-  campaing_id                       String                @db.VarChar(255) @unique
+  campaign_id                       String                @db.VarChar(255) @unique
   delivery_plan_model_description   String                @db.VarChar(255)
 
-  campaing                          campaing              @relation(fields: [campaing_id], references: [campaing_id])
+  campaign                          campaign              @relation(fields: [campaign_id], references: [campaign_id])
   departure_detail                  departure_detail[]
 }
 

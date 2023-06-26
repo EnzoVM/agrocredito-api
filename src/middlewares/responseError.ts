@@ -2,9 +2,11 @@ import { Request, Response, NextFunction } from 'express'
 import { ResponseCodes } from '../utils/standar-response/response.codes'
 import ResponseModel from '../utils/standar-response/response.model'
 import { ResponseStatusCodes } from '../utils/standar-response/response.status.codes'
-import UnauthorizateError from '../utils/custom-errors/application-errors/unauthorizate.error';
-import NotFoundError from '../utils/custom-errors/application-errors/not.found.error';
-import UnavailableError from '../utils/custom-errors/infrastructure-errors/unavailable.error';
+import UnauthorizateError from '../utils/custom-errors/application-errors/unauthorizate.error'
+import NotFoundError from '../utils/custom-errors/application-errors/not.found.error'
+import UnavailableError from '../utils/custom-errors/infrastructure-errors/unavailable.error'
+import BadRequestError from '../utils/custom-errors/application-errors/bad.request.error'
+import ProcessError from '../utils/custom-errors/application-errors/process.error'
 
 interface ErrorHandler {
   [key: string]: (error: Error, request: Request, response: Response) => void;
@@ -20,7 +22,7 @@ const HANDLER_ERROR: ErrorHandler = {
   'default': (_error: Error, _request: Request, response: Response) => new ResponseModel({ code: ResponseCodes.UNCONTROLLER_ERROR, statusCode: ResponseStatusCodes.UNCONTROLLER_ERROR, message: 'Uncontroller error' }).send(response)
 }
 
-const responseError = (error: NotFoundError | UnauthorizateError | UnavailableError, request: Request, response: Response, _next: NextFunction) => {
+const responseError = (error: NotFoundError | UnauthorizateError | UnavailableError | BadRequestError | ProcessError, request: Request, response: Response, _next: NextFunction) => {
   const responseError = HANDLER_ERROR[error.code || 'default']
   console.log(error)
   responseError(error, request, response)
