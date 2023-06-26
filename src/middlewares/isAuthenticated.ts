@@ -1,11 +1,11 @@
-import { Request, Response, NextFunction } from "express";
-import ResponseModel from "../utils/standar-response/response.model";
-import { ResponseStatusCodes } from "../utils/standar-response/response.status.codes";
-import { ResponseCodes } from "../utils/standar-response/response.codes";
-import TokenJWTRepository from "../core/user/infrastructure/token.jwt.repository";
-import UserPrismaRepository from "../core/user/infrastructure/user.prisma.repository";
-import EncryptBcryptRespository from "../core/user/infrastructure/encrypt.bcrypt.respository";
-import AuthUseCase from "../core/user/application/auth.usecase";
+import { Request, Response, NextFunction } from "express"
+import ResponseModel from "../utils/standar-response/response.model"
+import { ResponseStatusCodes } from "../utils/standar-response/response.status.codes"
+import { ResponseCodes } from "../utils/standar-response/response.codes"
+import TokenJWTRepository from "../core/user/infrastructure/token.jwt.repository"
+import UserPrismaRepository from "../core/user/infrastructure/user.prisma.repository"
+import EncryptBcryptRespository from "../core/user/infrastructure/encrypt.bcrypt.respository"
+import AuthUseCase from "../core/user/application/auth.usecase"
 
 const userRepository = new UserPrismaRepository()
 const tokenRepository = new TokenJWTRepository()

@@ -13,7 +13,7 @@ const encryptRepository = new EncryptBcryptRespository()
 
 const authUseCase = new AuthUseCase(userRepository, tokenRepository, encryptRepository)
 
-export const loginController = async (request: Request, response: Response, next: NextFunction) => {
+export const loginHandler = async (request: Request, response: Response, next: NextFunction) => {
   const { email, password } = request.body
 
   try {
@@ -36,7 +36,7 @@ export const loginController = async (request: Request, response: Response, next
   }
 }
 
-export const loginByAccessToken = async (request: Request, response: Response, next: NextFunction) => {
+export const loginByAccessTokenHandler = async (request: Request, response: Response, next: NextFunction) => {
   const accessTokenFromCookie = request.cookies.accessToken
 
   try {
@@ -55,7 +55,7 @@ export const loginByAccessToken = async (request: Request, response: Response, n
   }
 }
 
-export const getNewAccessToken = async (request: Request, response: Response, next: NextFunction) => {
+export const getNewAccessTokenHandler = async (request: Request, response: Response, next: NextFunction) => {
   const refreshTokenFromCookie = request.cookies.refreshToken
 
   try {
