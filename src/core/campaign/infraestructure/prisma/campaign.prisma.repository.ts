@@ -2,13 +2,11 @@ import Campaign from "../../domain/campaign.model"
 import CampaignPersistanceRepository from "../../domain/campaign.persistance.repository"
 import PrismaConnection from "../../../../prisma/prisma.connection"
 import UnavailableError from "../../../../utils/custom-errors/infrastructure-errors/unavailable.error"
-import CampaignType from "../../../campaing-type/domain/campaign.type.model"
 import CampaignList from "../../domain/campaign.list.model"
 
 const prisma = new PrismaConnection().connection
 
 export default class CampaignPrismaRepository implements CampaignPersistanceRepository {
-
 
   async createCampaign(campaign: Campaign): Promise<Campaign> {
     try {
@@ -98,7 +96,7 @@ export default class CampaignPrismaRepository implements CampaignPersistanceRepo
   }
 
 
-  async listCampaign(): Promise<CampaignList[]> {
+  async listCampaign(): Promise<{ campaign: CampaignList[], count: number }> {
     try {
       const campaignList = await prisma.campaign.findMany({
         include: {
@@ -106,7 +104,9 @@ export default class CampaignPrismaRepository implements CampaignPersistanceRepo
         }
       })
 
-      return campaignList.map(campaign => {
+      const count = campaignList.length
+
+      const campaign = campaignList.map(campaign => {
         return {
           campaignId: campaign.campaign_id,
           campaignDescription: campaign.campaign_description,
@@ -118,13 +118,18 @@ export default class CampaignPrismaRepository implements CampaignPersistanceRepo
         }
       })
 
+      return {
+        campaign,
+        count
+      }
+
     } catch (error: any) {
       throw new UnavailableError({ message: error.message, core: 'Campaign' })
     }
   }
 
 
-  async listCampaignById (campaignId: string): Promise<CampaignList[]>{
+  async listCampaignById (campaignId: string): Promise<{ campaign: CampaignList[], count: number }>{
     try {
       const campaignListFound = await prisma.campaign.findMany({
         where:{
@@ -137,7 +142,9 @@ export default class CampaignPrismaRepository implements CampaignPersistanceRepo
         }
       })
 
-      return campaignListFound.map(campaign => {
+      const count = campaignListFound.length
+
+      const campaign = campaignListFound.map(campaign => {
         return {
           campaignId: campaign.campaign_id,
           campaignDescription: campaign.campaign_description,
@@ -149,13 +156,18 @@ export default class CampaignPrismaRepository implements CampaignPersistanceRepo
         }
       })
 
+      return {
+        campaign,
+        count
+      }
+
     } catch (error: any) {
       throw new UnavailableError({ message: error.message, core: 'Campaign' })
     }
   }
 
 
-  async listCampaignByYear (campaignYear: string): Promise<CampaignList[]>{
+  async listCampaignByYear (campaignYear: string): Promise<{ campaign: CampaignList[], count: number }>{
     try {
       const campaignListFound = await prisma.campaign.findMany({
         where:{
@@ -168,7 +180,9 @@ export default class CampaignPrismaRepository implements CampaignPersistanceRepo
         }
       })
 
-      return campaignListFound.map(campaign => {
+      const count = campaignListFound.length
+
+      const campaign = campaignListFound.map(campaign => {
         return {
           campaignId: campaign.campaign_id,
           campaignDescription: campaign.campaign_description,
@@ -179,6 +193,11 @@ export default class CampaignPrismaRepository implements CampaignPersistanceRepo
           finishDate: campaign.finish_date
         }
       })
+
+      return {
+        campaign,
+        count
+      }
 
     } catch (error: any) {
       throw new UnavailableError({ message: error.message, core: 'Campaign' })

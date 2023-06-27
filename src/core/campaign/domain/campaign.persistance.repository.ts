@@ -7,8 +7,8 @@ export default interface CampaignPersistanceRepository {
     createCampaign: (campaign: Campaign) => Promise<Campaign>
     deleteCampaign: (campaignId: string) => Promise<string>
     getCampaignByYearAndType: (campaignYear: string, campaignTypeId: number) => Promise<Campaign[]>
-    listCampaign: () => Promise <CampaignList[]>
-    listCampaignById: (campaignId: string) => Promise<CampaignList[]>
-    listCampaignByYear: (campaignYear: string) => Promise<CampaignList[]>
+    listCampaign: () => Promise <{ campaign: CampaignList[], count: number }>
+    listCampaignById: (campaignId: string) => Promise<{ campaign: CampaignList[], count: number }>
+    listCampaignByYear: (campaignYear: string) => Promise<{ campaign: CampaignList[], count: number }>
 
 }
