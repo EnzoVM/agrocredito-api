@@ -23,7 +23,7 @@ export default class CampaignPrismaRepository implements CampaignPersistanceRepo
           finish_date: campaign.finishDate
         }
       })
-      console.log(campaignCreated);
+      console.log(campaignCreated)
       
       return {
         campaignId: campaignCreated.campaign_id,
@@ -159,7 +159,9 @@ export default class CampaignPrismaRepository implements CampaignPersistanceRepo
     try {
       const campaignListFound = await prisma.campaign.findMany({
         where:{
-          campaign_year: campaignYear
+          campaign_year: {
+            contains: campaignYear
+          }
         },
         include: {
           campaign_type: true

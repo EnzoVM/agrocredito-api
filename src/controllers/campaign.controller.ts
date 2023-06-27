@@ -24,10 +24,10 @@ export const createCampaignHandler = async (req: Request, res: Response, next: N
       campaignDescription,
       campaignTypeId,
       campaignYear,
-      periodName,
       startDate,
       finishDate
     }))
+
     if(errorDataCampaign.length > 0) {
       const errorMessages = errorDataCampaign.map((error) => error.constraints ? Object.values(error.constraints): []).flat()
       throw new BadRequestError({ message: errorMessages.join(', '), core: 'Campaign'})
@@ -36,8 +36,7 @@ export const createCampaignHandler = async (req: Request, res: Response, next: N
     const campaignCreated = await createCampaign.create({
       campaignDescription, 
       campaignTypeId, 
-      campaignYear, 
-      periodName, 
+      campaignYear,
       startDate, 
       finishDate
     })

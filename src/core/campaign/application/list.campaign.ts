@@ -21,7 +21,7 @@ export default class ListCampaign {
     page: number, 
     limit: number, 
     typeSearch: 'code' | 'year' | 'all'
-  }): Promise<{ campaignId: string, campaignDescription: string, campaignTypeDescription: string, periodName: string }[]> {
+  }): Promise<{ campaignId: string, campaignDescription: string, campaignTypeDescription: string, periodName: string, campaignYear: string }[]> {
     
     let campaignList: CampaignList[] = []
 
@@ -48,7 +48,8 @@ export default class ListCampaign {
         campaignId: campaign.campaignId,
         campaignDescription: campaign.campaignDescription,
         campaignTypeDescription: campaign.campaignTypeDescription,
-        periodName: campaign.periodName
+        periodName: campaign.periodName,
+        campaignYear: campaign.campaignYear
       }
     })
                     
