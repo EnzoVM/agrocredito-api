@@ -129,7 +129,7 @@ export default class CampaignPrismaRepository implements CampaignPersistanceRepo
       const campaignListFound = await prisma.campaign.findMany({
         where:{
           campaign_id: {
-            contains: campaignId
+            startsWith: campaignId
           }
         },
         include: {
@@ -160,7 +160,7 @@ export default class CampaignPrismaRepository implements CampaignPersistanceRepo
       const campaignListFound = await prisma.campaign.findMany({
         where:{
           campaign_year: {
-            contains: campaignYear
+            startsWith: campaignYear
           }
         },
         include: {
