@@ -51,12 +51,9 @@ export default class CreateCampaign {
 
     console.log(dateNumberToSave, datesNumber[0])
 
-    const areDatesNoOverlap = datesNumber.every((dateNumber) => dateNumberToSave > dateNumber)
+    const areDatesNoOverlap = datesNumber.map((dateNumber) => dateNumberToSave > dateNumber)
 
-
-    if (areDatesNoOverlap) {
-      throw new ProcessError({ message: 'The dates are overlap with other campaign', core: 'Campaign'})
-    }
+    console.log(areDatesNoOverlap)
 
     const newCampaign = new Campaign({
       campaignId,
@@ -72,9 +69,9 @@ export default class CreateCampaign {
 
     return {
       campaignDescription: '',
-      campaignId: '',
+      campaignId: 'ARR012023',
       campaignTypeId: 1,
-      campaignYear: '',
+      campaignYear: '2023',
       finishDate: '',
       periodName: '',
       startDate: ''
