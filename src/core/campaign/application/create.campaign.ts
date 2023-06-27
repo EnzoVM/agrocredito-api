@@ -20,10 +20,10 @@ export default class CreateCampaign {
     startDate, 
     finishDate
   }:{
-    campaignDescription: string, 
-    campaignTypeId: number, 
+    campaignDescription: string,
+    campaignTypeId: number,
     campaignYear: string,
-    startDate: string, 
+    startDate: string,
     finishDate: string
   }): Promise<Campaign> {
     
@@ -43,18 +43,23 @@ export default class CreateCampaign {
     const periodName = `Periodo ${numberOfCampaignByYear + 1}`
     const campaignId = campaignTypeFound.campaignTypeDescription.split(' ')[0].slice(0, 3)+'0'+periodName.trim().slice(-1)+campaignYear
 
-    const datesNumber = campaignByYear.map(campaign => {
-      return Number(`${campaign.startDate.split('/').join('')}${campaign.finishDate.split('/').join('')}`)
+    const startDateNumberToSave = Number(`${startDate.split('/').join('')}`)
+    const finishDateNumberToSave = Number(`${finishDate.split('/').join('')}`)
+
+    if (startDateNumberToSave >= finishDateNumberToSave) {
+      throw new BadRequestError({ message: 'Start date dont must to be grater than finish date', core: 'Campaign'})
+    }
+
+    const finishDatesNumber = campaignByYear.map(campaign => {
+      return Number(`${campaign.finishDate.split('/').join('')}`)
     })
 
-    const dateNumberToSave = Number(`${startDate.split('/').join('')}${finishDate.split('/').join('')}`)
+    const startDateIsValid = finishDatesNumber.every((finishDate) => finishDate < startDateNumberToSave)
 
-    console.log(dateNumberToSave, datesNumber[0])
-
-    const areDatesNoOverlap = datesNumber.map((dateNumber) => dateNumberToSave > dateNumber)
-
-    console.log(areDatesNoOverlap)
-
+    if (!startDateIsValid) {
+      throw new ProcessError({ message: 'The start date must be grater than the finish date of the last campaign', core: 'Campaign'})
+    }
+  
     const newCampaign = new Campaign({
       campaignId,
       campaignDescription,
@@ -65,16 +70,8 @@ export default class CreateCampaign {
       finishDate
     })
 
-    // const campaignCreated = await this.campaignPersistanceRepository.createCampaign(newCampaign)
+    const campaignCreated = await this.campaignPersistanceRepository.createCampaign(newCampaign)
 
-    return {
-      campaignDescription: '',
-      campaignId: 'ARR012023',
-      campaignTypeId: 1,
-      campaignYear: '2023',
-      finishDate: '',
-      periodName: '',
-      startDate: ''
-    }
+    return campaignCreated
   }
 }
