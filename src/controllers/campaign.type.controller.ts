@@ -1,25 +1,22 @@
 import { Request, Response, NextFunction } from "express"
-import ListPeriodByCampaignType from "../core/campaing-type/application/list.period.by.campaign.type"
+import ListCampaignTypes from "../core/campaing-type/application/list.campaign.types"
 import CampaignTypePrismaRepository from "../core/campaing-type/infrastructure/campaign.type.prisma.repository"
 import ResponseModel from "../utils/standar-response/response.model"
 import { ResponseCodes } from "../utils/standar-response/response.codes"
 import { ResponseStatusCodes } from "../utils/standar-response/response.status.codes"
 
-const listPeriodByCampaignType = new ListPeriodByCampaignType(new CampaignTypePrismaRepository)
+const listCampaignTypes = new ListCampaignTypes(new CampaignTypePrismaRepository)
 
-export const listPeriodHandler = async (req: Request, res: Response, next: NextFunction) => {
-  const { campaignTypeId } = req.params
+export const listCampaignTypesHandler = async (_req: Request, res: Response, next: NextFunction) => {
 
   try {
-    const periodList = await listPeriodByCampaignType.list({
-      campaignTypeId: Number(campaignTypeId)
-    })
+    const campaignTypesList = await listCampaignTypes.list()
 
     new ResponseModel({
       statusCode: ResponseStatusCodes.SUCCESS_REQUEST,
       code: ResponseCodes.SUCCESS_REQUEST,
-      message: 'List of periods by campaign type',
-      data: periodList
+      message: 'List of campaign types',
+      data: campaignTypesList
     }).send(res)
     
   } catch (error) {
