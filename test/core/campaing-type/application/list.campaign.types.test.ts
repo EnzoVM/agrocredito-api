@@ -38,9 +38,9 @@ describe('List periods by campaign module test suites', () => {
     test('When list periods successfully', async () => {
       spyCampaignType.mockResolvedValue(mockCampaingTypeResponse)
 
-      const periodList = await listCampaignTypes.list()
+      const campaignList = await listCampaignTypes.list()
 
-      expect(periodList).toHaveLength(2)
+      expect(campaignList).toHaveLength(2)
     })
 
   })
