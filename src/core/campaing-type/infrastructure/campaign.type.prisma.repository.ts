@@ -1,12 +1,29 @@
-import CampaignType from "../domain/campaign.type.model";
-import CampaignTypePersistanceRepository from "../domain/campaign.type.persistance.repository";
+import CampaignType from "../domain/campaign.type.model"
+import CampaignTypePersistanceRepository from "../domain/campaign.type.persistance.repository"
 import PrismaConnection from "../../../prisma/prisma.connection"
-import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error";
+import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error"
 
 const prisma = new PrismaConnection().connection
 
 export default class CampaignTypePrismaRepository implements CampaignTypePersistanceRepository{
   
+  async listCampaignType(): Promise<CampaignType[]> {
+    try {
+      const campaignTypeFound = await prisma.campaign_type.findMany()
+
+      return campaignTypeFound.map(campaignType => {
+        return {
+          campaignTypeId: campaignType.campaign_type_id,
+          campaignTypeDescription: campaignType.campaign_type_description,
+          periodQuantity: campaignType.period_quantity
+        }
+      })
+
+    } catch (error: any) {
+      throw new UnavailableError({ message: error.message, core: 'Campaign' })
+    }
+  }
+
   async getCampaignTypeById(campaignTypeId: number): Promise<CampaignType | null> {
     try {
       const campaignTypeFound = await prisma.campaign_type.findUnique({
@@ -27,5 +44,4 @@ export default class CampaignTypePrismaRepository implements CampaignTypePersist
       throw new UnavailableError({ message: error.message, core: 'Campaign' })
     }
   }
-
 }
