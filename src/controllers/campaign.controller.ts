@@ -89,34 +89,47 @@ export const listCampaignHandler = async (req: Request, res: Response, next: Nex
   try {
 
     let campaignList: { campaignId: string, campaignDescription: string, campaignTypeDescription: string, periodName: string }[] = []
+    let count: number = 0
 
     if(typeSearch === 'code'){
-      campaignList = await listCampaign.list({
+      const { campaign, count: countCampaign } = await listCampaign.list({
         campaignId: filter,
         page: Number(page),
         limit: Number(limit),
         typeSearch
       })
+
+      campaignList = campaign
+      count = countCampaign
     } else if(typeSearch === 'year'){
-      campaignList = await listCampaign.list({
+      const { campaign, count: countCampaign } = await listCampaign.list({
         campaignYear: filter,
         page: Number(page),
         limit: Number(limit),
         typeSearch
       })
+
+      campaignList = campaign
+      count = countCampaign
     } else if(typeSearch === 'all'){
-      campaignList = await listCampaign.list({
+      const { campaign, count: countCampaign } = await listCampaign.list({
         page: Number(page),
         limit: Number(limit),
         typeSearch
       })
+
+      campaignList = campaign
+      count = countCampaign
     }
 
     new ResponseModel({
       statusCode: ResponseStatusCodes.SUCCESS_REQUEST,
       code: ResponseCodes.SUCCESS_REQUEST,
       message: 'List of campaigns',
-      data: campaignList
+      data: {
+        campaignList,
+        count
+      }
     }).send(res)
 
   } catch (error) {

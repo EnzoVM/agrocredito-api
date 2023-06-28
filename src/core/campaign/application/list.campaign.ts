@@ -21,26 +21,33 @@ export default class ListCampaign {
     page: number, 
     limit: number, 
     typeSearch: 'code' | 'year' | 'all'
-  }): Promise<{ campaignId: string, campaignDescription: string, campaignTypeDescription: string, periodName: string, campaignYear: string }[]> {
+  }): Promise<{ campaign: { campaignId: string, campaignDescription: string, campaignTypeDescription: string, periodName: string, campaignYear: string }[], count: number }> {
     
     let campaignList: CampaignList[] = []
+    let finalCount: number = 0
 
     if(typeSearch === 'code') {
       if(!campaignId){
         throw new BadRequestError({ message: 'Campaing ID is missing', core: 'Campaign'})
       }
-      campaignList = await this.campaignPersistanceRepository.listCampaignById(campaignId)
+      const { campaign, count: countCampaign } = await this.campaignPersistanceRepository.listCampaignById(campaignId)
+      campaignList = campaign
+      finalCount = countCampaign
     }
 
     if(typeSearch === 'year') {
       if(!campaignYear){
         throw new BadRequestError({ message: 'Campaing year is missing', core: 'Campaign'})
       }
-      campaignList = await this.campaignPersistanceRepository.listCampaignByYear(campaignYear)
+      const { campaign, count: countCampaign } = await this.campaignPersistanceRepository.listCampaignByYear(campaignYear)
+      campaignList = campaign
+      finalCount = countCampaign
     }
 
     if(typeSearch === 'all') {
-      campaignList = await this.campaignPersistanceRepository.listCampaign()
+      const { campaign, count: countCampaign } = await this.campaignPersistanceRepository.listCampaign()
+      campaignList = campaign
+      finalCount = countCampaign
     }
     
     const orderDataCampaign = campaignList.map((campaign) => {                    
@@ -58,7 +65,10 @@ export default class ListCampaign {
 
     const listCampaign = orderDataCampaign.slice(startIndex, endIndex)
                     
-    return listCampaign
+    return {
+      campaign: listCampaign,
+      count: finalCount
+    }
 
   }
 }

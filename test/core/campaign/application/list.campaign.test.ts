@@ -14,31 +14,43 @@ describe('List Campaign module test suites', () => {
     limit: 2, 
   }
   
-  const mockListResponse = [
-    {
-      campaignId: 'ARR012023',
-      campaignDescription: 'Arroz 2023',
-      campaignTypeDescription: 'Arroz',
-      campaignYear: '2023',
-      periodName: 'Periodo 1',
-      startDate: '02/10',
-      finishDate: '03/11'
-    },
-    {
-      campaignId: 'ARR012023',
-      campaignDescription: 'Arroz 2023',
-      campaignTypeDescription: 'Arroz',
-      campaignYear: '2023',
-      periodName: 'Periodo 1',
-      startDate: '02/10',
-      finishDate: '03/11'
-    },
-  ]
+  const mockListResponse = {
+    campaign: [
+      {
+        campaignId: 'ARR012023',
+        campaignDescription: 'Arroz 2023',
+        campaignTypeDescription: 'Arroz',
+        campaignYear: '2023',
+        periodName: 'Periodo 1',
+        startDate: '02/10',
+        finishDate: '03/11'
+      },
+      {
+        campaignId: 'ARR012023',
+        campaignDescription: 'Arroz 2023',
+        campaignTypeDescription: 'Arroz',
+        campaignYear: '2023',
+        periodName: 'Periodo 1',
+        startDate: '02/10',
+        finishDate: '03/11'
+      },
+    ],
+    count: 2
+  }
 
   let campaignPrismaRepository: CampaignPrismaRepository
-  let spyListById: jest.SpyInstance<Promise<CampaignList[]>, [campaignId: string], any>
-  let spyListByYear: jest.SpyInstance<Promise<CampaignList[]>, [campaignYear: string], any>
-  let spyListAll: jest.SpyInstance<Promise<CampaignList[]>, [], any>
+  let spyListById: jest.SpyInstance<Promise<{
+    campaign: CampaignList[];
+    count: number;
+}>, [campaignId: string], any>
+  let spyListByYear: jest.SpyInstance<Promise<{
+    campaign: CampaignList[];
+    count: number;
+}>, [campaignId: string], any>
+  let spyListAll: jest.SpyInstance<Promise<{
+    campaign: CampaignList[];
+    count: number;
+}>, [], any>
   let listCampaign: ListCampaign
 
   beforeAll(() => {
@@ -64,7 +76,7 @@ describe('List Campaign module test suites', () => {
         typeSearch: 'all'
       })
 
-      expect(campaignListAll).toHaveLength(2)
+      expect(campaignListAll.campaign).toHaveLength(2)
     })
 
     test('When list campaigns by ID successfully', async () => {
@@ -77,7 +89,7 @@ describe('List Campaign module test suites', () => {
         typeSearch: 'code'
       })
 
-      expect(campaignListById).toHaveLength(2)
+      expect(campaignListById.campaign).toHaveLength(2)
     })
 
 
@@ -91,7 +103,7 @@ describe('List Campaign module test suites', () => {
         typeSearch: 'year'
       })
 
-      expect(campaignListByYear).toHaveLength(2)
+      expect(campaignListByYear.campaign).toHaveLength(2)
     })
 
   }) 

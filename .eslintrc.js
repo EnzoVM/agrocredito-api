@@ -26,7 +26,8 @@ module.exports = {
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-inferrable-types": "off",
     "indent": ["error", 2],
     "semi": ["error", "never"]
   },
-};
+}

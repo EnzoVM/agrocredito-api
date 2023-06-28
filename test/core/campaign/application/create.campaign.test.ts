@@ -23,7 +23,7 @@ describe('Create Campaign module test suites', () => {
   const mockCampaingTypeResponse = {
     campaignTypeId: 1,
     campaignTypeDescription: 'ARROZ',
-    periodQuantity: 2
+    periodQuantity: 3
   }
 
   const mockCampaignArrayResponse = [
@@ -42,8 +42,8 @@ describe('Create Campaign module test suites', () => {
       campaignTypeId: 1,
       campaignYear: '2023',
       periodName: 'Periodo 1',
-      startDate: '02/10',
-      finishDate: '03/11'
+      startDate: '03/12',
+      finishDate: '03/14'
     }
   ]
 
@@ -99,16 +99,43 @@ describe('Create Campaign module test suites', () => {
 
       await expect(createCampaign.create(mockParamaters)).rejects.toBeInstanceOf(BadRequestError)
     })
+
+    test('When start date is grater than finish date', async () => {
+      await expect(createCampaign.create({
+        campaignDescription: 'Arroz 2023',
+        campaignTypeId: 1,
+        campaignYear: '2023',
+        startDate: '02/13',
+        finishDate: '02/11'
+      })).rejects.toBeInstanceOf(BadRequestError)
+    })
     
   })
 
   describe('PROCESS ERROR', () => {
 
     test('when the number of campaigns is greater than the number of periods', async () => {
-      spyCampaignType.mockResolvedValue(mockCampaingTypeResponse)
+      spyCampaignType.mockResolvedValue({
+        campaignTypeId: 1,
+        campaignTypeDescription: 'ARROZ',
+        periodQuantity: 2
+      })
       spyGetCampaign.mockResolvedValue(mockCampaignArrayResponse)
       
       await expect(createCampaign.create(mockParamaters)).rejects.toBeInstanceOf(ProcessError)
+    })
+
+    test('when the finish date is greater than start date of the new campaign', async () => {   
+      spyCampaignType.mockResolvedValue(mockCampaingTypeResponse)
+      spyGetCampaign.mockResolvedValue(mockCampaignArrayResponse)
+   
+      await expect(createCampaign.create({
+        campaignDescription: 'Arroz 2023',
+        campaignTypeId: 1,
+        campaignYear: '2023',
+        startDate: '03/12',
+        finishDate: '05/12',
+      })).rejects.toBeInstanceOf(ProcessError)
     })
     
   })
