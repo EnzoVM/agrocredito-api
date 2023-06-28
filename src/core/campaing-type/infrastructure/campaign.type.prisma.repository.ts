@@ -7,7 +7,7 @@ const prisma = new PrismaConnection().connection
 
 export default class CampaignTypePrismaRepository implements CampaignTypePersistanceRepository{
   
-  async listCampaignType(): Promise<CampaignType[]> {
+  async listCampaignType (): Promise<CampaignType[]> {
     try {
       const campaignTypeFound = await prisma.campaign_type.findMany()
 

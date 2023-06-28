@@ -2,7 +2,7 @@ import CampaignTypePrismaRepository from '../../../../src/core/campaing-type/inf
 import ListCampaignTypes from '../../../../src/core/campaing-type/application/list.campaign.types'
 import CampaignType from '../../../../src/core/campaing-type/domain/campaign.type.model'
 
-jest.mock("../../../../src/core/campaing-type/application/list.campaign.types")
+jest.mock("../../../../src/core/campaing-type/infrastructure/campaign.type.prisma.repository")
 
 describe('List periods by campaign module test suites', () => { 
 
@@ -20,7 +20,7 @@ describe('List periods by campaign module test suites', () => {
   ]
   
   let campaignTypePrismaRepository: CampaignTypePrismaRepository
-  let spyCampaignType: jest.SpyInstance<Promise<CampaignType[]>, [], any>
+  let spyListCampaignType: jest.SpyInstance<Promise<CampaignType[]>, [], any>
   let listCampaignTypes: ListCampaignTypes
 
   beforeAll(() => {
@@ -28,18 +28,19 @@ describe('List periods by campaign module test suites', () => {
   })
 
   beforeEach(() => {
-    spyCampaignType = jest.spyOn(campaignTypePrismaRepository, 'listCampaignType')
+    spyListCampaignType = jest.spyOn(campaignTypePrismaRepository, 'listCampaignType')
 
     listCampaignTypes= new ListCampaignTypes(campaignTypePrismaRepository)
   })
 
   describe('OPERATION SUCCESS', () => {
-    
-    test('When list periods successfully', async () => {
-      spyCampaignType.mockResolvedValue(mockCampaingTypeResponse)
+
+    test('When list campaign types successfully', async () => {
+      spyListCampaignType.mockResolvedValue(mockCampaingTypeResponse)
 
       const campaignList = await listCampaignTypes.list()
-
+      console.log(campaignList);
+      
       expect(campaignList).toHaveLength(2)
     })
 
