@@ -2,7 +2,7 @@ import CampaignTypePrismaRepository from '../../../../src/core/campaing-type/inf
 import ListCampaignTypes from '../../../../src/core/campaing-type/application/list.campaign.types'
 import CampaignType from '../../../../src/core/campaing-type/domain/campaign.type.model'
 
-jest.mock("../../../../src/core/campaing-type/infrastructure/campaign.type.prisma.repository")
+jest.mock("../../../../src/core/campaing-type/application/list.campaign.types")
 
 describe('List periods by campaign module test suites', () => { 
 
