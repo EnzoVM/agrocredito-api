@@ -17,7 +17,7 @@ const deleteCampaign = new DeleteCampaign(new CampaignPrismaRepository, new Cred
 const listCampaign = new ListCampaign(new CampaignPrismaRepository)
 
 export const createCampaignHandler = async (req: Request, res: Response, next: NextFunction) => {
-  const {campaignDescription, campaignTypeId, campaignYear, periodName, startDate, finishDate} = req.body
+  const {campaignDescription, campaignTypeId, campaignYear, startDate, finishDate} = req.body
 
   try {
     const errorDataCampaign = await validate(new CampaignDTO({
