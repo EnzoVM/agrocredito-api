@@ -55,8 +55,6 @@ export default class CreateCampaign {
       return Number(`${campaign.finishDate.split('/').join('')}`)
     })
 
-    console.log('finish:', finishDatesNumber)
-
     const startDateIsValid = finishDatesNumber.every((finishDate) => finishDate < startDateNumberToSave)
 
     if (!startDateIsValid) {
