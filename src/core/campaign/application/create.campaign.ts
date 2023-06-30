@@ -28,7 +28,6 @@ export default class CreateCampaign {
   }): Promise<Campaign> {
     
     const campaignTypeFound = await this.campaignTypePersistanceRepository.getCampaignTypeById(campaignTypeId)
-
     if(!campaignTypeFound){
       throw new BadRequestError({ message: 'Id of the campaign does not exist', core: 'Campaign'})
     }
@@ -44,9 +43,11 @@ export default class CreateCampaign {
     const campaignId = campaignTypeFound.campaignTypeDescription.split(' ')[0].slice(0, 3)+'0'+periodName.trim().slice(-1)+campaignYear
 
     const startDateNumberToSave = Number(`${startDate.split('/').join('')}`)
-    const finishDateNumberToSave = Number(`${finishDate.split('/').join('')}`)
 
-    if (startDateNumberToSave >= finishDateNumberToSave) {
+    const startDateNumberForValidation = Number(`${startDate.split('/').reverse().join('')}`)
+    const finishDateNumberForValidation = Number(`${finishDate.split('/').reverse().join('')}`)
+
+    if (startDateNumberForValidation >= finishDateNumberForValidation) {
       throw new BadRequestError({ message: 'Start date dont must to be grater than finish date', core: 'Campaign'})
     }
 
