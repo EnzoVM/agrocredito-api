@@ -1,16 +1,16 @@
 import BadRequestError from "../../../utils/custom-errors/application-errors/bad.request.error"
 import { FarmerCreate } from "../domain/farmer.create.model"
-import { Farmer } from "../domain/farmer.model"
 import FarmerPersistanceRepository from "../domain/farmer.persistance.repository"
 import { FarmerType } from "../domain/farmer.type"
 
 export default class CreateFarmerUseCase {
-  constructor (private readonly farmerPersistanceRepository: FarmerPersistanceRepository) {}
+  constructor (
+    private readonly farmerPersistanceRepository: FarmerPersistanceRepository
+  ) {}
 
   async create(farmer: FarmerCreate): Promise<string> {
     const {
       cadastralRegistry,
-      correlative,
       farmerAddress,
       farmerProjectId,
       farmerQualityId,
@@ -28,7 +28,6 @@ export default class CreateFarmerUseCase {
     
     if (
       !cadastralRegistry ||
-      !correlative ||
       !farmerAddress ||
       !farmerProjectId ||
       !farmerQualityId ||
@@ -43,7 +42,6 @@ export default class CreateFarmerUseCase {
     }
 
     if (
-      typeof correlative !== 'number' ||
       typeof farmerProjectId !== 'number' ||
       typeof farmerQualityId !== 'number' ||
       typeof propertyHectareQuantity !== 'number' ||
@@ -75,8 +73,11 @@ export default class CreateFarmerUseCase {
         throw new BadRequestError({ message: 'Body of the request are null or invalid', core: 'farmer' })
       }
     }
+    
+    const farmerCorrelative = await this.farmerPersistanceRepository.getFarmerCount() + 1
+    const farmerId = `${propertySectorId}.${propertyProjectId}.${farmerCorrelative}`
 
-    const farmerCreated = await this.farmerPersistanceRepository.createFarmer(farmer)
+    const farmerCreated = await this.farmerPersistanceRepository.createFarmer({...farmer, correlative: farmerCorrelative, farmerId})
 
     return `Agricultor ${farmerCreated.fullNames || farmerCreated.socialReason} con código ${farmerCreated.farmerId} creado exitósamente`
   }

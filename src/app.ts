@@ -11,6 +11,8 @@ import responseError from './middlewares/responseError'
 import authRouter from './routes/auth.routes'
 import campaignRouter from './routes/campaign.routes'
 import campaignTypeRouter from './routes/campaign.types.routes'
+import farmerRouter from './routes/farmer.routes'
+import projectRouter from './routes/project.routes'
 
 dotenv.config()
 const app = express()
@@ -34,6 +36,8 @@ app.get('/', home)
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/campaign', campaignRouter)
 app.use('/api/v1/campaign-type', campaignTypeRouter)
+app.use('/api/v1/farmers', farmerRouter)
+app.use('/api/v1/projects', projectRouter)
 
 app.use(notFound)
 app.use(responseError)

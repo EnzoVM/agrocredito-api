@@ -1,10 +1,8 @@
 import { FarmerType } from "./farmer.type"
 
-export interface FarmerCreate {  
-  farmerId: string
+export interface FarmerCreate {
   propertySectorId: number   
   propertyProjectId: number
-  correlative: number
   farmerQualityId: number
   farmerType: FarmerType
   socialReason?: string
