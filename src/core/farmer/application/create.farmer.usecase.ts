@@ -1,11 +1,14 @@
 import BadRequestError from "../../../utils/custom-errors/application-errors/bad.request.error"
+import NotFoundError from "../../../utils/custom-errors/application-errors/not.found.error"
+import ProjectPersistanceRepository from "../../project/domain/project.persistance.repository"
 import { FarmerCreate } from "../domain/farmer.create.model"
 import FarmerPersistanceRepository from "../domain/farmer.persistance.repository"
 import { FarmerType } from "../domain/farmer.type"
 
 export default class CreateFarmerUseCase {
   constructor (
-    private readonly farmerPersistanceRepository: FarmerPersistanceRepository
+    private readonly farmerPersistanceRepository: FarmerPersistanceRepository,
+    private readonly projectPersistanceRepository: ProjectPersistanceRepository
   ) {}
 
   async create(farmer: FarmerCreate): Promise<string> {
@@ -72,6 +75,14 @@ export default class CreateFarmerUseCase {
       ) {
         throw new BadRequestError({ message: 'Body of the request are null or invalid', core: 'farmer' })
       }
+    }
+
+    const projectsBySectorFound = await this.projectPersistanceRepository.getProjectsBySector({ sectorId: propertySectorId })
+
+    const projectFound = projectsBySectorFound.find(project => project.projectId === propertyProjectId)
+
+    if (!projectFound) {
+      throw new NotFoundError({ message: 'El proyecto en la petición no existe en el sector especificado', core: 'farmer' })
     }
     
     const farmerCorrelative = await this.farmerPersistanceRepository.getFarmerCount() + 1

@@ -45,7 +45,7 @@ INSERT INTO project VALUES
 (25, "Realengal", 4, 9),
 (26, "La Cruz", 4, 10),
 (27, "Coop 5 de Diciembre", 4, 11),
-(28, "Rica Playa", 3, 15),
-(29, "La Rosita", 3, 16),
-(30, "Monteo", 3, 17),
-(31, "La Paila", 3, 18);
+(28, "Rica Playa", 4, 15),
+(29, "La Rosita", 4, 16),
+(30, "Monteo", 4, 17),
+(31, "La Paila", 4, 18);

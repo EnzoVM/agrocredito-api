@@ -1,12 +1,115 @@
 import PrismaConnection from "../../../prisma/prisma.connection"
 import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error"
 import FarmerAttributes from "../domain/farmer.attributes.model"
+import { FarmerList } from "../domain/farmer.list.model"
 import { Farmer } from "../domain/farmer.model"
 import FarmerPersistanceRepository from "../domain/farmer.persistance.repository"
 
 const prisma = new PrismaConnection().connection
 
 export default class FarmerPrismaRepository implements FarmerPersistanceRepository {
+  async getFarmersById ({ farmerId }: { farmerId: string }): Promise<{ farmers: FarmerList[], count: number }> {
+    try {
+      const farmersFound = await prisma.farmer.findMany({
+        where: {
+          farmer_id: {
+            startsWith: farmerId
+          }
+        },
+        include: {
+          farmer_quality: true
+        }
+      })
+
+      const count = farmersFound.length
+  
+      return {
+        farmers: farmersFound.map(farmer => {
+          return {
+            farmerId: farmer.farmer_id,
+            farmerQualityDescription: farmer.farmer_quality.farmer_quality_description,
+            farmerType: farmer.farmer_type,
+            socialReason: farmer.social_reason ? farmer.social_reason : undefined,
+            fullNames: farmer.full_names ? farmer.full_names : undefined,
+            dni: farmer.dni ? farmer.dni : undefined,
+            ruc: farmer.ruc ? farmer.ruc : undefined
+          }
+        }),
+        count
+      }
+    } catch (error: any) {
+      throw new UnavailableError({ message: error.message, core: 'farmer' })
+    }
+  }
+
+  async getFarmersByFullNames ({ fullNames }: { fullNames: string }): Promise<{ farmers: FarmerList[], count: number }> {
+    try {
+      const farmersFound = await prisma.farmer.findMany({
+        where: {
+          full_names: {
+            startsWith: fullNames
+          }
+        },
+        include: {
+          farmer_quality: true
+        }
+      })
+
+      const count = farmersFound.length
+  
+      return {
+        farmers: farmersFound.map(farmer => {
+          return {
+            farmerId: farmer.farmer_id,
+            farmerQualityDescription: farmer.farmer_quality.farmer_quality_description,
+            farmerType: farmer.farmer_type,
+            socialReason: farmer.social_reason ? farmer.social_reason : undefined,
+            fullNames: farmer.full_names ? farmer.full_names : undefined,
+            dni: farmer.dni ? farmer.dni : undefined,
+            ruc: farmer.ruc ? farmer.ruc : undefined
+          }
+        }),
+        count
+      }
+    } catch (error: any) {
+      throw new UnavailableError({ message: error.message, core: 'farmer' })
+    }
+  }
+
+  async getFarmersBySocialReason ({ socialReason }: { socialReason: string }): Promise<{ farmers: FarmerList[], count: number }> {
+    try {
+      const farmersFound = await prisma.farmer.findMany({
+        where: {
+          social_reason: {
+            startsWith: socialReason
+          }
+        },
+        include: {
+          farmer_quality: true
+        }
+      })
+
+      const count = farmersFound.length
+  
+      return {
+        farmers: farmersFound.map(farmer => {
+          return {
+            farmerId: farmer.farmer_id,
+            farmerQualityDescription: farmer.farmer_quality.farmer_quality_description,
+            farmerType: farmer.farmer_type,
+            socialReason: farmer.social_reason ? farmer.social_reason : undefined,
+            fullNames: farmer.full_names ? farmer.full_names : undefined,
+            dni: farmer.dni ? farmer.dni : undefined,
+            ruc: farmer.ruc ? farmer.ruc : undefined
+          }
+        }),
+        count
+      }
+    } catch (error: any) {
+      throw new UnavailableError({ message: error.message, core: 'farmer' })
+    }
+  }
+
   async createFarmer (farmer: Farmer): Promise<{ farmerId: string, fullNames: string | null,  socialReason: string | null }> {
     try {
       const farmerSaved = await prisma.farmer.create({

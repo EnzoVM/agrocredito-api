@@ -60,7 +60,7 @@ export default class ListCampaign {
       }
     })
                     
-    const startIndex = (page-1) * limit
+    const startIndex = (page - 1) * limit
     const endIndex = page * limit
 
     const listCampaign = orderDataCampaign.slice(startIndex, endIndex)
