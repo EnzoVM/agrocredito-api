@@ -1,7 +1,7 @@
-import DeliveryPlanModel from "../domain/delivery.plan.model";
-import DeliveryPlanModelPersistanceRepository from "../domain/delivery.plan.model.persistance.repository";
+import DeliveryPlanModel from "../domain/delivery.plan.model"
+import DeliveryPlanModelPersistanceRepository from "../domain/delivery.plan.model.persistance.repository"
 import PrismaConnection from "../../../prisma/prisma.connection"
-import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error";
+import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error"
 
 const prisma = new PrismaConnection().connection
 
@@ -78,25 +78,35 @@ export default class DeliveryPlanModelPrismaRepository implements DeliveryPlanMo
     }
   }
 
-  async getLastDeliveryPlanModel (): Promise<DeliveryPlanModel | null> {
+  async getTotalNumberOfDeliveryPlanModel (): Promise<number>{
     try {
-      const lastDeliveryPlanModelFound = await prisma.delivery_plan_model.findFirst({
-        orderBy: {
-          delivery_plan_model_id: 'desc'
-        }
-      })
+      const numOfDeliveryPlanModelFound = await prisma.delivery_plan_model.count()
 
-      if(!lastDeliveryPlanModelFound) { return null }
-
-      return {
-        deliveryPlanModelId: lastDeliveryPlanModelFound.delivery_plan_model_id,
-        campaignId: lastDeliveryPlanModelFound.campaign_id,
-        deliveryPlanModelDescription: lastDeliveryPlanModelFound.delivery_plan_model_description
-      }
-
+      return numOfDeliveryPlanModelFound
+      
     } catch (error: any) {
       throw new UnavailableError({ message: error.message, core: 'Delivery Plan Model' })
     }
   }
+  
+  async getDeliveryPlanModelById (deliveryPlanModelId: number): Promise<DeliveryPlanModel | null>{
+    try {
+      const deliveryPlanModelFound = await prisma.delivery_plan_model.findUnique({
+        where: {
+          delivery_plan_model_id: deliveryPlanModelId
+        }
+      })
 
+      if(!deliveryPlanModelFound) {return null}
+
+      return {
+        deliveryPlanModelId: deliveryPlanModelFound.delivery_plan_model_id,
+        campaignId: deliveryPlanModelFound.campaign_id,
+        deliveryPlanModelDescription: deliveryPlanModelFound.delivery_plan_model_description
+      }
+
+    } catch (error:any) {
+      throw new UnavailableError({ message: error.message, core: 'Delivery Plan Model' })
+    }
+  }
 }

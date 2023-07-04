@@ -1,7 +1,7 @@
-import DepartureDetail from "../domain/departure.detail.model";
-import DepartureDetailPersistanceRepository from "../domain/departure.detail.persistance.repository";
+import DepartureDetail from "../domain/departure.detail.model"
+import DepartureDetailPersistanceRepository from "../domain/departure.detail.persistance.repository"
 import PrismaConnection from "../../../prisma/prisma.connection"
-import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error";
+import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error"
 
 const prisma = new PrismaConnection().connection
 
@@ -73,24 +73,11 @@ export default class DepartureDetailPrismaRepository implements DepartureDetailP
     }
   }
 
-  async getLastDepartureDetail (): Promise<DepartureDetail | null>{
+  async getTotalNumberOfDepartureDetail (): Promise<number>{
     try {
-      const lastDepartureDetailFound = await prisma.departure_detail.findFirst({
-        orderBy: {
-          departure_detail_id: 'desc'
-        }
-      })
+      const numOfDepartureDetailFound = await prisma.departure_detail.count()
 
-      if(!lastDepartureDetailFound) {return null}
-
-      return {
-        departureDetailId: lastDepartureDetailFound.departure_detail_id,
-        deliveryPlanModelId: lastDepartureDetailFound.delivery_plan_model_id,
-        departureDetailDescription: lastDepartureDetailFound.departure_detail_description,
-        departureType: lastDepartureDetailFound.departure_type,
-        resource: lastDepartureDetailFound.resource,
-        amountPerHectare: Number(lastDepartureDetailFound.amount_per_hectare)
-      }
+      return numOfDepartureDetailFound
 
     } catch (error: any) {
       throw new UnavailableError({ message: error.message, core: 'Departure Detail' })

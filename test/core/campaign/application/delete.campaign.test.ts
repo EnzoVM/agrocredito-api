@@ -1,6 +1,6 @@
 import CampaignPrismaRepository from '../../../../src/core/campaign/infraestructure/prisma/campaign.prisma.repository'
 import CreditRequestPrimaRepository from '../../../../src/core/credit-request/infrastructure/credit.request.prisma.repository'
-import DeleteCampaing from '../../../../src/core/campaign/application/delete.campaign'
+import DeleteCampaing from '../../../../src/core/campaign/application/delete.campaign.usecase'
 import ProcessError from '../../../../src/utils/custom-errors/application-errors/process.error'
 import CreditRequest from '../../../../src/core/credit-request/domain/credit.request.model'
 
@@ -49,7 +49,7 @@ describe('Delete Campaign module test suites', () => {
       spyCreditRequest.mockResolvedValue([])
       spyDeleteCampaing.mockResolvedValue('The Campaign was deleted')
 
-      const campaingDeleted = await deleteCampaign.delete({campaignId: mockCampaignId})
+      const campaingDeleted = await deleteCampaign.invoke({campaignId: mockCampaignId})
 
       expect(campaingDeleted).toStrictEqual('The Campaign was deleted')
     })
@@ -61,7 +61,7 @@ describe('Delete Campaign module test suites', () => {
     test('when there are credit request', async () => {
       spyCreditRequest.mockResolvedValue([mockCreditResponse])
 
-      await expect(deleteCampaign.delete({campaignId: mockCampaignId})).rejects.toBeInstanceOf(ProcessError)
+      await expect(deleteCampaign.invoke({campaignId: mockCampaignId})).rejects.toBeInstanceOf(ProcessError)
     })
 
   })

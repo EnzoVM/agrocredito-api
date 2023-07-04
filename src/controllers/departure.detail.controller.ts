@@ -1,21 +1,37 @@
-import { Request, Response, NextFunction } from "express";
-import CreateDepartureDetail from "../core/departure-detail/application/create.departure.detail"
-import DeleteDepartureDetail from "../core/departure-detail/application/delete.departure.detail"
-import ListDepartureDetail from "../core/departure-detail/application/list.departure.detail"
+import { Request, Response, NextFunction } from "express"
+import CreateDepartureDetailUseCase from "../core/departure-detail/application/create.departure.detail.usecase"
+import DeleteDepartureDetailUseCase from "../core/departure-detail/application/delete.departure.detail.usecase"
+import ListDepartureDetailUseCase from "../core/departure-detail/application/list.departure.detail.usecase"
 import DepartureDetailPrismaRepository from "../core/departure-detail/infrastructure/departure.detail.prisma.repository"
-import ResponseModel from "../utils/standar-response/response.model";
-import { ResponseStatusCodes } from "../utils/standar-response/response.status.codes";
-import { ResponseCodes } from "../utils/standar-response/response.codes";
+import DeliveryPlanModelPrismaRepository from "../core/delivery-plan-model/infrastructure/delivery.plan.model.prisma.repository"
+import ResponseModel from "../utils/standar-response/response.model"
+import { ResponseStatusCodes } from "../utils/standar-response/response.status.codes"
+import { ResponseCodes } from "../utils/standar-response/response.codes"
+import { validate } from "class-validator"
+import DepartureDetailDTO from "../dto/departure.detail.dto"
+import BadRequestError from "../utils/custom-errors/application-errors/bad.request.error"
 
-const createDepartureDetail = new CreateDepartureDetail(new DepartureDetailPrismaRepository)
-const deleteDepartureDetail = new DeleteDepartureDetail(new DepartureDetailPrismaRepository)
-const listDepartureDetail = new ListDepartureDetail(new DepartureDetailPrismaRepository)
+const createDepartureDetailUseCase = new CreateDepartureDetailUseCase(new DepartureDetailPrismaRepository, new DeliveryPlanModelPrismaRepository)
+const deleteDepartureDetailUseCase = new DeleteDepartureDetailUseCase(new DepartureDetailPrismaRepository)
+const listDepartureDetailUseCase = new ListDepartureDetailUseCase(new DepartureDetailPrismaRepository)
 
 export const createDepartureDetailHandle = async (req: Request, res: Response, next: NextFunction) => {
   const {deliveryPlanModelId, departureDetailDescription, departureType, amountPerHectare} = req.body
 
   try {
-    const departureDetailCreated = await createDepartureDetail.invoke({
+    const errorDataDepartureDetail = await validate(new DepartureDetailDTO({
+      deliveryPlanModelId,
+      departureDetailDescription,
+      departureType,
+      amountPerHectare
+    }))
+
+    if(errorDataDepartureDetail.length > 0) {
+      const errorMessages = errorDataDepartureDetail.map((error) => error.constraints ? Object.values(error.constraints): []).flat()
+      throw new BadRequestError({ message: errorMessages.join(', '), core: 'Departure Detail'})
+    }
+    
+    const departureDetailCreated = await createDepartureDetailUseCase.invoke({
       deliveryPlanModelId,
       departureDetailDescription,
       departureType,
@@ -38,7 +54,7 @@ export const deleteDepartureDetailHandle = async (req: Request, res: Response, n
   const {departureDetailId} = req.params
 
   try {
-    const departureDetailDeleted = await deleteDepartureDetail.invoke({departureDetailId: Number(departureDetailId)})
+    const departureDetailDeleted = await deleteDepartureDetailUseCase.invoke({departureDetailId: Number(departureDetailId)})
 
     new ResponseModel({
       statusCode: ResponseStatusCodes.SUCCESS_REQUEST,
@@ -56,7 +72,7 @@ export const listDepartureDetailHandle = async (req: Request, res: Response, nex
   const {deliveryPlanModelId} = req.params
 
   try {
-    const departureDetailList = await listDepartureDetail.invoke({deliveryPlanModelId: Number(deliveryPlanModelId)})
+    const departureDetailList = await listDepartureDetailUseCase.invoke({deliveryPlanModelId: Number(deliveryPlanModelId)})
 
     new ResponseModel({
       statusCode: ResponseStatusCodes.SUCCESS_REQUEST,

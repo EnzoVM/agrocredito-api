@@ -2,14 +2,14 @@ import CampaignPersistanceRepository from "../domain/campaign.persistance.reposi
 import BadRequestError from "../../../utils/custom-errors/application-errors/bad.request.error"
 import CampaignList from "../domain/campaign.list.model"
 
-export default class ListCampaign {
+export default class ListCampaignUseCase {
   private readonly campaignPersistanceRepository: CampaignPersistanceRepository
 
   constructor(campaignPersistanceRepository: CampaignPersistanceRepository) {
     this.campaignPersistanceRepository = campaignPersistanceRepository
   }
 
-  async list ({
+  async invoke ({
     campaignId, 
     campaignYear, 
     page, 

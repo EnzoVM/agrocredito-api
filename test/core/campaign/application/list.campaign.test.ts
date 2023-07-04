@@ -1,6 +1,6 @@
 import CampaignList from '../../../../src/core/campaign/domain/campaign.list.model'
 import CampaignPrismaRepository from '../../../../src/core/campaign/infraestructure/prisma/campaign.prisma.repository'
-import ListCampaign from '../../../../src/core/campaign/application/list.campaign'
+import ListCampaign from '../../../../src/core/campaign/application/list.campaign.usecase'
 import BadRequestError from '../../../../src/utils/custom-errors/application-errors/bad.request.error'
 
 jest.mock("../../../../src/core/campaign/infraestructure/prisma/campaign.prisma.repository")
@@ -70,7 +70,7 @@ describe('List Campaign module test suites', () => {
     test('When list all campaigns successfully', async () => {
       spyListAll.mockResolvedValue(mockListResponse)
 
-      const campaignListAll = await listCampaign.list({
+      const campaignListAll = await listCampaign.invoke({
         page: mockListCampaingParameters.page, 
         limit: mockListCampaingParameters.limit, 
         typeSearch: 'all'
@@ -82,7 +82,7 @@ describe('List Campaign module test suites', () => {
     test('When list campaigns by ID successfully', async () => {
       spyListById.mockResolvedValue(mockListResponse)
 
-      const campaignListById = await listCampaign.list({
+      const campaignListById = await listCampaign.invoke({
         campaignId: mockListCampaingParameters.campaignId, 
         page: mockListCampaingParameters.page, 
         limit: mockListCampaingParameters.limit, 
@@ -96,7 +96,7 @@ describe('List Campaign module test suites', () => {
     test('When list campaigns by year successfully', async () => {
       spyListByYear.mockResolvedValue(mockListResponse)
 
-      const campaignListByYear = await listCampaign.list({
+      const campaignListByYear = await listCampaign.invoke({
         campaignYear: mockListCampaingParameters.campaignYear, 
         page: mockListCampaingParameters.page, 
         limit: mockListCampaingParameters.limit, 
@@ -111,7 +111,7 @@ describe('List Campaign module test suites', () => {
   describe('BAD REQUEST ERROR', () => {
 
     test('When campaignId is missing', async () => {
-      await expect(listCampaign.list({
+      await expect(listCampaign.invoke({
         page: mockListCampaingParameters.page, 
         limit: mockListCampaingParameters.limit, 
         typeSearch: 'code'
@@ -120,7 +120,7 @@ describe('List Campaign module test suites', () => {
 
 
     test('When campaignYear is missing', async () => {
-      await expect(listCampaign.list({
+      await expect(listCampaign.invoke({
         page: mockListCampaingParameters.page, 
         limit: mockListCampaingParameters.limit, 
         typeSearch: 'year'

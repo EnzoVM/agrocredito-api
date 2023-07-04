@@ -22,7 +22,19 @@ export default class CampaignDTO {
     @IsString({ message: 'Finish date of campaign must be a string'})
       finishDate: string
 
-    constructor({ campaignDescription, campaignTypeId, campaignYear, startDate, finishDate}:{campaignDescription: string, campaignTypeId: number, campaignYear: string, startDate: string, finishDate: string}) {
+    constructor({ 
+      campaignDescription, 
+      campaignTypeId, 
+      campaignYear, 
+      startDate, 
+      finishDate
+    }:{
+      campaignDescription: string, 
+      campaignTypeId: number, 
+      campaignYear: string, 
+      startDate: string, 
+      finishDate: string
+    }) {
       this.campaignDescription = campaignDescription
       this.campaignTypeId = campaignTypeId
       this.campaignYear = campaignYear

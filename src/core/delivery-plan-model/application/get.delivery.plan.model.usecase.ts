@@ -1,8 +1,8 @@
-import ProcessError from "../../../utils/custom-errors/application-errors/process.error";
-import DeliveryPlanModel from "../domain/delivery.plan.model";
-import DeliveryPlanModelPersistanceRepository from "../domain/delivery.plan.model.persistance.repository";
+import ProcessError from "../../../utils/custom-errors/application-errors/process.error"
+import DeliveryPlanModel from "../domain/delivery.plan.model"
+import DeliveryPlanModelPersistanceRepository from "../domain/delivery.plan.model.persistance.repository"
 
-export default class GetDeliveryPlanModel {
+export default class GetDeliveryPlanModelUseCase {
 
   constructor(
     private readonly deliveryPlanModelPersistanceRepository: DeliveryPlanModelPersistanceRepository

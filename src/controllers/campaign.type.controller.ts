@@ -1,16 +1,16 @@
 import { Request, Response, NextFunction } from "express"
-import ListCampaignTypes from "../core/campaing-type/application/list.campaign.types"
+import ListCampaignTypesUseCase from "../core/campaing-type/application/list.campaign.types.usecase"
 import CampaignTypePrismaRepository from "../core/campaing-type/infrastructure/campaign.type.prisma.repository"
 import ResponseModel from "../utils/standar-response/response.model"
 import { ResponseCodes } from "../utils/standar-response/response.codes"
 import { ResponseStatusCodes } from "../utils/standar-response/response.status.codes"
 
-const listCampaignTypes = new ListCampaignTypes(new CampaignTypePrismaRepository)
+const listCampaignTypesUseCase = new ListCampaignTypesUseCase(new CampaignTypePrismaRepository)
 
 export const listCampaignTypesHandler = async (_req: Request, res: Response, next: NextFunction) => {
 
   try {
-    const campaignTypesList = await listCampaignTypes.list()
+    const campaignTypesList = await listCampaignTypesUseCase.invoke()
 
     new ResponseModel({
       statusCode: ResponseStatusCodes.SUCCESS_REQUEST,

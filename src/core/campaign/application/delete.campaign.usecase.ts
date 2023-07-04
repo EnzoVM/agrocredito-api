@@ -2,7 +2,7 @@ import CampaignPersistanceRepository from "../domain/campaign.persistance.reposi
 import CreditRequestPersistanceRepository from "../../credit-request/domain/credit.request.persistance.repository"
 import ProcessError from "../../../utils/custom-errors/application-errors/process.error"
 
-export default class DeleteCampaign {
+export default class DeleteCampaignUseCase {
   private readonly campaignPersistanceRepository: CampaignPersistanceRepository
   private readonly creditRequestPersistanceRepository: CreditRequestPersistanceRepository
 
@@ -11,7 +11,7 @@ export default class DeleteCampaign {
     this.creditRequestPersistanceRepository = creditRequestPersistanceRepository
   }
 
-  async delete ({campaignId}:{campaignId: string}): Promise<string> {
+  async invoke ({campaignId}:{campaignId: string}): Promise<string> {
 
     const creditRequestList = await this.creditRequestPersistanceRepository.listCreditRequestByCampaignId(campaignId)
     if(creditRequestList.length > 0) {

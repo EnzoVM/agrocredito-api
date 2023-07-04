@@ -4,7 +4,7 @@ import CampaignType from '../../../../src/core/campaing-type/domain/campaign.typ
 import CampaignTypePrismaRepository from '../../../../src/core/campaing-type/infrastructure/campaign.type.prisma.repository'
 import BadRequestError from '../../../../src/utils/custom-errors/application-errors/bad.request.error'
 import ProcessError from '../../../../src/utils/custom-errors/application-errors/process.error'
-import CreateCampaign from './../../../../src/core/campaign/application/create.campaign'
+import CreateCampaign from './../../../../src/core/campaign/application/create.campaign.usecase'
 
 jest.mock("../../../../src/core/campaign/infraestructure/prisma/campaign.prisma.repository")
 jest.mock("../../../../src/core/campaing-type/infrastructure/campaign.type.prisma.repository")
@@ -84,7 +84,7 @@ describe('Create Campaign module test suites', () => {
       spyGetCampaign.mockResolvedValue([])
       spyCreateCampaign.mockResolvedValue(mockCreateCampaignResponse)
 
-      const campaignCreated = await createCampaign.create(mockParamaters)
+      const campaignCreated = await createCampaign.invoke(mockParamaters)
 
       expect(campaignCreated.campaignId).toStrictEqual('ARR012023')
       expect(campaignCreated.campaignYear).toStrictEqual('2023')
@@ -97,11 +97,11 @@ describe('Create Campaign module test suites', () => {
     test('When campaign type is not found', async () => {
       spyCampaignType.mockResolvedValue(null)
 
-      await expect(createCampaign.create(mockParamaters)).rejects.toBeInstanceOf(BadRequestError)
+      await expect(createCampaign.invoke(mockParamaters)).rejects.toBeInstanceOf(BadRequestError)
     })
 
     test('When start date is grater than finish date', async () => {
-      await expect(createCampaign.create({
+      await expect(createCampaign.invoke({
         campaignDescription: 'Arroz 2023',
         campaignTypeId: 1,
         campaignYear: '2023',
@@ -122,14 +122,14 @@ describe('Create Campaign module test suites', () => {
       })
       spyGetCampaign.mockResolvedValue(mockCampaignArrayResponse)
       
-      await expect(createCampaign.create(mockParamaters)).rejects.toBeInstanceOf(ProcessError)
+      await expect(createCampaign.invoke(mockParamaters)).rejects.toBeInstanceOf(ProcessError)
     })
 
     test('when the finish date is greater than start date of the new campaign', async () => {   
       spyCampaignType.mockResolvedValue(mockCampaingTypeResponse)
       spyGetCampaign.mockResolvedValue(mockCampaignArrayResponse)
    
-      await expect(createCampaign.create({
+      await expect(createCampaign.invoke({
         campaignDescription: 'Arroz 2023',
         campaignTypeId: 1,
         campaignYear: '2023',

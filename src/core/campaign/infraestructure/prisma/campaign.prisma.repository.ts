@@ -47,6 +47,11 @@ export default class CampaignPrismaRepository implements CampaignPersistanceRepo
       })
       
       if(deliveryPlanModelFound){
+        await prisma.departure_detail.deleteMany({
+          where: {
+            delivery_plan_model_id: deliveryPlanModelFound.delivery_plan_model_id
+          }
+        })
         await prisma.delivery_plan_model.delete({
           where: {
             campaign_id: campaignId
@@ -209,6 +214,31 @@ export default class CampaignPrismaRepository implements CampaignPersistanceRepo
 
     } catch (error: any) {
       throw new UnavailableError({ message: error.message, core: 'Campaign' })
+    }
+  }
+
+  async getCampaignById (campaignId: string): Promise<Campaign | null>{
+    try {
+      const campaignFound = await prisma.campaign.findUnique({
+        where: {
+          campaign_id: campaignId
+        }
+      })
+
+      if(!campaignFound) {return null}
+
+      return {
+        campaignId: campaignFound.campaign_id,
+        campaignDescription: campaignFound.campaign_description,
+        campaignTypeId: campaignFound.campaign_type_id,
+        campaignYear: campaignFound.campaign_year,
+        periodName: campaignFound.period_name,
+        startDate: campaignFound.start_date,
+        finishDate: campaignFound.finish_date
+      }
+
+    } catch (error: any) {
+      throw new UnavailableError({ message: error.message, core: 'Campaign'})
     }
   }
 }
