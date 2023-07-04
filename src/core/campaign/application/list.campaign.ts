@@ -49,8 +49,18 @@ export default class ListCampaign {
       campaignList = campaign
       finalCount = countCampaign
     }
-
-    const startIndex = (page-1) * limit
+    
+    const orderDataCampaign = campaignList.map((campaign) => {                    
+      return {
+        campaignId: campaign.campaignId,
+        campaignDescription: campaign.campaignDescription,
+        campaignTypeDescription: campaign.campaignTypeDescription,
+        periodName: campaign.periodName,
+        campaignYear: campaign.campaignYear
+      }
+    })
+                    
+    const startIndex = (page - 1) * limit
     const endIndex = page * limit
 
     const listCampaign = campaignList.slice(startIndex, endIndex)

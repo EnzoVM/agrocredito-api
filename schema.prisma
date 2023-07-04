@@ -42,6 +42,7 @@ model sector {
 
 model project {
   project_id            Int         @id @unique
+  code                  Int         
   project_description   String      @db.VarChar(255)
   sector_id             Int  
 
