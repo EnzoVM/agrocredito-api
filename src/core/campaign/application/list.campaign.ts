@@ -21,7 +21,7 @@ export default class ListCampaign {
     page: number, 
     limit: number, 
     typeSearch: 'code' | 'year' | 'all'
-  }): Promise<{ campaign: { campaignId: string, campaignDescription: string, campaignTypeDescription: string, periodName: string, campaignYear: string }[], count: number }> {
+  }): Promise<{ campaign: CampaignList[], count: number }> {
     
     let campaignList: CampaignList[] = []
     let finalCount: number = 0
@@ -63,8 +63,8 @@ export default class ListCampaign {
     const startIndex = (page - 1) * limit
     const endIndex = page * limit
 
-    const listCampaign = orderDataCampaign.slice(startIndex, endIndex)
-                    
+    const listCampaign = campaignList.slice(startIndex, endIndex)
+
     return {
       campaign: listCampaign,
       count: finalCount

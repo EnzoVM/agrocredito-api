@@ -100,6 +100,9 @@ export default class CampaignPrismaRepository implements CampaignPersistanceRepo
       const campaignList = await prisma.campaign.findMany({
         include: {
           campaign_type: true
+        },
+        orderBy: {
+          campaign_year: 'desc'
         }
       })
 
@@ -138,6 +141,9 @@ export default class CampaignPrismaRepository implements CampaignPersistanceRepo
         },
         include: {
           campaign_type: true
+        },
+        orderBy: {
+          campaign_year: 'desc'
         }
       })
 
@@ -176,6 +182,9 @@ export default class CampaignPrismaRepository implements CampaignPersistanceRepo
         },
         include: {
           campaign_type: true
+        },
+        orderBy: {
+          campaign_year: 'desc'
         }
       })
 

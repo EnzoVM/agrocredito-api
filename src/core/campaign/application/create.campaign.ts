@@ -42,11 +42,21 @@ export default class CreateCampaign {
     const periodName = `Periodo ${numberOfCampaignByYear + 1}`
     const campaignId = campaignTypeFound.campaignTypeDescription.split(' ')[0].slice(0, 3)+'0'+periodName.trim().slice(-1)+campaignYear
 
+    const [startDateDay, startDateMonth] = startDate.split('/').map(Number)
+    const [finishDateDay, finishDateMonth] = finishDate.split('/').map(Number)
+
+    if(startDateDay <= 0 ||  startDateDay > 31 || finishDateDay <= 0 || finishDateDay > 31) {
+      throw new BadRequestError({ message: 'Day cannot be less than 0 or greater than 31', core: 'Campaign'})
+    }
+    if(startDateMonth <= 0 ||  startDateMonth > 12 || finishDateMonth <= 0 || finishDateMonth > 12) {
+      throw new BadRequestError({ message: 'Month cannot be less than 0 or greater than 12', core: 'Campaign'})
+    }
+
     const startDateNumberToSave = Number(`${startDate.split('/').join('')}`)
 
     const startDateNumberForValidation = Number(`${startDate.split('/').reverse().join('')}`)
     const finishDateNumberForValidation = Number(`${finishDate.split('/').reverse().join('')}`)
-
+    
     if (startDateNumberForValidation >= finishDateNumberForValidation) {
       throw new BadRequestError({ message: 'Start date dont must to be grater than finish date', core: 'Campaign'})
     }
