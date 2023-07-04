@@ -63,7 +63,7 @@ export const deleteCampaignHandler = async (req: Request, res: Response, next: N
     new ResponseModel({
       statusCode: ResponseStatusCodes.SUCCESS_REQUEST,
       code: ResponseCodes.SUCCESS_REQUEST,
-      message: 'The campaign has been successfully deleted',
+      message: 'The campaign has been deleted successfully',
       data: campaingMessageDeleted
     }).send(res)
 

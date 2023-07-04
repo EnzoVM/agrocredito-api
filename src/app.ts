@@ -11,6 +11,8 @@ import responseError from './middlewares/responseError'
 import authRouter from './routes/auth.routes'
 import campaignRouter from './routes/campaign.routes'
 import campaignTypeRouter from './routes/campaign.types.routes'
+import deliveryPlanModelRouter from './routes/delivery.plan.model.routes'
+import departureDetailRouter from './routes/departure.detail.routes'
 import farmerRouter from './routes/farmer.routes'
 import projectRouter from './routes/project.routes'
 
@@ -36,6 +38,8 @@ app.get('/', home)
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/campaign', campaignRouter)
 app.use('/api/v1/campaign-type', campaignTypeRouter)
+app.use('/api/v1/delivery-plan-model', deliveryPlanModelRouter)
+app.use('/api/v1/departure-detail', departureDetailRouter)
 app.use('/api/v1/farmers', farmerRouter)
 app.use('/api/v1/projects', projectRouter)
 
