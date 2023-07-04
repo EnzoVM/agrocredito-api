@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction } from "express"
-import CreateCampaign from "../core/campaign/application/create.campaign"
-import DeleteCampaign from "../core/campaign/application/delete.campaign"
-import ListCampaign from "../core/campaign/application/list.campaign"
+import CreateCampaignUseCase from "../core/campaign/application/create.campaign.usecase"
+import DeleteCampaignUseCase from "../core/campaign/application/delete.campaign.usecase"
+import ListCampaignUseCase from "../core/campaign/application/list.campaign.usecase"
 import CampaignPrismaRepository from "../core/campaign/infraestructure/prisma/campaign.prisma.repository"
 import CampaignTypePrismaRepository from "../core/campaing-type/infrastructure/campaign.type.prisma.repository"
 import CreditRequestPrimaRepository from "../core/credit-request/infrastructure/credit.request.prisma.repository"
@@ -12,9 +12,9 @@ import ResponseModel from "../utils/standar-response/response.model"
 import { ResponseStatusCodes } from "../utils/standar-response/response.status.codes"
 import { ResponseCodes } from "../utils/standar-response/response.codes"
 
-const createCampaign = new CreateCampaign(new CampaignPrismaRepository, new CampaignTypePrismaRepository)
-const deleteCampaign = new DeleteCampaign(new CampaignPrismaRepository, new CreditRequestPrimaRepository)
-const listCampaign = new ListCampaign(new CampaignPrismaRepository)
+const createCampaignUseCase = new CreateCampaignUseCase(new CampaignPrismaRepository, new CampaignTypePrismaRepository)
+const deleteCampaignUseCase = new DeleteCampaignUseCase(new CampaignPrismaRepository, new CreditRequestPrimaRepository)
+const listCampaignUseCase = new ListCampaignUseCase(new CampaignPrismaRepository)
 
 export const createCampaignHandler = async (req: Request, res: Response, next: NextFunction) => {
   const {campaignDescription, campaignTypeId, campaignYear, startDate, finishDate} = req.body
@@ -33,7 +33,7 @@ export const createCampaignHandler = async (req: Request, res: Response, next: N
       throw new BadRequestError({ message: errorMessages.join(', '), core: 'Campaign'})
     }
 
-    const campaignCreated = await createCampaign.create({
+    const campaignCreated = await createCampaignUseCase.invoke({
       campaignDescription, 
       campaignTypeId, 
       campaignYear,
@@ -58,7 +58,7 @@ export const deleteCampaignHandler = async (req: Request, res: Response, next: N
   const { campaignId } = req.params
 
   try {
-    const campaingMessageDeleted = await deleteCampaign.delete({campaignId})
+    const campaingMessageDeleted = await deleteCampaignUseCase.invoke({campaignId})
 
     new ResponseModel({
       statusCode: ResponseStatusCodes.SUCCESS_REQUEST,
@@ -92,7 +92,7 @@ export const listCampaignHandler = async (req: Request, res: Response, next: Nex
     let count: number = 0
 
     if(typeSearch === 'code'){
-      const { campaign, count: countCampaign } = await listCampaign.list({
+      const { campaign, count: countCampaign } = await listCampaignUseCase.invoke({
         campaignId: filter,
         page: Number(page),
         limit: Number(limit),
@@ -102,7 +102,7 @@ export const listCampaignHandler = async (req: Request, res: Response, next: Nex
       campaignList = campaign
       count = countCampaign
     } else if(typeSearch === 'year'){
-      const { campaign, count: countCampaign } = await listCampaign.list({
+      const { campaign, count: countCampaign } = await listCampaignUseCase.invoke({
         campaignYear: filter,
         page: Number(page),
         limit: Number(limit),
@@ -112,7 +112,7 @@ export const listCampaignHandler = async (req: Request, res: Response, next: Nex
       campaignList = campaign
       count = countCampaign
     } else if(typeSearch === 'all'){
-      const { campaign, count: countCampaign } = await listCampaign.list({
+      const { campaign, count: countCampaign } = await listCampaignUseCase.invoke({
         page: Number(page),
         limit: Number(limit),
         typeSearch

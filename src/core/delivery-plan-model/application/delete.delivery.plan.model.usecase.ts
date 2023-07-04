@@ -1,6 +1,6 @@
-import DeliveryPlanModelPersistanceRepository from "../domain/delivery.plan.model.persistance.repository";
+import DeliveryPlanModelPersistanceRepository from "../domain/delivery.plan.model.persistance.repository"
 
-export default class DeleteDeliveryPlanModel {
+export default class DeleteDeliveryPlanModelUseCase {
   constructor(
     private readonly deliveryPlanModelPersistanceRepository: DeliveryPlanModelPersistanceRepository 
   ) {}

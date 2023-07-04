@@ -1,7 +1,7 @@
-import DepartureDetail from "../domain/departure.detail.model";
-import DepartureDetailPersistanceRepository from "../domain/departure.detail.persistance.repository";
+import DepartureDetail from "../domain/departure.detail.model"
+import DepartureDetailPersistanceRepository from "../domain/departure.detail.persistance.repository"
 
-export default class ListDepartureDetail {
+export default class ListDepartureDetailUseCase {
 
   constructor(
     private readonly departureDetailPersistanceRepository: DepartureDetailPersistanceRepository

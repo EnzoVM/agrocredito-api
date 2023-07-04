@@ -1,5 +1,5 @@
 import CampaignTypePrismaRepository from '../../../../src/core/campaing-type/infrastructure/campaign.type.prisma.repository'
-import ListCampaignTypes from '../../../../src/core/campaing-type/application/list.campaign.types'
+import ListCampaignTypes from '../../../../src/core/campaing-type/application/list.campaign.types.usecase'
 import CampaignType from '../../../../src/core/campaing-type/domain/campaign.type.model'
 
 jest.mock("../../../../src/core/campaing-type/infrastructure/campaign.type.prisma.repository")
@@ -38,7 +38,7 @@ describe('List periods by campaign module test suites', () => {
     test('When list campaign types successfully', async () => {
       spyListCampaignType.mockResolvedValue(mockCampaingTypeResponse)
 
-      const campaignList = await listCampaignTypes.list()
+      const campaignList = await listCampaignTypes.invoke()
       
       expect(campaignList).toHaveLength(2)
     })

@@ -1,21 +1,35 @@
-import { Request, Response, NextFunction } from "express";
-import CreateDeliveryPlanModel from "../core/delivery-plan-model/application/create.delivery.plan.model"
-import DeleteDeliveryPlanModel from "../core/delivery-plan-model/application/delete.delivery.plan.model"
-import GetDeliveryPlanModel from "../core/delivery-plan-model/application/get.delivery.plan.model"
+import { Request, Response, NextFunction } from "express"
+import CreateDeliveryPlanModelUseCase from "../core/delivery-plan-model/application/create.delivery.plan.model.usecase"
+import DeleteDeliveryPlanModelUseCase from "../core/delivery-plan-model/application/delete.delivery.plan.model.usecase"
+import GetDeliveryPlanModelUseCase from "../core/delivery-plan-model/application/get.delivery.plan.model.usecase"
 import DeliveryPlanModelPrismaRepository from "../core/delivery-plan-model/infrastructure/delivery.plan.model.prisma.repository"
-import ResponseModel from "../utils/standar-response/response.model";
-import { ResponseStatusCodes } from "../utils/standar-response/response.status.codes";
-import { ResponseCodes } from "../utils/standar-response/response.codes";
+import CampaignPrismaRepository from "../core/campaign/infraestructure/prisma/campaign.prisma.repository"
+import ResponseModel from "../utils/standar-response/response.model"
+import { ResponseStatusCodes } from "../utils/standar-response/response.status.codes"
+import { ResponseCodes } from "../utils/standar-response/response.codes"
+import { validate } from "class-validator"
+import DeliveryPlanModelDTO from "../dto/delivery.plan.model.dto"
+import BadRequestError from "../utils/custom-errors/application-errors/bad.request.error"
 
-const createDeliveryPlanModel = new CreateDeliveryPlanModel(new DeliveryPlanModelPrismaRepository)
-const deleteDeliveryPlanModel = new DeleteDeliveryPlanModel(new DeliveryPlanModelPrismaRepository)
-const getDeliveryPlanModel = new GetDeliveryPlanModel(new DeliveryPlanModelPrismaRepository)
+const createDeliveryPlanModelUseCase = new CreateDeliveryPlanModelUseCase(new DeliveryPlanModelPrismaRepository, new CampaignPrismaRepository)
+const deleteDeliveryPlanModelUseCase = new DeleteDeliveryPlanModelUseCase(new DeliveryPlanModelPrismaRepository)
+const getDeliveryPlanModelUseCase = new GetDeliveryPlanModelUseCase(new DeliveryPlanModelPrismaRepository)
 
 export const createDeliveryPlanModelHandle = async (req: Request, res: Response, next: NextFunction) => {
   const {campaignId, deliveryPlanModelDescription} = req.body
 
   try {
-    const deliveryPlanModelCreated = await createDeliveryPlanModel.invoke({
+    const errorDataDeliveryPlanModel = await validate(new DeliveryPlanModelDTO({
+      campaignId,
+      deliveryPlanModelDescription
+    }))
+
+    if(errorDataDeliveryPlanModel.length > 0) {
+      const errorMessages = errorDataDeliveryPlanModel.map((error) => error.constraints ? Object.values(error.constraints): []).flat()
+      throw new BadRequestError({ message: errorMessages.join(', '), core: 'Delivery Plan Model'})
+    }
+
+    const deliveryPlanModelCreated = await createDeliveryPlanModelUseCase.invoke({
       campaignId,
       deliveryPlanModelDescription
     })
@@ -36,7 +50,7 @@ export const deleteDeliveryPlanModelHandle = async (req: Request, res: Response,
   const {deliveryPlanModelId} = req.params
 
   try {
-    const deliveryPlanModelDeleted = await deleteDeliveryPlanModel.invoke({deliveryPlanModelId: Number(deliveryPlanModelId)})
+    const deliveryPlanModelDeleted = await deleteDeliveryPlanModelUseCase.invoke({deliveryPlanModelId: Number(deliveryPlanModelId)})
 
     new ResponseModel({
       statusCode: ResponseStatusCodes.SUCCESS_REQUEST,
@@ -54,7 +68,7 @@ export const getDeliveryPlanModelHandle = async (req: Request, res: Response, ne
   const {campaignId} = req.params
 
   try {
-    const deliveryPlanModelFound = await getDeliveryPlanModel.invoke({campaignId})
+    const deliveryPlanModelFound = await getDeliveryPlanModelUseCase.invoke({campaignId})
 
     new ResponseModel({
       statusCode: ResponseStatusCodes.SUCCESS_REQUEST,

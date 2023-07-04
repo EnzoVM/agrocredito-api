@@ -4,7 +4,7 @@ import BadRequestError from "../../../utils/custom-errors/application-errors/bad
 import ProcessError from "../../../utils/custom-errors/application-errors/process.error"
 import CampaignTypePersistanceRepository from "../../campaing-type/domain/campaign.type.persistance.repository"
 
-export default class CreateCampaign {
+export default class CreateCampaignUseCase {
   private readonly campaignPersistanceRepository: CampaignPersistanceRepository
   private readonly campaignTypePersistanceRepository: CampaignTypePersistanceRepository
 
@@ -13,7 +13,7 @@ export default class CreateCampaign {
     this.campaignTypePersistanceRepository = campaignTypePersistanceRepository
   }
 
-  async create ({
+  async invoke ({
     campaignDescription, 
     campaignTypeId, 
     campaignYear,
