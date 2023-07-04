@@ -21,7 +21,6 @@ export default class CampaignPrismaRepository implements CampaignPersistanceRepo
           finish_date: campaign.finishDate
         }
       })
-      console.log(campaignCreated)
       
       return {
         campaignId: campaignCreated.campaign_id,
