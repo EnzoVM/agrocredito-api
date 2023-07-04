@@ -55,7 +55,7 @@ export default class ListFarmerUseCase {
         throw new BadRequestError({ message: 'Must specify a farmer id', core: 'farmer' })
       }
 
-      const { farmers, count } = await this.farmerPersistanceRepository.getFarmersById({ farmerId })
+      const { farmers, count } = await this.farmerPersistanceRepository.getFarmersByIncludeId({ farmerId })
       finalFarmers = farmers
       finalCount = count
     }

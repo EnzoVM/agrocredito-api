@@ -9,7 +9,7 @@ import FarmerPersistanceRepository from "../domain/farmer.persistance.repository
 const prisma = new PrismaConnection().connection
 
 export default class FarmerPrismaRepository implements FarmerPersistanceRepository {
-  async getFarmersById ({ farmerId }: { farmerId: string }): Promise<{ farmers: FarmerList[], count: number }> {
+  async getFarmersByIncludeId ({ farmerId }: { farmerId: string }): Promise<{ farmers: FarmerList[], count: number }> {
     try {
       const farmersFound = await prisma.farmer.findMany({
         where: {

@@ -14,7 +14,7 @@ export default class UpdateFarmerUseCase {
     const farmerUpdated = await this.farmerPersistanceRepository.updateFarmerById({ 
       farmerId, 
       farmerAddress: typeof farmerAddress !== 'undefined' ? farmerAddress : farmerFound.farmerAddress, 
-      farmerProjectId: farmerProjectId, 
+      farmerProjectId: farmerProjectId,
       hectareQuantity: typeof hectareQuantity !== 'undefined' ? hectareQuantity : farmerFound.propertyHectareQuantity
     })
     return `El agricultor ${farmerUpdated.fullNames || farmerUpdated.socialReason} con código ${farmerUpdated.farmerId} ha actualizado correctamente`
