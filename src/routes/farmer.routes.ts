@@ -5,8 +5,8 @@ import isAuthenticated from '../middlewares/isAuthenticated'
 const farmerRouter = Router()
 
 farmerRouter
-  .get('/:farmerId', isAuthenticated, findFarmerHandler)
   .get('/attributes', isAuthenticated, listFarmerAttributesHandler)
+  .get('/:farmerId', isAuthenticated, findFarmerHandler)
   .get('/list/:filters', isAuthenticated, listFarmersHandler)
   .post('/', isAuthenticated, createFarmerHandler)
   .put('/:farmerId', isAuthenticated, updateFarmerHandler)
