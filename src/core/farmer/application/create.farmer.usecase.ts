@@ -91,8 +91,6 @@ export default class CreateFarmerUseCase {
 
     const farmerFound = await this.farmerPersistanceRepository.getFarmerById({ farmerId })
 
-    console.log(farmerFound)
-
     if (farmerFound) {
       throw new ProcessError({ message: `The farmer with id ${farmerId} already exists`, core: 'farmer' })
     }
