@@ -25,7 +25,6 @@ export default class ListFarmerUseCase {
   }): Promise<{ farmers: FarmerList[], count: number }> {
     
     if (
-      !farmerType ||
       !searchType ||
       !page ||
       !limit
@@ -55,7 +54,7 @@ export default class ListFarmerUseCase {
         throw new BadRequestError({ message: 'Must specify a farmer id', core: 'farmer' })
       }
 
-      const { farmers, count } = await this.farmerPersistanceRepository.getFarmersByIncludeId({ farmerId })
+      const { farmers, count } = await this.farmerPersistanceRepository.getFarmersByIncludeId({ farmerId, farmerType })
       finalFarmers = farmers
       finalCount = count
     }

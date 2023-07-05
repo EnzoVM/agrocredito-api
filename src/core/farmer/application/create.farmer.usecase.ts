@@ -1,5 +1,6 @@
 import BadRequestError from "../../../utils/custom-errors/application-errors/bad.request.error"
 import NotFoundError from "../../../utils/custom-errors/application-errors/not.found.error"
+import ProcessError from "../../../utils/custom-errors/application-errors/process.error"
 import ProjectPersistanceRepository from "../../project/domain/project.persistance.repository"
 import { FarmerCreate } from "../domain/farmer.create.model"
 import FarmerPersistanceRepository from "../domain/farmer.persistance.repository"
@@ -87,6 +88,12 @@ export default class CreateFarmerUseCase {
     
     const farmerCorrelative = await this.farmerPersistanceRepository.getFarmerCount() + 1
     const farmerId = `${propertySectorId}.${propertyProjectId}.${farmerCorrelative}`
+
+    const farmerFound = await this.farmerPersistanceRepository.getFarmerById({ farmerId })
+
+    if (farmerFound) {
+      throw new ProcessError({ message: `The farmer with id ${farmerId} already exists`, core: 'farmer' })
+    }
 
     const farmerCreated = await this.farmerPersistanceRepository.createFarmer({...farmer, correlative: farmerCorrelative, farmerId})
 

@@ -10,6 +10,10 @@ import ProjectPrismaRepository from "../core/project/infrastructure/project.pris
 import ListFarmerUseCase from "../core/farmer/application/list.farmer.usecase"
 import FindFarmerUseCase from "../core/farmer/application/find.farmer.usecase"
 import UpdateFarmerUseCase from "../core/farmer/application/update.farmer.usecase"
+import { validate } from "class-validator"
+import FarmerCreateDTO from "../dto/farmer.create.dto"
+import BadRequestError from "../utils/custom-errors/application-errors/bad.request.error"
+import FarmerUpdateDTO from "../dto/farmer.update.dto"
 
 const farmerPrismaRepository = new FarmerPrismaRepository()
 const projectPrismaRepository = new ProjectPrismaRepository()
@@ -55,6 +59,28 @@ export const createFarmerHandler = async (request: Request, response: Response, 
   }
 
   try {
+    const errorDataFarmerCreate = await validate(new FarmerCreateDTO({
+      propertySectorId,
+      propertyProjectId,
+      farmerQualityId,
+      farmerType,
+      socialReason,
+      fullNames,
+      dni,
+      ruc,
+      propertyLocation,
+      propertyLegalConditionId,
+      cadastralRegistry,
+      farmerAddress,
+      farmerProjectId,
+      propertyHectareQuantity
+    }))
+
+    if(errorDataFarmerCreate.length > 0) {
+      const errorMessages = errorDataFarmerCreate.map((error) => error.constraints ? Object.values(error.constraints): []).flat()
+      throw new BadRequestError({ message: errorMessages.join(', '), core: 'Delivery Plan Model'})
+    }
+
     const message = await createFarmerUseCase.create(farmer)
 
     new ResponseModel({
@@ -129,7 +155,7 @@ export const findFarmerHandler = async (request: Request, response: Response, ne
     new ResponseModel({
       code: ResponseCodes.SUCCESS_REQUEST,
       statusCode: ResponseStatusCodes.SUCCESS_REQUEST,
-      message: 'Attributes found',
+      message: 'Farmer found',
       data: attributes
     }).send(response)
   } catch (error) {
@@ -142,12 +168,25 @@ export const updateFarmerHandler = async (request: Request, response: Response, 
   const { farmerAddress, farmerProjectId, hectareQuantity } = request.body
   
   try {
+
+    const errorDataFarmerUpdate = await validate(new FarmerUpdateDTO({
+      farmerId,
+      farmerAddress,
+      farmerProjectId,
+      hectareQuantity
+    }))
+
+    if(errorDataFarmerUpdate.length > 0) {
+      const errorMessages = errorDataFarmerUpdate.map((error) => error.constraints ? Object.values(error.constraints): []).flat()
+      throw new BadRequestError({ message: errorMessages.join(', '), core: 'Delivery Plan Model'})
+    }
+
     const attributes = await updateFarmerUseCase.update({ farmerId, farmerAddress, farmerProjectId, hectareQuantity })
 
     new ResponseModel({
       code: ResponseCodes.SUCCESS_REQUEST,
       statusCode: ResponseStatusCodes.SUCCESS_REQUEST,
-      message: 'Attributes found',
+      message: 'Farmer updated',
       data: attributes
     }).send(response)
   } catch (error) {

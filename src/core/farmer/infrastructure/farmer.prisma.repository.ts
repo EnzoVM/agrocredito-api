@@ -5,16 +5,20 @@ import { FarmerDetail } from "../domain/farmer.detail.model"
 import { FarmerList } from "../domain/farmer.list.model"
 import { Farmer } from "../domain/farmer.model"
 import FarmerPersistanceRepository from "../domain/farmer.persistance.repository"
+import { FarmerType } from "../domain/farmer.type"
 
 const prisma = new PrismaConnection().connection
 
 export default class FarmerPrismaRepository implements FarmerPersistanceRepository {
-  async getFarmersByIncludeId ({ farmerId }: { farmerId: string }): Promise<{ farmers: FarmerList[], count: number }> {
+  async getFarmersByIncludeId ({ farmerId, farmerType }: { farmerId: string, farmerType: FarmerType }): Promise<{ farmers: FarmerList[], count: number }> {
     try {
       const farmersFound = await prisma.farmer.findMany({
         where: {
-          farmer_id: {
-            startsWith: farmerId
+          AND: {
+            farmer_id: {
+              startsWith: farmerId
+            },
+            farmer_type: farmerType
           }
         },
         include: {
@@ -47,8 +51,11 @@ export default class FarmerPrismaRepository implements FarmerPersistanceReposito
     try {
       const farmersFound = await prisma.farmer.findMany({
         where: {
-          full_names: {
-            startsWith: fullNames
+          AND: {
+            full_names: {
+              startsWith: fullNames
+            },
+            farmer_type: 'Individual'
           }
         },
         include: {
@@ -81,8 +88,11 @@ export default class FarmerPrismaRepository implements FarmerPersistanceReposito
     try {
       const farmersFound = await prisma.farmer.findMany({
         where: {
-          social_reason: {
-            startsWith: socialReason
+          AND: {
+            social_reason: {
+              startsWith: socialReason
+            },
+            farmer_type: 'Asociación'
           }
         },
         include: {
