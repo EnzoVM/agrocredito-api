@@ -1,11 +1,13 @@
 import CreateFarmerUseCase from '../../../../src/core/farmer/application/create.farmer.usecase'
 import { FarmerCreate } from '../../../../src/core/farmer/domain/farmer.create.model'
+import { FarmerDetail } from '../../../../src/core/farmer/domain/farmer.detail.model'
 import { FarmerType } from '../../../../src/core/farmer/domain/farmer.type'
 import FarmerPrismaRepository from '../../../../src/core/farmer/infrastructure/farmer.prisma.repository'
 import Project from '../../../../src/core/project/domain/project.model'
 import ProjectPrismaRepository from '../../../../src/core/project/infrastructure/project.prisma.repository'
 import BadRequestError from '../../../../src/utils/custom-errors/application-errors/bad.request.error'
 import NotFoundError from '../../../../src/utils/custom-errors/application-errors/not.found.error'
+import ProcessError from '../../../../src/utils/custom-errors/application-errors/process.error'
 
 jest.mock("../../../../src/core/farmer/infrastructure/farmer.prisma.repository")
 
@@ -34,6 +36,23 @@ describe('Create Campaign module test suites', () => {
     }
   ]
 
+  const mockFarmerDetail: FarmerDetail = {
+    farmerId: '3.17.1',
+    propertySector: 'Tumbes',
+    propertyProject: 'Tumbes',
+    correlative: 1,
+    farmerQuality: 'Bueno',
+    farmerType: 'Individual',
+    fullNames: 'JOSUE EMMANUEL MEDINA GARCÍA',
+    dni: '12345678',
+    propertyLocation: 'Panamericana sur',
+    propertyLegalCondition: 'Titulado',
+    cadastralRegistry: '374847984793WW',
+    farmerAddress: 'Av. Tumbes 2034',
+    farmerProject: 'Tumbes',
+    propertyHectareQuantity: 10
+  }
+
   const mockFarmerCreater = {
     farmerId: '10.2.3',
     fullNames: 'Farmer test',
@@ -53,6 +72,7 @@ describe('Create Campaign module test suites', () => {
     jest.spyOn(projectPrismaRepository, 'getProjectsBySector').mockResolvedValue(mockProjects)
     jest.spyOn(farmerPrismaRepository, 'getFarmerCount').mockResolvedValue(1)
     jest.spyOn(farmerPrismaRepository, 'createFarmer').mockResolvedValue(mockFarmerCreater)
+    jest.spyOn(farmerPrismaRepository, 'getFarmerById').mockResolvedValue(null)
 
     createFarmerUseCase = new CreateFarmerUseCase(farmerPrismaRepository, projectPrismaRepository)
   })
@@ -179,6 +199,18 @@ describe('Create Campaign module test suites', () => {
         await createFarmerUseCase.create(mockFarmerCreate)
       } catch (error) {
         expect(error).toBeInstanceOf(NotFoundError)
+      }
+    })
+  })
+
+  describe('PROCESS ERROR', () => {
+    test('Should throw a process error error when create a farmer thats already exists', async () => {
+      jest.spyOn(farmerPrismaRepository, 'getFarmerById').mockResolvedValue(mockFarmerDetail)
+
+      try {
+        await createFarmerUseCase.create(mockFarmerCreate)
+      } catch (error) {
+        expect(error).toBeInstanceOf(ProcessError)
       }
     })
   })
