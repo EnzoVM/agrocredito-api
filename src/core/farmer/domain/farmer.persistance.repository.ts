@@ -13,4 +13,6 @@ export default interface FarmerPersistanceRepository {
   getFarmersBySocialReason: ({ socialReason }: { socialReason: string }) => Promise<{ farmers: FarmerList[], count: number }>
   updateFarmerById: ({ farmerId, hectareQuantity, farmerAddress, farmerProjectId }: { farmerId: string, hectareQuantity: number, farmerAddress: string,farmerProjectId?: number }) => Promise<FarmerDetail>
   getFarmerById: ({ farmerId }: { farmerId: string }) => Promise<FarmerDetail | null>
+  getFarmerByDNI: ({ dni }: { dni: string }) => Promise<FarmerDetail | null>
+  getFarmerByRUC: ({ ruc }: { ruc: string }) => Promise<FarmerDetail | null>
 }

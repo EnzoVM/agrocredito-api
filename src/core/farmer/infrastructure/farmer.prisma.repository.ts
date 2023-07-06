@@ -277,4 +277,94 @@ export default class FarmerPrismaRepository implements FarmerPersistanceReposito
       throw new UnavailableError({ message: error.message, core: 'farmer' })
     }
   }
+
+  async getFarmerByDNI ({ dni }: { dni: string }): Promise<FarmerDetail | null> {
+    try {
+      const farmerFound = await prisma.farmer.findUnique({
+        where: {
+          dni
+        },
+        include: {
+          farmer_project: {
+            include: {
+              sector: true
+            }
+          },
+          property_project: true,
+          farmer_quality: true,
+          property_legal_condition: true
+        }
+      })
+
+      if (!farmerFound) {
+        return null
+      }
+
+      return {
+        farmerId: farmerFound.farmer_id,                   
+        propertySector: farmerFound.farmer_project.sector.sector_description,
+        propertyProject: farmerFound.property_project.project_description,
+        correlative: farmerFound.correlative,
+        farmerQuality: farmerFound.farmer_quality.farmer_quality_description,
+        farmerType: farmerFound.farmer_type,
+        socialReason: farmerFound.social_reason ? farmerFound.social_reason : undefined,
+        fullNames: farmerFound.full_names ? farmerFound.full_names : undefined,
+        dni: farmerFound.dni ? farmerFound.dni : undefined,
+        ruc: farmerFound.ruc ? farmerFound.ruc : undefined,
+        propertyLocation: farmerFound.property_location,
+        propertyLegalCondition: farmerFound.property_legal_condition.property_legal_condition_description,
+        cadastralRegistry: farmerFound.cadastral_registry,
+        farmerAddress: farmerFound.farmer_address,
+        farmerProject: farmerFound.farmer_project.project_description,
+        propertyHectareQuantity: farmerFound.property_hectare_quantity
+      }
+    } catch (error: any) {
+      throw new UnavailableError({ message: error.message, core: 'farmer' })
+    }
+  }
+
+  async getFarmerByRUC ({ ruc }: { ruc: string }): Promise<FarmerDetail | null> {
+    try {
+      const farmerFound = await prisma.farmer.findUnique({
+        where: {
+          ruc
+        },
+        include: {
+          farmer_project: {
+            include: {
+              sector: true
+            }
+          },
+          property_project: true,
+          farmer_quality: true,
+          property_legal_condition: true
+        }
+      })
+
+      if (!farmerFound) {
+        return null
+      }
+
+      return {
+        farmerId: farmerFound.farmer_id,                   
+        propertySector: farmerFound.farmer_project.sector.sector_description,
+        propertyProject: farmerFound.property_project.project_description,
+        correlative: farmerFound.correlative,
+        farmerQuality: farmerFound.farmer_quality.farmer_quality_description,
+        farmerType: farmerFound.farmer_type,
+        socialReason: farmerFound.social_reason ? farmerFound.social_reason : undefined,
+        fullNames: farmerFound.full_names ? farmerFound.full_names : undefined,
+        dni: farmerFound.dni ? farmerFound.dni : undefined,
+        ruc: farmerFound.ruc ? farmerFound.ruc : undefined,
+        propertyLocation: farmerFound.property_location,
+        propertyLegalCondition: farmerFound.property_legal_condition.property_legal_condition_description,
+        cadastralRegistry: farmerFound.cadastral_registry,
+        farmerAddress: farmerFound.farmer_address,
+        farmerProject: farmerFound.farmer_project.project_description,
+        propertyHectareQuantity: farmerFound.property_hectare_quantity
+      }
+    } catch (error: any) {
+      throw new UnavailableError({ message: error.message, core: 'farmer' })
+    }
+  }
 }

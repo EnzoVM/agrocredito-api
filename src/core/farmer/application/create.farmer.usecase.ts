@@ -89,11 +89,24 @@ export default class CreateFarmerUseCase {
     const farmerCorrelative = await this.farmerPersistanceRepository.getFarmerCount() + 1
     const farmerId = `${propertySectorId}.${propertyProjectId}.${farmerCorrelative}`
 
-    const farmerFound = await this.farmerPersistanceRepository.getFarmerById({ farmerId })
+    let farmerFound = await this.farmerPersistanceRepository.getFarmerById({ farmerId })
 
     if (farmerFound) {
-      throw new ProcessError({ message: `The farmer with id ${farmerId} already exists`, core: 'farmer' })
+      throw new ProcessError({ message: `El agricultor con ID ${farmerId} ya existe`, core: 'farmer' })
     }
+    
+    if (farmerType === 'Individual') {
+      farmerFound = await this.farmerPersistanceRepository.getFarmerByDNI({ dni: dni! })
+    }
+
+    if (farmerType === 'Asociación') {
+      farmerFound = await this.farmerPersistanceRepository.getFarmerByRUC({ ruc: ruc! })
+    }
+
+    if (farmerFound) {
+      throw new ProcessError({ message: `El agricultor con ${farmerFound.dni ? 'DNI' : 'RUC'} ${farmerFound.dni || farmerFound.ruc} ya existe`, core: 'farmer' })
+    }
+
 
     const farmerCreated = await this.farmerPersistanceRepository.createFarmer({...farmer, correlative: farmerCorrelative, farmerId})
 

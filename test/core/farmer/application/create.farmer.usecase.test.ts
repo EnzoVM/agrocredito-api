@@ -73,6 +73,9 @@ describe('Create Campaign module test suites', () => {
     jest.spyOn(farmerPrismaRepository, 'getFarmerCount').mockResolvedValue(1)
     jest.spyOn(farmerPrismaRepository, 'createFarmer').mockResolvedValue(mockFarmerCreater)
     jest.spyOn(farmerPrismaRepository, 'getFarmerById').mockResolvedValue(null)
+    jest.spyOn(farmerPrismaRepository, 'getFarmerByDNI').mockResolvedValue(null)
+    jest.spyOn(farmerPrismaRepository, 'getFarmerByRUC').mockResolvedValue(null)
+
 
     createFarmerUseCase = new CreateFarmerUseCase(farmerPrismaRepository, projectPrismaRepository)
   })
@@ -206,6 +209,26 @@ describe('Create Campaign module test suites', () => {
   describe('PROCESS ERROR', () => {
     test('Should throw a process error error when create a farmer thats already exists', async () => {
       jest.spyOn(farmerPrismaRepository, 'getFarmerById').mockResolvedValue(mockFarmerDetail)
+
+      try {
+        await createFarmerUseCase.create(mockFarmerCreate)
+      } catch (error) {
+        expect(error).toBeInstanceOf(ProcessError)
+      }
+    })
+
+    test('Should throw a process error error when create a farmer thats DNI already exists', async () => {
+      jest.spyOn(farmerPrismaRepository, 'getFarmerByDNI').mockResolvedValue(mockFarmerDetail)
+
+      try {
+        await createFarmerUseCase.create(mockFarmerCreate)
+      } catch (error) {
+        expect(error).toBeInstanceOf(ProcessError)
+      }
+    })
+
+    test('Should throw a process error error when create a farmer thats RUC already exists', async () => {
+      jest.spyOn(farmerPrismaRepository, 'getFarmerByRUC').mockResolvedValue(mockFarmerDetail)
 
       try {
         await createFarmerUseCase.create(mockFarmerCreate)
