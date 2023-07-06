@@ -50,7 +50,7 @@ export default class ListFarmerUseCase {
     let finalFarmers: FarmerList[] = []
 
     if (searchType === 'code') {
-      if (!farmerId) {
+      if (typeof farmerId === 'undefined') {
         throw new BadRequestError({ message: 'Must specify a farmer id', core: 'farmer' })
       }
 
