@@ -15,7 +15,6 @@ describe('Create Campaign module test suites', () => {
   const mockFarmerCreate: FarmerCreate = {
     propertySectorId: 3,
     propertyProjectCode: 1,
-    propertyProjectId: 12,
     farmerQualityId: 1,
     farmerType: FarmerType.INDIVIDUAL,
     fullNames: 'Farmer test',
@@ -94,7 +93,6 @@ describe('Create Campaign module test suites', () => {
       try {
         // @ts-ignore
         await createFarmerUseCase.create({
-          propertyProjectId: 12,
           farmerQualityId: 1,
           farmerType: FarmerType.INDIVIDUAL,
           fullNames: 'Farmer test',
@@ -160,7 +158,6 @@ describe('Create Campaign module test suites', () => {
         await createFarmerUseCase.create({
           propertySectorId: 2,
           propertyProjectCode: 1,
-          propertyProjectId: 12,
           farmerQualityId: 1,
           farmerType: FarmerType.INDIVIDUAL,
           propertyLocation: 'Av. Brasil',
@@ -180,7 +177,6 @@ describe('Create Campaign module test suites', () => {
         await createFarmerUseCase.create({
           propertySectorId: 2,
           propertyProjectCode: 1,
-          propertyProjectId: 12,
           farmerQualityId: 1,
           farmerType: FarmerType.ASSOCIATION,
           fullNames: 'Farmer test',

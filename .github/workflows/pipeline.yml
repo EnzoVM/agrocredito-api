@@ -74,7 +74,7 @@ jobs:
         with:
           fetch-depth: 0 
       #- name: Generate deployment package                  # Only use if a new version is required
-      #  run: zip -r deploy.zip ./Dockerrun.aws.json        # Only use if a new version is required 
+        #run: zip -r deploy.zip ./Dockerrun.aws.json        # Only use if a new version is required 
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
         with:

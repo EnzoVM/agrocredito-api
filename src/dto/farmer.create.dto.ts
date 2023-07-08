@@ -8,7 +8,7 @@ export default class FarmerCreateDTO {
 
   @IsNotEmpty({ message: 'Property project id is empty'})
   @IsNumber({}, { message: 'Property project id must be a number'})
-    propertyProjectId: number
+    propertyProjectCode: number
 
   @IsNotEmpty({ message: 'Farmer quality is empty'})
   @IsNumber({}, { message: 'Farmer quality is must be a number'})
@@ -60,7 +60,7 @@ export default class FarmerCreateDTO {
 
   constructor({ 
     propertySectorId,   
-    propertyProjectId,
+    propertyProjectCode,
     farmerQualityId,
     farmerType,
     socialReason,
@@ -75,7 +75,7 @@ export default class FarmerCreateDTO {
     propertyHectareQuantity
   }:{
     propertySectorId: number   
-    propertyProjectId: number
+    propertyProjectCode: number
     farmerQualityId: number
     farmerType: string
     socialReason?: string
@@ -90,7 +90,7 @@ export default class FarmerCreateDTO {
     propertyHectareQuantity: number
   }) {
     this.propertySectorId = propertySectorId   
-    this.propertyProjectId = propertyProjectId
+    this.propertyProjectCode = propertyProjectCode
     this.farmerQualityId = farmerQualityId
     this.farmerType = farmerType
     this.socialReason = socialReason

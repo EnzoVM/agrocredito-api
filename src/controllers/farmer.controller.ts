@@ -26,7 +26,7 @@ const updateFarmerUseCase = new UpdateFarmerUseCase(farmerPrismaRepository)
 export const createFarmerHandler = async (request: Request, response: Response, next: NextFunction) => {
   const { 
     propertySectorId,
-    propertyProjectId,
+    propertyProjectCode,
     farmerQualityId,
     farmerType,
     socialReason,
@@ -43,7 +43,7 @@ export const createFarmerHandler = async (request: Request, response: Response, 
 
   const farmer: FarmerCreate = { 
     propertySectorId,
-    propertyProjectId,
+    propertyProjectCode,
     farmerQualityId,
     farmerType,
     socialReason,
@@ -61,7 +61,7 @@ export const createFarmerHandler = async (request: Request, response: Response, 
   try {
     const errorDataFarmerCreate = await validate(new FarmerCreateDTO({
       propertySectorId,
-      propertyProjectId,
+      propertyProjectCode,
       farmerQualityId,
       farmerType,
       socialReason,
