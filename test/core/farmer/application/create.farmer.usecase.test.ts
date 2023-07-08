@@ -14,6 +14,7 @@ jest.mock("../../../../src/core/farmer/infrastructure/farmer.prisma.repository")
 describe('Create Campaign module test suites', () => {
   const mockFarmerCreate: FarmerCreate = {
     propertySectorId: 3,
+    propertyProjectCode: 1,
     propertyProjectId: 12,
     farmerQualityId: 1,
     farmerType: FarmerType.INDIVIDUAL,
@@ -29,7 +30,7 @@ describe('Create Campaign module test suites', () => {
 
   const mockProjects: Project[] = [
     {
-      projectCode: 12,
+      projectCode: 1,
       projectDescription: 'San Julian',
       projectId: 12,
       projectSectorId: 3
@@ -158,6 +159,7 @@ describe('Create Campaign module test suites', () => {
       try {
         await createFarmerUseCase.create({
           propertySectorId: 2,
+          propertyProjectCode: 1,
           propertyProjectId: 12,
           farmerQualityId: 1,
           farmerType: FarmerType.INDIVIDUAL,
@@ -177,6 +179,7 @@ describe('Create Campaign module test suites', () => {
       try {
         await createFarmerUseCase.create({
           propertySectorId: 2,
+          propertyProjectCode: 1,
           propertyProjectId: 12,
           farmerQualityId: 1,
           farmerType: FarmerType.ASSOCIATION,

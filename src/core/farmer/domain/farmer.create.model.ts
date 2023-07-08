@@ -2,6 +2,7 @@ import { FarmerType } from "./farmer.type"
 
 export interface FarmerCreate {
   propertySectorId: number   
+  propertyProjectCode: number
   propertyProjectId: number
   farmerQualityId: number
   farmerType: FarmerType

@@ -127,6 +127,7 @@ export default class FarmerPrismaRepository implements FarmerPersistanceReposito
         data: {
           farmer_id: farmer.farmerId,
           property_sector_id: farmer.propertySectorId,
+          property_project_code: farmer.propertyProjectCode,
           property_project_id: farmer.propertyProjectId,
           correlative: farmer.correlative,
           farmer_quality_id: farmer.farmerQualityId,

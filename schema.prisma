@@ -10,7 +10,8 @@ datasource db {
 
 model farmer {
   farmer_id                     String                      @id @unique @db.VarChar(255)
-  property_sector_id            Int     
+  property_sector_id            Int 
+  property_project_code         Int 
   property_project_id           Int 
   correlative                   Int         
   farmer_quality_id             Int
