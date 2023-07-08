@@ -2,7 +2,8 @@ import { FarmerType } from "./farmer.type"
 
 export interface Farmer {
   farmerId: string                     
-  propertySectorId: number   
+  propertySectorId: number  
+  propertyProjectCode: number
   propertyProjectId: number
   correlative: number
   farmerQualityId: number

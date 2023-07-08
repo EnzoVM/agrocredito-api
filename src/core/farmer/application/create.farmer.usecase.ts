@@ -22,7 +22,7 @@ export default class CreateFarmerUseCase {
       propertyHectareQuantity,
       propertyLegalConditionId,
       propertyLocation,
-      propertyProjectId,
+      propertyProjectCode,
       propertySectorId,
       dni,
       fullNames,
@@ -39,7 +39,7 @@ export default class CreateFarmerUseCase {
       !propertyHectareQuantity ||
       !propertyLegalConditionId ||
       !propertyLocation ||
-      !propertyProjectId ||
+      !propertyProjectCode ||
       !propertySectorId
     ) {
       throw new BadRequestError({ message: 'Body of the request are null or invalid', core: 'farmer' })
@@ -50,7 +50,7 @@ export default class CreateFarmerUseCase {
       typeof farmerQualityId !== 'number' ||
       typeof propertyHectareQuantity !== 'number' ||
       typeof propertyLegalConditionId !== 'number' ||
-      typeof propertyProjectId !== 'number' ||
+      typeof propertyProjectCode !== 'number' ||
       typeof propertySectorId !== 'number'
     ) {
       throw new BadRequestError({ message: 'Body of the request are null or invalid', core: 'farmer' })
@@ -80,14 +80,14 @@ export default class CreateFarmerUseCase {
 
     const projectsBySectorFound = await this.projectPersistanceRepository.getProjectsBySector({ sectorId: propertySectorId })
 
-    const projectFound = projectsBySectorFound.find(project => project.projectId === propertyProjectId)
+    const projectFound = projectsBySectorFound.find(project =>  project.projectSectorId === propertySectorId && project.projectCode === propertyProjectCode)
 
     if (!projectFound) {
       throw new NotFoundError({ message: 'El proyecto en la petición no existe en el sector especificado', core: 'farmer' })
     }
     
     const farmerCorrelative = await this.farmerPersistanceRepository.getFarmerCount() + 1
-    const farmerId = `${propertySectorId}.${propertyProjectId}.${farmerCorrelative}`
+    const farmerId = `${propertySectorId}.${propertyProjectCode}.${farmerCorrelative}`
 
     let farmerFound = await this.farmerPersistanceRepository.getFarmerById({ farmerId })
 
@@ -108,7 +108,7 @@ export default class CreateFarmerUseCase {
     }
 
 
-    const farmerCreated = await this.farmerPersistanceRepository.createFarmer({...farmer, correlative: farmerCorrelative, farmerId})
+    const farmerCreated = await this.farmerPersistanceRepository.createFarmer({...farmer, correlative: farmerCorrelative, farmerId, propertyProjectId: projectFound.projectId})
 
     return `Agricultor ${farmerCreated.fullNames || farmerCreated.socialReason} con código ${farmerCreated.farmerId} creado exitósamente`
   }

@@ -1,3 +1,12 @@
+INSERT INTO campaign_type VALUES
+(1, "ARROZ", 2),
+(1, "FREJOL", 3),
+(1, "PAPA", 4),
+(1, "YUCA", 2),
+(1, "TOMATE", 3),
+(1, "ZANAHORIA", 1),
+(1, "SANDIA", 6);
+
 INSERT INTO farmer_quality VALUES
 (1, "Bueno"),
 (2, "Regular"),
