@@ -7,4 +7,11 @@ export const departureDetailPrismaRepositoryMock = {
 
 export const departureDetailIdMock = 1
 
-export const departureDetailMessageDeletedMock = 'The departure detail Descripion de partida was deleted'
+export const departureDetailMessageDeletedMock = {
+  departureDetailId: 1,
+  deliveryPlanModelId: 1,
+  departureDetailDescription: "Descripion de partida",
+  departureType: "Indirecta",
+  resource: "Efectivo",
+  amountPerHectare: 1000.2
+}

@@ -58,7 +58,7 @@ export default class DepartureDetailPrismaRepository implements DepartureDetailP
     }
   }
 
-  async deleteDepartureDetail (departureDetailId: number): Promise<string>{
+  async deleteDepartureDetail (departureDetailId: number): Promise<DepartureDetail>{
     try {
       const departureDetailDeleted = await prisma.departure_detail.delete({
         where: {
@@ -66,8 +66,15 @@ export default class DepartureDetailPrismaRepository implements DepartureDetailP
         }
       })
 
-      return `The departure detail ${departureDetailDeleted.departure_detail_description} was deleted`
-
+      return {
+        departureDetailId: departureDetailDeleted.departure_detail_id,
+        deliveryPlanModelId: departureDetailDeleted.delivery_plan_model_id,
+        departureDetailDescription: departureDetailDeleted.departure_detail_description,
+        departureType: departureDetailDeleted.departure_type,
+        resource: departureDetailDeleted.resource,
+        amountPerHectare: Number(departureDetailDeleted.amount_per_hectare)
+      }
+      
     } catch (error: any) {
       throw new UnavailableError({ message: error.message, core: 'Departure Detail' })
     }
