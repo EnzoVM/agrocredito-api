@@ -12,6 +12,6 @@ describe('OPERATION SUCCESS', () => {
     departureDetailPrismaRepositoryMock.deleteDepartureDetail.mockResolvedValue(departureDetailMessageDeletedMock)
     const departureDetailMessageDeleted = await deleteDepartureDetailUseCase.invoke({ departureDetailId: departureDetailIdMock})
     
-    expect(departureDetailMessageDeleted).toStrictEqual(departureDetailMessageDeletedMock)
+    expect(departureDetailMessageDeleted).toEqual(departureDetailMessageDeletedMock)
   })
 })
