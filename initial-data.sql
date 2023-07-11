@@ -1,11 +1,12 @@
 INSERT INTO campaign_type VALUES
 (1, "ARROZ", 2),
-(1, "FREJOL", 3),
-(1, "PAPA", 4),
-(1, "YUCA", 2),
-(1, "TOMATE", 3),
-(1, "ZANAHORIA", 1),
-(1, "SANDIA", );
+(2, "FREJOL", 3),
+(3, "MANGO", 4),
+(4, "LIMON", 2),
+(5, "SOYA", 3),
+(6, "PAPAYA", 2),
+(7, "PLATANO", 2),
+(8, "MAIZ", 2);
 
 INSERT INTO farmer_quality VALUES
 (1, "Bueno"),
@@ -58,3 +59,38 @@ INSERT INTO project VALUES
 (29, 16,"La Rosita", 4),
 (30, 17,"Monteo", 4),
 (31, 18,"La Paila", 4);
+
+INSERT INTO assistance_type (assistance_type_id, assistance_type_description) VALUES 
+(1, 'SERVIAGRO'),
+(2, 'AGROINDUSTRIAS'),
+(3, 'Tecnologóa Tumbesina'),
+(4, 'P&G INGENIEROS'),
+(5, 'INDEPENDIENTES');
+
+INSERT INTO tecnique (tecnique_id, assistance_type_id, tecnique_name) VALUES
+(1, 1, 'SILVA CRUZ TEODORO'),
+(2, 1, 'ZAPATA CAMACHO PORFIRIO'),
+(3, 3, 'JAVIER MIJAHUANCA'),
+(4, 3, 'WILMER FERMANDEZ'),
+(5, 3, 'ODAR LA ROSA'),
+(6, 3, 'JOSE ALVINES YOVERA'),
+(7, 4, 'ZAPATA CAMACHO PORFIRIO'),
+(8, 5, 'Eras Luna Orlando'),
+(9, 5, 'Valladares Lopez Edilbert'),
+(10, 5, 'Olavarria Saavedra Ricard'),
+(11, 5, 'Coveñas Palomino Segundo'),
+(12, 5, 'Dios Espinoza Miguel'),
+(13, 5, 'Aguirre Challe Dante'),
+(14, 5, 'Medina Benites Jose'),
+(15, 5, 'Emp. Agroindustrial Tumpis'),
+(16, 5, 'Helguero Campaña Erwing'),
+(17, 5, 'Castro Arrunategui Milagr'),
+(18, 5, 'Paz Garcia Sandra'),
+(19, 5, 'Guerra Garcia Carlos'),
+(20, 5, 'Zapata Balladares Oswaldo'),
+(21, 5, 'Carrasco Delgado Anibal'),
+(22, 5, 'Dioses Espinoza Rey Willy'),
+(23, 5, 'Cespedes Dioses Luis'),
+(24, 5, 'Vinces Martinez Pedro'),
+(25, 5, 'Alvines Sullon Jose Pascu'),
+(26, 5, 'No requiere');

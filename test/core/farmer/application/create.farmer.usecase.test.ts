@@ -70,7 +70,7 @@ describe('Create Campaign module test suites', () => {
 
   beforeEach(() => {
     jest.spyOn(projectPrismaRepository, 'getProjectsBySector').mockResolvedValue(mockProjects)
-    jest.spyOn(farmerPrismaRepository, 'getFarmerCount').mockResolvedValue(1)
+    jest.spyOn(farmerPrismaRepository, 'getLastFarmerCorrelative').mockResolvedValue(10)
     jest.spyOn(farmerPrismaRepository, 'createFarmer').mockResolvedValue(mockFarmerCreater)
     jest.spyOn(farmerPrismaRepository, 'getFarmerById').mockResolvedValue(null)
     jest.spyOn(farmerPrismaRepository, 'getFarmerByDNI').mockResolvedValue(null)

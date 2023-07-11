@@ -21,7 +21,7 @@ describe('Delete Campaign module test suites', () => {
     guaranteeDescription: 'ffff',
     guaranteeAmount: 3,
     tecniqueId: 3,
-    creditRequestStatus: false,
+    creditRequestStatus: 'Pendiente',
     creditRequestObservation: 'ff3f'
   }
 

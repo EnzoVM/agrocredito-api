@@ -76,8 +76,10 @@ model credit_request {
   guarantee_description       String      @db.VarChar(255)
   guarantee_amount            Decimal     @db.Decimal(19, 4)
   tecnique_id                 Int
-  credit_request_status       Boolean     @default(false)
+  credit_request_status       String      @db.VarChar(255) @default("Pendiente")
   credit_request_observation  String      @db.VarChar(255)
+  create_datetime             DateTime    @default(now())
+  update_status_datetime      DateTime?
 
   farmer                      farmer      @relation(fields: [farmer_id], references: [farmer_id])
   tecnique                    tecnique    @relation(fields: [tecnique_id], references: [tecnique_id])

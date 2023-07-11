@@ -179,10 +179,24 @@ export default class FarmerPrismaRepository implements FarmerPersistanceReposito
     }
   }
 
-  async getFarmerCount (): Promise<number> {
+  async getLastFarmerCorrelative ({
+    propertySectorId,
+    propertyProjectId
+  } : {
+    propertySectorId: number
+    propertyProjectId: number
+  }): Promise<number> {
     try {
-      const farmerCount = await prisma.farmer.count()
-      return farmerCount
+      const farmer = await prisma.farmer.findMany({
+        where: {
+          property_sector_id: propertySectorId,
+          property_project_id: propertyProjectId
+        },
+        orderBy: {
+          correlative: 'desc'
+        }
+      })
+      return farmer[0].correlative
     } catch (error: any) {
       throw new UnavailableError({ message: error.message, core: 'farmer' })
     }
@@ -364,6 +378,20 @@ export default class FarmerPrismaRepository implements FarmerPersistanceReposito
         farmerProject: farmerFound.farmer_project.project_description,
         propertyHectareQuantity: farmerFound.property_hectare_quantity
       }
+    } catch (error: any) {
+      throw new UnavailableError({ message: error.message, core: 'farmer' })
+    }
+  }
+
+  async deleteFarmerById ({ farmerId }: { farmerId: string }): Promise<string> {
+    try {
+      const farmerDeleted = await prisma.farmer.delete({
+        where: {
+          farmer_id: farmerId
+        }
+      })
+
+      return farmerDeleted.farmer_id
     } catch (error: any) {
       throw new UnavailableError({ message: error.message, core: 'farmer' })
     }
