@@ -9,6 +9,12 @@ export default class DeleteFarmerUseCase {
   ) {}
   
   async delete ({ farmerId }: { farmerId: string }): Promise<string> {
+    const farmerFound = await this.farmerPersistanceRepository.getFarmerById({ farmerId })
+
+    if (!farmerFound) {
+      throw new ProcessError({ message: `El agricultor con código ${farmerId} no existe`, core: 'farmer' })
+    }
+
     const creditRequestNumber = await this.creditRequestPersistanceRepository.getNumberOfCreditRequestByFarmer({ farmerId })
 
     if (creditRequestNumber > 0) {
