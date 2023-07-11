@@ -86,7 +86,7 @@ export default class CreateFarmerUseCase {
       throw new NotFoundError({ message: 'El proyecto en la petición no existe en el sector especificado', core: 'farmer' })
     }
     
-    const farmerCorrelative = await this.farmerPersistanceRepository.getFarmerCount() + 1
+    const farmerCorrelative = await this.farmerPersistanceRepository.getLastFarmerCorrelative({ propertyProjectId: projectFound.projectId, propertySectorId: projectFound.projectSectorId }) + 1
     const farmerId = `${propertySectorId}.${propertyProjectCode}.${farmerCorrelative}`
 
     let farmerFound = await this.farmerPersistanceRepository.getFarmerById({ farmerId })
