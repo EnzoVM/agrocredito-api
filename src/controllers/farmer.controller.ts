@@ -14,14 +14,18 @@ import { validate } from "class-validator"
 import FarmerCreateDTO from "../dto/farmer.create.dto"
 import BadRequestError from "../utils/custom-errors/application-errors/bad.request.error"
 import FarmerUpdateDTO from "../dto/farmer.update.dto"
+import DeleteFarmerUseCase from "../core/farmer/application/delete.farmer.usecase"
+import CreditRequestPrimaRepository from "../core/credit-request/infrastructure/credit.request.prisma.repository"
 
 const farmerPrismaRepository = new FarmerPrismaRepository()
 const projectPrismaRepository = new ProjectPrismaRepository()
+const creditRequestPrismaRepository = new CreditRequestPrimaRepository()
 const createFarmerUseCase = new CreateFarmerUseCase(farmerPrismaRepository, projectPrismaRepository)
 const listFarmerUseCase = new ListFarmerUseCase(farmerPrismaRepository)
 const listFarmerAttributes = new ListFarmerAttributesUseCase(farmerPrismaRepository)
 const findFarmerUseCase = new FindFarmerUseCase(farmerPrismaRepository)
 const updateFarmerUseCase = new UpdateFarmerUseCase(farmerPrismaRepository)
+const deleteFarmerUseCase = new DeleteFarmerUseCase(farmerPrismaRepository, creditRequestPrismaRepository)
 
 export const createFarmerHandler = async (request: Request, response: Response, next: NextFunction) => {
   const { 
@@ -188,6 +192,22 @@ export const updateFarmerHandler = async (request: Request, response: Response, 
       statusCode: ResponseStatusCodes.SUCCESS_REQUEST,
       message: 'Farmer updated',
       data: attributes
+    }).send(response)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const deleteFarmerHandler = async (request: Request, response: Response, next: NextFunction) => {
+  const { farmerId } = request.params
+  
+  try {
+    const message = await deleteFarmerUseCase.delete({ farmerId })
+
+    new ResponseModel({
+      code: ResponseCodes.SUCCESS_REQUEST,
+      statusCode: ResponseStatusCodes.SUCCESS_REQUEST,
+      message
     }).send(response)
   } catch (error) {
     next(error)

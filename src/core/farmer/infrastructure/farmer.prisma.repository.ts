@@ -382,4 +382,18 @@ export default class FarmerPrismaRepository implements FarmerPersistanceReposito
       throw new UnavailableError({ message: error.message, core: 'farmer' })
     }
   }
+
+  async deleteFarmerById ({ farmerId }: { farmerId: string }): Promise<string> {
+    try {
+      const farmerDeleted = await prisma.farmer.delete({
+        where: {
+          farmer_id: farmerId
+        }
+      })
+
+      return farmerDeleted.farmer_id
+    } catch (error: any) {
+      throw new UnavailableError({ message: error.message, core: 'farmer' })
+    }
+  }
 }

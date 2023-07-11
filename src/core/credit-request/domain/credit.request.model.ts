@@ -9,7 +9,7 @@ export default class CreditRequest {
   guaranteeDescription: string
   guaranteeAmount: number
   tecniqueId: number
-  creditRequestStatus: boolean
+  creditRequestStatus: string
   creditRequestObservation: string
 
   constructor({ 
@@ -34,7 +34,7 @@ export default class CreditRequest {
     guaranteeDescription: string, 
     guaranteeAmount: number, 
     tecniqueId: number, 
-    creditRequestStatus: boolean, 
+    creditRequestStatus: string, 
     creditRequestObservation: string 
   }) {
     this.creditRequestId = creditRequestId

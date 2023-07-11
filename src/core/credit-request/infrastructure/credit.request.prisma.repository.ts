@@ -36,4 +36,17 @@ export default class CreditRequestPrimaRepository implements CreditRequestPersis
     }
   }
 
+  async getNumberOfCreditRequestByFarmer ({ farmerId }: { farmerId: string }): Promise<number> {
+    try {
+      const creditRequestCount = await prisma.credit_request.count({
+        where: {
+          farmer_id: farmerId
+        }
+      })
+
+      return creditRequestCount
+    } catch (error: any) {
+      throw new UnavailableError({ message: error.message, core: 'farmer' })
+    }
+  }
 }
