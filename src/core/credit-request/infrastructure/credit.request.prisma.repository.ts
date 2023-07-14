@@ -2,6 +2,7 @@ import CreditRequest from "../domain/credit.request.model"
 import CreditRequestPersistanceRepository from "../domain/credit.request.persistance.repository"
 import PrismaConnection from "../../../prisma/prisma.connection"
 import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error"
+import CreditRequestList from "../domain/credit.request.list.model"
 
 const prisma = new PrismaConnection().connection
 
@@ -32,7 +33,7 @@ export default class CreditRequestPrimaRepository implements CreditRequestPersis
       })
 
     } catch (error: any) {
-      throw new UnavailableError({ message: error.message, core: 'Credit Request' })
+      throw new UnavailableError({ message: error.message, core: 'credit-request' })
     }
   }
 
@@ -46,7 +47,48 @@ export default class CreditRequestPrimaRepository implements CreditRequestPersis
 
       return creditRequestCount
     } catch (error: any) {
-      throw new UnavailableError({ message: error.message, core: 'farmer' })
+      throw new UnavailableError({ message: error.message, core: 'credit-request' })
+    }
+  }
+
+  async listCreditRequest ({ farmerType, creditRequestStatus, farmerFullNames, farmerSocialReason }: { farmerType: "Individual" | "Asociación"; creditRequestStatus?: string; farmerFullNames?: string | undefined; farmerSocialReason?: string | undefined }): Promise<{ creditRequests: CreditRequestList[], count: number }> {
+    try {
+      const creaditRequestFound = await prisma.credit_request.findMany({
+        where: {
+          credit_request_status: creditRequestStatus,
+          farmer: {
+            farmer_type: farmerType,
+            full_names: {
+              contains: farmerFullNames
+            },
+            social_reason: {
+              contains: farmerSocialReason
+            }
+          }
+        },
+        include: {
+          farmer: true
+        }
+      })
+
+      const count = creaditRequestFound.length
+
+      return {
+        creditRequests: creaditRequestFound.map(creaditRequest => {
+          return {
+            campaignId: creaditRequest.campaign_id,
+            fullNames: creaditRequest.farmer.full_names || undefined,
+            socialReason: creaditRequest.farmer.social_reason || undefined,
+            creditAmount: Number(creaditRequest.credit_amount),
+            createDateTime: creaditRequest.create_datetime,
+            updateStatusDateTime: creaditRequest.update_status_datetime || undefined,
+            creditRequestStatus: creaditRequest.credit_request_status
+          }
+        }),
+        count
+      }
+    } catch (error: any) {
+      throw new UnavailableError({ message: error.message, core: 'credit-request' })
     }
   }
 }

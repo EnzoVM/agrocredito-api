@@ -56,11 +56,11 @@ export default class CreateFarmerUseCase {
       throw new BadRequestError({ message: 'Body of the request are null or invalid', core: 'farmer' })
     }
 
-    if (farmerType in FarmerType) {
+    if (!Object.values(FarmerType).includes(farmerType)) {
       throw new BadRequestError({ message: 'Farmer type is invalid', core: 'farmer' })
     }
 
-    if (farmerType === 'Individual') {
+    if (farmerType === FarmerType.INDIVIDUAL) {
       if (
         !dni ||
         !fullNames
@@ -69,7 +69,7 @@ export default class CreateFarmerUseCase {
       }
     }
 
-    if (farmerType === 'Asociación') {
+    if (farmerType === FarmerType.ASSOCIATION) {
       if (
         !ruc ||
         !socialReason
@@ -95,11 +95,11 @@ export default class CreateFarmerUseCase {
       throw new ProcessError({ message: `El agricultor con ID ${farmerId} ya existe`, core: 'farmer' })
     }
     
-    if (farmerType === 'Individual') {
+    if (farmerType === FarmerType.INDIVIDUAL) {
       farmerFound = await this.farmerPersistanceRepository.getFarmerByDNI({ dni: dni! })
     }
 
-    if (farmerType === 'Asociación') {
+    if (farmerType === FarmerType.ASSOCIATION) {
       farmerFound = await this.farmerPersistanceRepository.getFarmerByRUC({ ruc: ruc! })
     }
 
