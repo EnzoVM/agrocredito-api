@@ -53,7 +53,7 @@ export default class FarmerPrismaRepository implements FarmerPersistanceReposito
         where: {
           AND: {
             full_names: {
-              startsWith: fullNames
+              contains: fullNames
             },
             farmer_type: 'Individual'
           }
@@ -90,7 +90,7 @@ export default class FarmerPrismaRepository implements FarmerPersistanceReposito
         where: {
           AND: {
             social_reason: {
-              startsWith: socialReason
+              contains: socialReason
             },
             farmer_type: 'Asociación'
           }
