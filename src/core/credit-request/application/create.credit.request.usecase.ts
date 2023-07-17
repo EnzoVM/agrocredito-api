@@ -3,7 +3,7 @@ import ProcessError from "../../../utils/custom-errors/application-errors/proces
 import DepartureDetailPersistanceRepository from "../../departure-detail/domain/departure.detail.persistance.repository";
 import FarmerPersistanceRepository from "../../farmer/domain/farmer.persistance.repository";
 import CreditRequestIdGeneratorRepository from "../domain/credit.request.id.generator.repository";
-import CreditRequest from "../domain/credit.request.model";
+import CreditRequestCreate from "../domain/credit.request.create.model"
 import CreditRequestPersistanceRepository from "../domain/credit.request.persistance.repository";
 
 export default class CreateCreditRequestUseCase {
@@ -23,8 +23,7 @@ export default class CreateCreditRequestUseCase {
     creditAmount,
     guaranteeDescription,
     guaranteeAmount,
-    tecniqueId,
-    creditRequestStatus,
+    technicalId,
     creditRequestObservation
   }:{
     farmerId: string
@@ -34,10 +33,9 @@ export default class CreateCreditRequestUseCase {
     creditAmount: number
     guaranteeDescription: string
     guaranteeAmount: number
-    tecniqueId: number
-    creditRequestStatus: string
+    technicalId: number
     creditRequestObservation: string
-  }): Promise<CreditRequest> {
+  }): Promise<CreditRequestCreate> {
     
     if(
       !farmerId ||
@@ -47,8 +45,7 @@ export default class CreateCreditRequestUseCase {
       !creditAmount ||
       !guaranteeDescription ||
       !guaranteeAmount ||
-      !tecniqueId ||
-      !creditRequestStatus ||
+      !technicalId ||
       !creditRequestObservation
     ) {
       throw new BadRequestError({ message: 'Body of the request are null or invalid', core: 'Credit Request'})
@@ -62,14 +59,13 @@ export default class CreateCreditRequestUseCase {
       typeof creditAmount !== 'number' ||
       typeof guaranteeDescription !== 'string' ||
       typeof guaranteeAmount !== 'number' ||
-      typeof tecniqueId !== 'number' ||
-      typeof creditRequestStatus !== 'string' ||
+      typeof technicalId !== 'number' ||
       typeof creditRequestObservation !== 'string'
     ) {
       throw new BadRequestError({ message: 'Body of the request are null or invalid', core: 'Credit Request'})
     }
 
-    const departureDetailFound = await this.departureDetailPersistanceRepository.getDepartureDetailByCampaignId(campaignId)
+    const departureDetailFound = await this.departureDetailPersistanceRepository.getDepartureDetailByCampaignId({campaignId})
     if(!departureDetailFound){
       throw new ProcessError({ message: 'Debe de crear un modelo de plan de entregas y una partida', core: 'Credit Request'})
     }
@@ -82,6 +78,8 @@ export default class CreateCreditRequestUseCase {
     for (const credit of creditRequestFound) { suma += credit.hectareNumber }
 
     const farmerFound = await this.farmerPersistanceRepository.getFarmerById({farmerId})
+    console.log(farmerFound);
+    
     if(!farmerFound) { 
       throw new BadRequestError({ message: 'El usuario elegido no existe', core: 'Credit Request'}) 
     }
@@ -90,9 +88,9 @@ export default class CreateCreditRequestUseCase {
       throw new ProcessError({ message: 'El número de hectareas supera el limite del usuario', core: 'Credit Request'})
     }
     
-    const creditRequestId = await this.creditRequestIdGeneratorRepository.generateCreditRequestId()
+    const creditRequestId = this.creditRequestIdGeneratorRepository.generateCreditRequestId()
 
-    const newCreditRequest = new CreditRequest({
+    const newCreditRequest: CreditRequestCreate = {
       creditRequestId,
       farmerId,
       campaignId,
@@ -101,11 +99,10 @@ export default class CreateCreditRequestUseCase {
       creditAmount,
       guaranteeDescription,
       guaranteeAmount,
-      tecniqueId,
-      creditRequestStatus,
+      technicalId,
       creditRequestObservation
-    })
-
+    }
+    
     const creditRequestCreated = await this.creditRequestPersistanceRepository.createCreditRequest({creditRequest: newCreditRequest})
 
     return creditRequestCreated

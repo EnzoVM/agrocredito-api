@@ -1,4 +1,4 @@
-import DepartureDetail from "../domain/departure.detail.model"
+import DepartureDetailList from "../domain/departure.detail.list.model"
 import DepartureDetailPersistanceRepository from "../domain/departure.detail.persistance.repository"
 
 export default class ListDepartureDetailUseCase {
@@ -11,9 +11,9 @@ export default class ListDepartureDetailUseCase {
     deliveryPlanModelId
   }:{
     deliveryPlanModelId: number
-  }): Promise<DepartureDetail[]> {
+  }): Promise<DepartureDetailList[]> {
     
-    const departureDetailList = await this.departureDetailPersistanceRepository.listDepartureDetail(deliveryPlanModelId)
+    const departureDetailList = await this.departureDetailPersistanceRepository.listDepartureDetail({deliveryPlanModelId})
     return departureDetailList
   }
 }

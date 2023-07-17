@@ -11,7 +11,7 @@ export default class DeleteDeliveryPlanModelUseCase {
     deliveryPlanModelId: number
   }): Promise<string> {
     
-    const deliveryPlanModelMessageDeleted = await this.deliveryPlanModelPersistanceRepository.deleteDeliveryPlanModel(deliveryPlanModelId)
+    const deliveryPlanModelMessageDeleted = await this.deliveryPlanModelPersistanceRepository.deleteDeliveryPlanModel({deliveryPlanModelId})
     return deliveryPlanModelMessageDeleted
   }
 }

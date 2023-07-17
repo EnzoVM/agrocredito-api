@@ -2,7 +2,7 @@ import CampaignPrismaRepository from '../../../../src/core/campaign/infraestruct
 import CreditRequestPrimaRepository from '../../../../src/core/credit-request/infrastructure/credit.request.prisma.repository'
 import DeleteCampaing from '../../../../src/core/campaign/application/delete.campaign.usecase'
 import ProcessError from '../../../../src/utils/custom-errors/application-errors/process.error'
-import CreditRequest from '../../../../src/core/credit-request/domain/credit.request.model'
+import CreditRequestCreate from '../../../../src/core/credit-request/domain/credit.request.create.model'
 
 jest.mock("../../../../src/core/campaign/infraestructure/prisma/campaign.prisma.repository")
 jest.mock("../../../../src/core/credit-request/infrastructure/credit.request.prisma.repository")
@@ -20,7 +20,7 @@ describe('Delete Campaign module test suites', () => {
     creditAmount: 10,
     guaranteeDescription: 'ffff',
     guaranteeAmount: 3,
-    tecniqueId: 3,
+    technicalId: 3,
     creditRequestStatus: 'Pendiente',
     creditRequestObservation: 'ff3f'
   }
@@ -29,7 +29,7 @@ describe('Delete Campaign module test suites', () => {
   let creditRequestPrimaRepository: CreditRequestPrimaRepository
   let deleteCampaign: DeleteCampaing
   let spyDeleteCampaing: jest.SpyInstance<Promise<string>, [campaignId: string], any>
-  let spyCreditRequest: jest.SpyInstance<Promise<CreditRequest[]>, [campaignId: string], any>
+  let spyCreditRequest: jest.SpyInstance<Promise<CreditRequestCreate[]>, [{campaignId: string;}], any>
 
   beforeAll(() => {
     campaignPrismaRepository = new CampaignPrismaRepository()
