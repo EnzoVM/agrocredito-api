@@ -1,4 +1,4 @@
-import CreditRequest from "../domain/credit.request.model"
+import CreditRequestCreate from "../domain/credit.request.create.model"
 import CreditRequestPersistanceRepository from "../domain/credit.request.persistance.repository"
 import PrismaConnection from "../../../prisma/prisma.connection"
 import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error"
@@ -8,7 +8,7 @@ const prisma = new PrismaConnection().connection
 
 export default class CreditRequestPrimaRepository implements CreditRequestPersistanceRepository {
 
-  async listCreditRequestByCampaignId(campaignId: string): Promise<CreditRequest[]> {
+  async listCreditRequestByCampaignId({campaignId}:{campaignId: string}): Promise<CreditRequestCreate[]> {
     try {
       const creditRequestList = await prisma.credit_request.findMany({
         where: {
@@ -37,7 +37,7 @@ export default class CreditRequestPrimaRepository implements CreditRequestPersis
     }
   }
 
-  async getNumberOfCreditRequestByFarmer ({ farmerId }: { farmerId: string }): Promise<number> {
+  async getNumberOfCreditRequestByFarmer ({farmerId}:{farmerId: string}): Promise<number> {
     try {
       const creditRequestCount = await prisma.credit_request.count({
         where: {
@@ -51,7 +51,7 @@ export default class CreditRequestPrimaRepository implements CreditRequestPersis
     }
   }
 
-  async listCreditRequest ({ farmerType, creditRequestStatus, farmerFullNames, farmerSocialReason }: { farmerType: "Individual" | "Asociación"; creditRequestStatus?: string; farmerFullNames?: string | undefined; farmerSocialReason?: string | undefined }): Promise<{ creditRequests: CreditRequestList[], count: number }> {
+  async listCreditRequest ({farmerType, creditRequestStatus, farmerFullNames, farmerSocialReason}:{farmerType: "Individual" | "Asociación"; creditRequestStatus?: string; farmerFullNames?: string | undefined; farmerSocialReason?: string | undefined }): Promise<{ creditRequests: CreditRequestList[], count: number }> {
     try {
       const creaditRequestFound = await prisma.credit_request.findMany({
         where: {
@@ -92,7 +92,7 @@ export default class CreditRequestPrimaRepository implements CreditRequestPersis
     }
   }
 
-  async createCreditRequest ({ creditRequest }: { creditRequest: CreditRequest }): Promise<CreditRequest> {
+  async createCreditRequest ({creditRequest}:{creditRequest: CreditRequestCreate}): Promise<CreditRequestCreate> {
     try {
       const creditRequestCreated = await prisma.credit_request.create({
         data: {
@@ -105,7 +105,6 @@ export default class CreditRequestPrimaRepository implements CreditRequestPersis
           guarantee_description: creditRequest.guaranteeDescription,
           guarantee_amount: creditRequest.guaranteeAmount,
           technical_id: creditRequest.technicalId,
-          credit_request_status: creditRequest.creditRequestStatus,
           credit_request_observation: creditRequest.creditRequestObservation
         }
       })
@@ -129,7 +128,7 @@ export default class CreditRequestPrimaRepository implements CreditRequestPersis
     }
   }
 
-  async getCreditRequestByFarmerId ({ farmerId }: { farmerId: string }): Promise<CreditRequest[]> {
+  async getCreditRequestByFarmerId ({farmerId}:{farmerId: string}): Promise<CreditRequestCreate[]> {
     try {
       const creditRequestFound = await prisma.credit_request.findMany({
         where: {

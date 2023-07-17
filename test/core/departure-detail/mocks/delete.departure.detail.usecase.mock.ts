@@ -2,7 +2,7 @@ export const departureDetailPrismaRepositoryMock = {
   createDepartureDetail: jest.fn(),
   listDepartureDetail: jest.fn(),
   deleteDepartureDetail: jest.fn(),
-  getTotalNumberOfDepartureDetail: jest.fn()
+  getDepartureDetailByCampaignId: jest.fn()
 }
 
 export const departureDetailIdMock = 1

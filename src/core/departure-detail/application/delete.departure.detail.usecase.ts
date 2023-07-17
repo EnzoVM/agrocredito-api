@@ -1,4 +1,4 @@
-import DepartureDetail from "../domain/departure.detail.model"
+import DepartureDetailList from "../domain/departure.detail.list.model"
 import DepartureDetailPersistanceRepository from "../domain/departure.detail.persistance.repository"
 
 export default class DeleteDepartureDetailUseCase {
@@ -11,9 +11,9 @@ export default class DeleteDepartureDetailUseCase {
     departureDetailId
   }:{
     departureDetailId: number
-  }): Promise<DepartureDetail> {
+  }): Promise<DepartureDetailList> {
     
-    const departureDetailMessageDeleted = await this.departureDetailPersistanceRepository.deleteDepartureDetail(departureDetailId)
+    const departureDetailMessageDeleted = await this.departureDetailPersistanceRepository.deleteDepartureDetail({departureDetailId})
     return departureDetailMessageDeleted
   }
 }

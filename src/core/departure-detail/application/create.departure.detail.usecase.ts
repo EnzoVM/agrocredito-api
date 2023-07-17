@@ -1,8 +1,9 @@
 import BadRequestError from "../../../utils/custom-errors/application-errors/bad.request.error"
 import ProcessError from "../../../utils/custom-errors/application-errors/process.error"
-import DepartureDetail from "../domain/departure.detail.model"
 import DepartureDetailPersistanceRepository from "../domain/departure.detail.persistance.repository"
 import DeliveryPlanModelPersistanceRepository from "../../delivery-plan-model/domain/delivery.plan.model.persistance.repository"
+import DepartureDetailList from "../domain/departure.detail.list.model"
+import DepartureDetailCreate from "../domain/departure.detail.create.model"
 
 export default class CreateDepartureDetailUseCase {
 
@@ -21,7 +22,7 @@ export default class CreateDepartureDetailUseCase {
     departureDetailDescription: string,
     departureType: string,
     amountPerHectare: number
-  }): Promise<DepartureDetail> {
+  }): Promise<DepartureDetailList> {
     
     if(
       !deliveryPlanModelId ||
@@ -41,29 +42,25 @@ export default class CreateDepartureDetailUseCase {
       throw new BadRequestError({ message: 'Body of the request are null or invalid', core: 'Delivery Plan Model'})
     }
     
-    const deliveryPlanModelFound = await this.deliveryPlanModelPersistanceRepository.getDeliveryPlanModelById(deliveryPlanModelId)
+    const deliveryPlanModelFound = await this.deliveryPlanModelPersistanceRepository.getDeliveryPlanModelById({deliveryPlanModelId})
     if(!deliveryPlanModelFound){
       throw new BadRequestError({ message: 'There is no delivery plan model', core: 'Delivery Plan Model'})
     }
 
-    const departureDetailsFound = await this.departureDetailPersistanceRepository.listDepartureDetail(deliveryPlanModelId)
-
+    const departureDetailsFound = await this.departureDetailPersistanceRepository.listDepartureDetail({deliveryPlanModelId})
     if(departureDetailsFound.length >= 2){
       throw new ProcessError({ message: 'Only 2 line item details can be created per delivery plan model', core: 'Departure Detail'})
     }
-
-    const departureDetailId = await this.departureDetailPersistanceRepository.getTotalNumberOfDepartureDetail() + 1
     
-    const newDepartureDetail = new DepartureDetail({
-      departureDetailId,
+    const newDepartureDetail: DepartureDetailCreate = {
       deliveryPlanModelId,
       departureDetailDescription,
       departureType,
       resource: 'Efectivo',
       amountPerHectare,
-    })
+    }
 
-    const departureDetailCreated = await this.departureDetailPersistanceRepository.createDepartureDetail(newDepartureDetail)
+    const departureDetailCreated = await this.departureDetailPersistanceRepository.createDepartureDetail({departureDetail: newDepartureDetail})
 
     return departureDetailCreated
   }

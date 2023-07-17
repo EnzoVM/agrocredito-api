@@ -1,11 +1,11 @@
-import DeliveryPlanModel from "./delivery.plan.model"
+import DeliveryPlanModelCreate from "./delivery.plan.model.create.mode"
+import DeliveryPlanModelList from "./delivery.plan.model.list.model"
 
 export default interface DeliveryPlanModelPersistanceRepository {
   
-  createDeliveryPlanModel: (deliveryPlanModel: DeliveryPlanModel) => Promise<DeliveryPlanModel>
-  getDeliveryPlanModelByCampaignId: (campaignId: string) => Promise<DeliveryPlanModel | null>
-  deleteDeliveryPlanModel: (deliveryPlanModelId: number) => Promise<string>
-  getTotalNumberOfDeliveryPlanModel: () => Promise<number>
-  getDeliveryPlanModelById: (deliveryPlanModelId: number) => Promise<DeliveryPlanModel | null>
+  createDeliveryPlanModel: ({deliveryPlanModel}:{deliveryPlanModel: DeliveryPlanModelCreate}) => Promise<DeliveryPlanModelList>
+  getDeliveryPlanModelByCampaignId: ({campaignId}:{campaignId: string}) => Promise<DeliveryPlanModelList | null>
+  deleteDeliveryPlanModel: ({deliveryPlanModelId}:{deliveryPlanModelId: number}) => Promise<string>
+  getDeliveryPlanModelById: ({deliveryPlanModelId}:{deliveryPlanModelId: number}) => Promise<DeliveryPlanModelList | null>
 
 }

@@ -10,7 +10,6 @@ import {
   departureDetailsFoundNothingMock,
   departureDetailsFoundOneMock,
   departureDetailsFoundTwoMock,
-  departureDetailId,
   departureDetailCreated,
   errorMessageBadRequestErrorMock,
   errorMessageBadRequestError2Mock,
@@ -23,7 +22,6 @@ describe('OPERATION SUCCESS', () => {
   test('Should create a departure detail successfully when none exist yet', async () => {
     deliveryPlanModelPrismaRepositoryMock.getDeliveryPlanModelById.mockResolvedValue(deliveryPlanModelFoundMock)
     departureDetailPrismaRepositoryMock.listDepartureDetail.mockResolvedValue(departureDetailsFoundNothingMock)
-    departureDetailPrismaRepositoryMock.getTotalNumberOfDepartureDetail.mockResolvedValue(departureDetailId)
     departureDetailPrismaRepositoryMock.createDepartureDetail.mockResolvedValue(departureDetailCreated)
     
     const departureDeliveryCreated = await createDepartureDetailUseCase.invoke(parametersMock)
@@ -34,7 +32,6 @@ describe('OPERATION SUCCESS', () => {
   test('Should create a delivery plan model successfully when a departure already exists', async () => {
     deliveryPlanModelPrismaRepositoryMock.getDeliveryPlanModelById.mockResolvedValue(deliveryPlanModelFoundMock)
     departureDetailPrismaRepositoryMock.listDepartureDetail.mockResolvedValue(departureDetailsFoundOneMock)
-    departureDetailPrismaRepositoryMock.getTotalNumberOfDepartureDetail.mockResolvedValue(departureDetailId)
     departureDetailPrismaRepositoryMock.createDepartureDetail.mockResolvedValue(departureDetailCreated)
     
     const departureDeliveryCreated = await createDepartureDetailUseCase.invoke(parametersMock)

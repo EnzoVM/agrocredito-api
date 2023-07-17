@@ -1,8 +1,9 @@
 import BadRequestError from "../../../utils/custom-errors/application-errors/bad.request.error"
 import ProcessError from "../../../utils/custom-errors/application-errors/process.error"
-import DeliveryPlanModel from "../domain/delivery.plan.model"
 import DeliveryPlanModelPersistanceRepository from "../domain/delivery.plan.model.persistance.repository"
 import CampaignPersistanceRepository from "../../campaign/domain/campaign.persistance.repository"
+import DeliveryPlanModelList from "../domain/delivery.plan.model.list.model"
+import DeliveryPlanModelCreate from "../domain/delivery.plan.model.create.mode"
 
 export default class CreateDeliveryPlanModelUseCase {
   constructor(
@@ -16,7 +17,7 @@ export default class CreateDeliveryPlanModelUseCase {
   }:{
     campaignId: string, 
     deliveryPlanModelDescription: string
-  }): Promise<DeliveryPlanModel> {
+  }): Promise<DeliveryPlanModelList> {
     
     if(!campaignId || !deliveryPlanModelDescription){
       throw new BadRequestError({ message: 'Body of the request are null or invalid', core: 'Delivery Plan Model'})
@@ -31,20 +32,17 @@ export default class CreateDeliveryPlanModelUseCase {
       throw new BadRequestError({ message: 'There is no campaign', core: 'Delivery Plan Model'})
     }
     
-    const deliveryPlanModelFound = await this.deliveryPlanModelPersistanceRepository.getDeliveryPlanModelByCampaignId(campaignId)
+    const deliveryPlanModelFound = await this.deliveryPlanModelPersistanceRepository.getDeliveryPlanModelByCampaignId({campaignId})
     if(deliveryPlanModelFound) {
       throw new ProcessError({ message: 'You can only create 1 delivery plan template per campaign', core: 'Delivery Plan Model'})
     }
-    
-    const deliveryPlanModelId = await this.deliveryPlanModelPersistanceRepository.getTotalNumberOfDeliveryPlanModel() + 1
-    
-    const newDeliveryPlanModel = new DeliveryPlanModel({
-      deliveryPlanModelId,
+        
+    const newDeliveryPlanModel: DeliveryPlanModelCreate = {
       campaignId,
       deliveryPlanModelDescription
-    })
-
-    const deliveryPlanModelCreated = await this.deliveryPlanModelPersistanceRepository.createDeliveryPlanModel(newDeliveryPlanModel)
+    }
+    
+    const deliveryPlanModelCreated = await this.deliveryPlanModelPersistanceRepository.createDeliveryPlanModel({deliveryPlanModel: newDeliveryPlanModel})
 
     return deliveryPlanModelCreated
   }

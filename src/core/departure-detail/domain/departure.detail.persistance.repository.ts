@@ -1,11 +1,11 @@
-import DepartureDetail from "./departure.detail.model"
+import DepartureDetailCreate from "./departure.detail.create.model"
+import DepartureDetailList from "./departure.detail.list.model"
 
 export default interface DepartureDetailPersistanceRepository {
 
-  createDepartureDetail: (departureDetail: DepartureDetail) => Promise<DepartureDetail>
-  listDepartureDetail: (deliveryPlanModelId: number) => Promise<DepartureDetail[]>
-  deleteDepartureDetail: (departureDetailId: number) => Promise<DepartureDetail>
-  getTotalNumberOfDepartureDetail: () => Promise<number>
-  getDepartureDetailByCampaignId: (campaignId: string) => Promise<DepartureDetail[] | null>
+  createDepartureDetail: ({departureDetail}:{departureDetail: DepartureDetailCreate}) => Promise<DepartureDetailList>
+  listDepartureDetail: ({deliveryPlanModelId}:{deliveryPlanModelId: number}) => Promise<DepartureDetailList[]>
+  deleteDepartureDetail: ({departureDetailId}:{departureDetailId: number}) => Promise<DepartureDetailList>
+  getDepartureDetailByCampaignId: ({campaignId}:{campaignId: string}) => Promise<DepartureDetailList[] | null>
 
 }

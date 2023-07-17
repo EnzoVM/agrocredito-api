@@ -7,14 +7,14 @@ import { ResponseCodes } from '../utils/standar-response/response.codes'
 
 const listAllAssistanceTypeUseCase = new ListAllAssistanceTypeUseCase(new AssistanceTypePrismaRepository)
 
-export const listAllAssistanceTypeHandle = async (req: Request, res: Response, next: NextFunction) => {
+export const listAllAssistanceTypeHandle = async (_req: Request, res: Response, next: NextFunction) => {
   try {
     const assistanceTypeList = await listAllAssistanceTypeUseCase.invoke()
 
     new ResponseModel({
       statusCode: ResponseStatusCodes.SUCCESS_REQUEST,
       code: ResponseCodes.SUCCESS_REQUEST,
-      message: 'The delivery plan model has been created successfully',
+      message: 'List of all assistance type',
       data: assistanceTypeList
     }).send(res)
 

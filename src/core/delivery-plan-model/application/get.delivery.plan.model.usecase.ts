@@ -1,5 +1,5 @@
 import ProcessError from "../../../utils/custom-errors/application-errors/process.error"
-import DeliveryPlanModel from "../domain/delivery.plan.model"
+import DeliveryPlanModelList from "../domain/delivery.plan.model.list.model"
 import DeliveryPlanModelPersistanceRepository from "../domain/delivery.plan.model.persistance.repository"
 
 export default class GetDeliveryPlanModelUseCase {
@@ -12,9 +12,9 @@ export default class GetDeliveryPlanModelUseCase {
     campaignId
   }:{
     campaignId: string
-  }): Promise<DeliveryPlanModel> {
+  }): Promise<DeliveryPlanModelList> {
 
-    const deliveryPlanModelFound = await this.deliveryPlanModelPersistanceRepository.getDeliveryPlanModelByCampaignId(campaignId)
+    const deliveryPlanModelFound = await this.deliveryPlanModelPersistanceRepository.getDeliveryPlanModelByCampaignId({campaignId})
     if(!deliveryPlanModelFound){
       throw new ProcessError({ message: 'There is no delivery plan template assigned to this campaign', core: 'Delivery Plan Model'})
     }
