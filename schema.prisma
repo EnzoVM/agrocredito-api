@@ -35,14 +35,14 @@ model farmer {
 }
 
 model sector {
-  sector_id             Int       @id @unique
+  sector_id             Int       @id @unique @default(autoincrement())
   sector_description    String    @db.VarChar(255)
 
   projects              project[]
 }
 
 model project {
-  project_id            Int         @id @unique
+  project_id            Int         @id @unique @default(autoincrement())
   code                  Int         
   project_description   String      @db.VarChar(255)
   sector_id             Int  
@@ -53,14 +53,14 @@ model project {
 }
 
 model farmer_quality {
-  farmer_quality_id             Int       @id @unique
+  farmer_quality_id             Int       @id @unique @default(autoincrement())
   farmer_quality_description    String    @db.VarChar(255)
 
   farmers                       farmer[]
 }
 
 model property_legal_condition {
-  property_legal_condition_id             Int       @id @unique
+  property_legal_condition_id             Int       @id @unique @default(autoincrement())
   property_legal_condition_description    String    @db.VarChar(255)
 
   farmers                                 farmer[]
@@ -75,31 +75,31 @@ model credit_request {
   credit_amount               Decimal     @db.Decimal(19, 4)
   guarantee_description       String      @db.VarChar(255)
   guarantee_amount            Decimal     @db.Decimal(19, 4)
-  tecnique_id                 Int
+  technical_id                 Int
   credit_request_status       String      @db.VarChar(255) @default("Pendiente")
   credit_request_observation  String      @db.VarChar(255)
   create_datetime             DateTime    @default(now())
   update_status_datetime      DateTime?
 
   farmer                      farmer      @relation(fields: [farmer_id], references: [farmer_id])
-  tecnique                    tecnique    @relation(fields: [tecnique_id], references: [tecnique_id])
+  technical                   technical   @relation(fields: [technical_id], references: [technical_id])
   campaign                    campaign    @relation(fields: [campaign_id], references: [campaign_id])
 }
 
-model tecnique {
-  tecnique_id           Int                 @id @unique
-  assistance_type_id    Int
-  tecnique_name         String              @db.VarChar(255)
+model technical {
+  technical_id           Int                 @id @unique @default(autoincrement())
+  assistance_type_id     Int
+  technical_name         String              @db.VarChar(255)
 
   credit_requests       credit_request[]
   assistance_type       assistance_type     @relation(fields: [assistance_type_id], references: [assistance_type_id])
 }
 
 model assistance_type {
-  assistance_type_id            Int       @id @unique
+  assistance_type_id            Int       @id @unique @default(autoincrement())
   assistance_type_description   String    @db.VarChar(30)
 
-  tecniques                     tecnique[]
+  technicals                    technical[]
 }
 
 model campaign {
@@ -117,7 +117,7 @@ model campaign {
 }
 
 model campaign_type {
-  campaign_type_id            Int       @id @unique
+  campaign_type_id            Int       @id @unique @default(autoincrement())
   campaign_type_description   String    @db.VarChar(255)
   period_quantity             Int
 
@@ -125,7 +125,7 @@ model campaign_type {
 }
 
 model delivery_plan_model {
-  delivery_plan_model_id            Int                   @id @unique
+  delivery_plan_model_id            Int                   @id @unique @default(autoincrement())
   campaign_id                       String                @db.VarChar(255) @unique
   delivery_plan_model_description   String                @db.VarChar(255)
 
@@ -134,7 +134,7 @@ model delivery_plan_model {
 }
 
 model departure_detail {
-  departure_detail_id                 Int                   @id @unique
+  departure_detail_id                 Int                   @id @unique @default(autoincrement())
   delivery_plan_model_id              Int   
   departure_detail_description        String                @db.VarChar(255)
   departure_type                      String                @db.VarChar(35)

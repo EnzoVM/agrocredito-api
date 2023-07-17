@@ -6,5 +6,6 @@ export default interface DepartureDetailPersistanceRepository {
   listDepartureDetail: (deliveryPlanModelId: number) => Promise<DepartureDetail[]>
   deleteDepartureDetail: (departureDetailId: number) => Promise<DepartureDetail>
   getTotalNumberOfDepartureDetail: () => Promise<number>
-  
+  getDepartureDetailByCampaignId: (campaignId: string) => Promise<DepartureDetail[] | null>
+
 }

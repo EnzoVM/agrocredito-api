@@ -6,7 +6,7 @@ import UnavailableError from "../../../utils/custom-errors/infrastructure-errors
 const prisma = new PrismaConnection().connection
 
 export default class DepartureDetailPrismaRepository implements DepartureDetailPersistanceRepository {
-   
+
   async createDepartureDetail (departureDetail: DepartureDetail): Promise<DepartureDetail>{
     try {
       const departureDetailCreated = await prisma.departure_detail.create({
@@ -87,6 +87,35 @@ export default class DepartureDetailPrismaRepository implements DepartureDetailP
       return numOfDepartureDetailFound
 
     } catch (error: any) {
+      throw new UnavailableError({ message: error.message, core: 'Departure Detail' })
+    }
+  }
+
+  async getDepartureDetailByCampaignId (campaignId: string): Promise<DepartureDetail[] | null>{
+    try {
+      const departureDetailFound = await prisma.delivery_plan_model.findUnique({
+        where: {
+          campaign_id: campaignId
+        },
+        select: {
+          departure_detail: true
+        }
+      })
+
+      if(!departureDetailFound) { return null }
+
+      return departureDetailFound.departure_detail.map(departure => {
+        return {
+          departureDetailId: departure.departure_detail_id,
+          deliveryPlanModelId: departure.delivery_plan_model_id,
+          departureDetailDescription: departure.departure_detail_description,
+          departureType: departure.departure_type,
+          resource: departure.resource,
+          amountPerHectare: Number(departure.amount_per_hectare),
+        }
+      })
+      
+    } catch (error:any) {
       throw new UnavailableError({ message: error.message, core: 'Departure Detail' })
     }
   }

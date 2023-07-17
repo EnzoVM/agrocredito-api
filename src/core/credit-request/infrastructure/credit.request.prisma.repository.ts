@@ -91,4 +91,70 @@ export default class CreditRequestPrimaRepository implements CreditRequestPersis
       throw new UnavailableError({ message: error.message, core: 'credit-request' })
     }
   }
+
+  async createCreditRequest ({ creditRequest }: { creditRequest: CreditRequest }): Promise<CreditRequest> {
+    try {
+      const creditRequestCreated = await prisma.credit_request.create({
+        data: {
+          credit_request_id: creditRequest.creditRequestId,
+          farmer_id: creditRequest.farmerId,
+          campaign_id: creditRequest.campaignId,
+          hectare_number: creditRequest.hectareNumber,
+          credit_reason: creditRequest.creditReason,
+          credit_amount: creditRequest.creditAmount,
+          guarantee_description: creditRequest.guaranteeDescription,
+          guarantee_amount: creditRequest.guaranteeAmount,
+          tecnique_id: creditRequest.tecniqueId,
+          credit_request_status: creditRequest.creditRequestStatus,
+          credit_request_observation: creditRequest.creditRequestObservation
+        }
+      })
+
+      return {
+        creditRequestId: creditRequestCreated.credit_request_id,
+        farmerId: creditRequestCreated.farmer_id,
+        campaignId: creditRequestCreated.campaign_id,
+        hectareNumber: creditRequestCreated.hectare_number,
+        creditReason: creditRequestCreated.credit_reason,
+        creditAmount: Number(creditRequestCreated.credit_amount),
+        guaranteeDescription: creditRequestCreated.guarantee_description,
+        guaranteeAmount: Number(creditRequestCreated.guarantee_amount),
+        tecniqueId: creditRequestCreated.tecnique_id,
+        creditRequestStatus: creditRequestCreated.credit_request_status,
+        creditRequestObservation: creditRequestCreated.credit_request_observation
+      }
+
+    } catch (error: any) {
+      throw new UnavailableError({ message: error.message, core: 'credit-request' })
+    }
+  }
+
+  async getCreditRequestByFarmerId ({ farmerId }: { farmerId: string }): Promise<CreditRequest[]> {
+    try {
+      const creditRequestFound = await prisma.credit_request.findMany({
+        where: {
+          farmer_id: farmerId
+        }
+      })
+
+      return creditRequestFound.map(credit => {
+        return {
+          creditRequestId: credit.credit_request_id,
+          farmerId: credit.farmer_id,
+          campaignId: credit.campaign_id,
+          hectareNumber: credit.hectare_number,
+          creditReason: credit.credit_reason,
+          creditAmount: Number(credit.credit_amount),
+          guaranteeDescription: credit.guarantee_description,
+          guaranteeAmount: Number(credit.guarantee_amount),
+          tecniqueId: credit.tecnique_id,
+          creditRequestStatus: credit.credit_request_status,
+          creditRequestObservation: credit.credit_request_observation
+        }
+      })
+      
+    } catch (error: any) {
+      throw new UnavailableError({ message: error.message, core: 'credit-request' })
+    }
+  }
 }
