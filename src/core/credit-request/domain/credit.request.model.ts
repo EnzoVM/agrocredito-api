@@ -8,7 +8,7 @@ export default class CreditRequest {
   creditAmount: number
   guaranteeDescription: string
   guaranteeAmount: number
-  tecniqueId: number
+  technicalId: number
   creditRequestStatus: string
   creditRequestObservation: string
 
@@ -21,7 +21,7 @@ export default class CreditRequest {
     creditAmount, 
     guaranteeDescription, 
     guaranteeAmount, 
-    tecniqueId, 
+    technicalId, 
     creditRequestStatus, 
     creditRequestObservation 
   }: { 
@@ -33,7 +33,7 @@ export default class CreditRequest {
     creditAmount: number, 
     guaranteeDescription: string, 
     guaranteeAmount: number, 
-    tecniqueId: number, 
+    technicalId: number, 
     creditRequestStatus: string, 
     creditRequestObservation: string 
   }) {
@@ -45,7 +45,7 @@ export default class CreditRequest {
     this.creditAmount = creditAmount
     this.guaranteeDescription = guaranteeDescription
     this.guaranteeAmount = guaranteeAmount
-    this.tecniqueId = tecniqueId
+    this.technicalId = technicalId
     this.creditRequestStatus = creditRequestStatus
     this.creditRequestObservation = creditRequestObservation
   }

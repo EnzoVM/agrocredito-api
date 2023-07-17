@@ -26,7 +26,7 @@ export default class CreditRequestPrimaRepository implements CreditRequestPersis
           creditAmount: Number(credit.credit_amount),
           guaranteeDescription: credit.guarantee_description,
           guaranteeAmount: Number(credit.guarantee_amount),
-          tecniqueId: credit.tecnique_id,
+          technicalId: credit.technical_id,
           creditRequestStatus: credit.credit_request_status,
           creditRequestObservation: credit.credit_request_observation
         }
@@ -104,7 +104,7 @@ export default class CreditRequestPrimaRepository implements CreditRequestPersis
           credit_amount: creditRequest.creditAmount,
           guarantee_description: creditRequest.guaranteeDescription,
           guarantee_amount: creditRequest.guaranteeAmount,
-          tecnique_id: creditRequest.tecniqueId,
+          technical_id: creditRequest.technicalId,
           credit_request_status: creditRequest.creditRequestStatus,
           credit_request_observation: creditRequest.creditRequestObservation
         }
@@ -119,7 +119,7 @@ export default class CreditRequestPrimaRepository implements CreditRequestPersis
         creditAmount: Number(creditRequestCreated.credit_amount),
         guaranteeDescription: creditRequestCreated.guarantee_description,
         guaranteeAmount: Number(creditRequestCreated.guarantee_amount),
-        tecniqueId: creditRequestCreated.tecnique_id,
+        technicalId: creditRequestCreated.technical_id,
         creditRequestStatus: creditRequestCreated.credit_request_status,
         creditRequestObservation: creditRequestCreated.credit_request_observation
       }
@@ -147,7 +147,7 @@ export default class CreditRequestPrimaRepository implements CreditRequestPersis
           creditAmount: Number(credit.credit_amount),
           guaranteeDescription: credit.guarantee_description,
           guaranteeAmount: Number(credit.guarantee_amount),
-          tecniqueId: credit.tecnique_id,
+          technicalId: credit.technical_id,
           creditRequestStatus: credit.credit_request_status,
           creditRequestObservation: credit.credit_request_observation
         }
