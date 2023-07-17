@@ -14,6 +14,7 @@ describe('Create Campaign module test suites', () => {
   } = {
     creditRequests: [
       {
+        creditRequestId: '1288822',
         campaignId: 'ARR012023',
         fullNames: 'EZNO GIULIANO VILLANUEVA MENDEZ',
         creditAmount: 1000,
@@ -22,6 +23,7 @@ describe('Create Campaign module test suites', () => {
         creditRequestStatus: 'Rechazado',
       },
       {
+        creditRequestId: '1288823',
         campaignId: 'ARR012023',
         fullNames: 'EZNO GIULIANO VILLANUEVA MENDEZ',
         creditAmount: 1000,
@@ -30,6 +32,7 @@ describe('Create Campaign module test suites', () => {
         creditRequestStatus: 'Rechazado',
       },
       {
+        creditRequestId: '1288824',
         campaignId: 'ARR012023',
         fullNames: 'EZNO GIULIANO VILLANUEVA MENDEZ',
         creditAmount: 1000,
