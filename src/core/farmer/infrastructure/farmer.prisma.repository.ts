@@ -186,6 +186,7 @@ export default class FarmerPrismaRepository implements FarmerPersistanceReposito
     propertySectorId: number
     propertyProjectId: number
   }): Promise<number> {
+    const FIRST_FARMER_CORRELATIVE = 0
     try {
       const farmer = await prisma.farmer.findMany({
         where: {
@@ -196,6 +197,11 @@ export default class FarmerPrismaRepository implements FarmerPersistanceReposito
           correlative: 'desc'
         }
       })
+
+      if (!farmer[0]) {
+        return FIRST_FARMER_CORRELATIVE
+      }
+
       return farmer[0].correlative
     } catch (error: any) {
       throw new UnavailableError({ message: error.message, core: 'farmer' })

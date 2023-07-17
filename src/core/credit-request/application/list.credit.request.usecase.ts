@@ -23,7 +23,6 @@ export default class ListCreditRequestUseCase {
     limit: number
   }): Promise<{ creditRequests: CreditRequestList[], count: number }> {
     if (
-      !farmerType ||
       !page ||
       !limit
     ) {
@@ -44,7 +43,7 @@ export default class ListCreditRequestUseCase {
     let finalCreditRequest: CreditRequestList[] = []
 
     if (farmerType === FarmerType.INDIVIDUAL) {
-      if (!farmerFullNames) {
+      if (typeof farmerFullNames === 'undefined') {
         throw new BadRequestError({ message: 'Body of the request are null or invalid', core: 'credit-request' })
       }
 
@@ -55,7 +54,7 @@ export default class ListCreditRequestUseCase {
     }
 
     if (farmerType === FarmerType.ASSOCIATION) {
-      if (!farmerSocialReason) {
+      if (typeof farmerSocialReason === 'undefined') {
         throw new BadRequestError({ message: 'Body of the request are null or invalid', core: 'credit-request' })
       }
   

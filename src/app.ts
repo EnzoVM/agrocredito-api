@@ -16,6 +16,8 @@ import departureDetailRouter from './routes/departure.detail.routes'
 import farmerRouter from './routes/farmer.routes'
 import projectRouter from './routes/project.routes'
 import creditRequestRouter from './routes/credit.request.routes'
+import assistanceTypeRouter from './routes/assistance.type.routes'
+import technicalRouter from './routes/technical.routes'
 
 dotenv.config()
 const app = express()
@@ -44,6 +46,8 @@ app.use('/api/v1/departure-detail', departureDetailRouter)
 app.use('/api/v1/farmers', farmerRouter)
 app.use('/api/v1/projects', projectRouter)
 app.use('/api/v1/credit-requests', creditRequestRouter)
+app.use('/api/v1/assistance-type', assistanceTypeRouter)
+app.use('/api/v1/technical', technicalRouter)
 
 app.use(notFound)
 app.use(responseError)

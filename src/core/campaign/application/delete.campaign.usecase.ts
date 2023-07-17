@@ -13,7 +13,7 @@ export default class DeleteCampaignUseCase {
 
   async invoke ({campaignId}:{campaignId: string}): Promise<string> {
 
-    const creditRequestList = await this.creditRequestPersistanceRepository.listCreditRequestByCampaignId(campaignId)
+    const creditRequestList = await this.creditRequestPersistanceRepository.listCreditRequestByCampaignId({campaignId})
     if(creditRequestList.length > 0) {
       throw new ProcessError({ message: 'It cannot be deleted because there are requests for associated credits', core: 'Campaign'})
     }  

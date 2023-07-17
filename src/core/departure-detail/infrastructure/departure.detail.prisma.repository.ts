@@ -1,17 +1,17 @@
-import DepartureDetail from "../domain/departure.detail.model"
 import DepartureDetailPersistanceRepository from "../domain/departure.detail.persistance.repository"
 import PrismaConnection from "../../../prisma/prisma.connection"
 import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error"
+import DepartureDetailCreate from "../domain/departure.detail.create.model"
+import DepartureDetailList from "../domain/departure.detail.list.model"
 
 const prisma = new PrismaConnection().connection
 
 export default class DepartureDetailPrismaRepository implements DepartureDetailPersistanceRepository {
-   
-  async createDepartureDetail (departureDetail: DepartureDetail): Promise<DepartureDetail>{
+
+  async createDepartureDetail ({departureDetail}:{departureDetail: DepartureDetailCreate}): Promise<DepartureDetailList>{
     try {
       const departureDetailCreated = await prisma.departure_detail.create({
         data: {
-          departure_detail_id: departureDetail.departureDetailId,
           delivery_plan_model_id: departureDetail.deliveryPlanModelId,
           departure_detail_description: departureDetail.departureDetailDescription,
           departure_type: departureDetail.departureType,
@@ -34,7 +34,7 @@ export default class DepartureDetailPrismaRepository implements DepartureDetailP
     }
   }
 
-  async listDepartureDetail (deliveryPlanModelId: number): Promise<DepartureDetail[]>{
+  async listDepartureDetail ({deliveryPlanModelId}:{deliveryPlanModelId: number}): Promise<DepartureDetailList[]>{
     try {
       const departureDetailList = await prisma.departure_detail.findMany({
         where: {
@@ -58,7 +58,7 @@ export default class DepartureDetailPrismaRepository implements DepartureDetailP
     }
   }
 
-  async deleteDepartureDetail (departureDetailId: number): Promise<DepartureDetail>{
+  async deleteDepartureDetail ({departureDetailId}:{departureDetailId: number}): Promise<DepartureDetailList>{
     try {
       const departureDetailDeleted = await prisma.departure_detail.delete({
         where: {
@@ -80,13 +80,31 @@ export default class DepartureDetailPrismaRepository implements DepartureDetailP
     }
   }
 
-  async getTotalNumberOfDepartureDetail (): Promise<number>{
+  async getDepartureDetailByCampaignId ({campaignId}:{campaignId: string}): Promise<DepartureDetailList[] | null>{
     try {
-      const numOfDepartureDetailFound = await prisma.departure_detail.count()
+      const departureDetailFound = await prisma.delivery_plan_model.findUnique({
+        where: {
+          campaign_id: campaignId
+        },
+        select: {
+          departure_detail: true
+        }
+      })
 
-      return numOfDepartureDetailFound
+      if(!departureDetailFound) { return null }
 
-    } catch (error: any) {
+      return departureDetailFound.departure_detail.map(departure => {
+        return {
+          departureDetailId: departure.departure_detail_id,
+          deliveryPlanModelId: departure.delivery_plan_model_id,
+          departureDetailDescription: departure.departure_detail_description,
+          departureType: departure.departure_type,
+          resource: departure.resource,
+          amountPerHectare: Number(departure.amount_per_hectare),
+        }
+      })
+      
+    } catch (error:any) {
       throw new UnavailableError({ message: error.message, core: 'Departure Detail' })
     }
   }
