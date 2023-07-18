@@ -3,6 +3,8 @@ import CreditRequestPersistanceRepository from "../domain/credit.request.persist
 import PrismaConnection from "../../../prisma/prisma.connection"
 import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error"
 import CreditRequestList from "../domain/credit.request.list.model"
+import CreditRequestDetail from "../domain/credit.request.detail.model"
+import { CreditRequestStatusType } from "../domain/credit.request.status.type"
 
 const prisma = new PrismaConnection().connection
 
@@ -153,6 +155,67 @@ export default class CreditRequestPrimaRepository implements CreditRequestPersis
         }
       })
       
+    } catch (error: any) {
+      throw new UnavailableError({ message: error.message, core: 'credit-request' })
+    }
+  }
+
+  async getCreditRequestById ({ creditRequestId }: { creditRequestId: string }): Promise<CreditRequestDetail | null> {
+    try {
+      const creditRequestFound = await prisma.credit_request.findUnique({
+        where: {
+          credit_request_id: creditRequestId
+        },
+        include: {
+          farmer: true,
+          technical: {
+            include: {
+              assistance_type: true
+            }
+          }
+        },
+      })
+
+      if (!creditRequestFound) {
+        return null
+      }
+
+      return {
+        creditRequestId: creditRequestFound.credit_request_id,
+        farmerId: creditRequestFound.farmer.farmer_id,
+        farmerFullNames: creditRequestFound.farmer.full_names || undefined,
+        farmerSocialReason: creditRequestFound.farmer.social_reason || undefined,
+        campaignId: creditRequestFound.campaign_id,
+        hectareNumber: creditRequestFound.hectare_number,
+        creditReason: creditRequestFound.credit_reason,
+        creditAmount: Number(creditRequestFound.credit_amount),
+        guaranteeDescription: creditRequestFound.guarantee_description,
+        guaranteeAmount: Number(creditRequestFound.guarantee_amount),
+        technicalName: creditRequestFound.technical.technical_name,
+        assistanceTypeDescription: creditRequestFound.technical.assistance_type.assistance_type_description,
+        creditRequestStatus: creditRequestFound.credit_request_status,
+        creditRequestObservation: creditRequestFound.credit_request_observation,
+        createDateTime: creditRequestFound.create_datetime,
+        updateStatusDateTime: creditRequestFound.update_status_datetime || undefined
+      }
+    } catch (error: any) {
+      throw new UnavailableError({ message: error.message, core: 'credit-request' })
+    }
+  }
+
+  async updateCreditRequestStatusById ({ creditRequestStatus, creditRequestId, updateStatusDateTime }: { creditRequestStatus: CreditRequestStatusType, creditRequestId: string, updateStatusDateTime: Date }): Promise<string> {
+    try {
+      await prisma.credit_request.update({
+        data: {
+          credit_request_status: creditRequestStatus,
+          update_status_datetime: updateStatusDateTime
+        },
+        where: {
+          credit_request_id: creditRequestId
+        }
+      })
+
+      return 'Update successfully'
     } catch (error: any) {
       throw new UnavailableError({ message: error.message, core: 'credit-request' })
     }
