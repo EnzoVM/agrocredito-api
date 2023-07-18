@@ -1,5 +1,6 @@
 export enum CreditRequestStatusType {
   APROVED = 'Aprobado',
   PENDING = 'Pendiente',
-  REFUSED = 'Rechazado'
+  REFUSED = 'Rechazado',
+  PAID = 'Pagado'
 }

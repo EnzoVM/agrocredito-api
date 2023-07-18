@@ -1,10 +1,10 @@
-import BadRequestError from "../../../utils/custom-errors/application-errors/bad.request.error";
-import ProcessError from "../../../utils/custom-errors/application-errors/process.error";
-import DepartureDetailPersistanceRepository from "../../departure-detail/domain/departure.detail.persistance.repository";
-import FarmerPersistanceRepository from "../../farmer/domain/farmer.persistance.repository";
-import CreditRequestIdGeneratorRepository from "../domain/credit.request.id.generator.repository";
+import BadRequestError from "../../../utils/custom-errors/application-errors/bad.request.error"
+import ProcessError from "../../../utils/custom-errors/application-errors/process.error"
+import DepartureDetailPersistanceRepository from "../../departure-detail/domain/departure.detail.persistance.repository"
+import FarmerPersistanceRepository from "../../farmer/domain/farmer.persistance.repository"
+import CreditRequestIdGeneratorRepository from "../domain/credit.request.id.generator.repository"
 import CreditRequestCreate from "../domain/credit.request.create.model"
-import CreditRequestPersistanceRepository from "../domain/credit.request.persistance.repository";
+import CreditRequestPersistanceRepository from "../domain/credit.request.persistance.repository"
 
 export default class CreateCreditRequestUseCase {
 
@@ -78,7 +78,6 @@ export default class CreateCreditRequestUseCase {
     for (const credit of creditRequestFound) { suma += credit.hectareNumber }
 
     const farmerFound = await this.farmerPersistanceRepository.getFarmerById({farmerId})
-    console.log(farmerFound);
     
     if(!farmerFound) { 
       throw new BadRequestError({ message: 'El usuario elegido no existe', core: 'Credit Request'}) 
