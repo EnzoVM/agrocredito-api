@@ -65,6 +65,20 @@ describe('Create Campaign module test suites', () => {
         creditRequestStatus: CreditRequestStatusType.APROVED, 
         farmerFullNames: "Josue", 
         page: 1,
+        limit: 0
+      })
+
+      expect(creditRequests.creditRequests.length).toBe(3)
+      expect(creditRequests.count).toBe(3)
+    })
+
+    test('List indiivduals farmers successfully', async () => {
+      const creditRequests = await listCreditRequestUseCase.list({
+        campaignId: 'ARR012023',
+        farmerType: FarmerType.ALL, 
+        creditRequestStatus: CreditRequestStatusType.APROVED, 
+        farmerFullNames: "Josue", 
+        page: 1,
         limit: 2
       })
 
