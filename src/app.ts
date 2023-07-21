@@ -3,6 +3,7 @@ import express, { type Request, type Response } from 'express'
 import morgan from 'morgan'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
+import './core/log-record/infrastructure/mongodb.connection'
 import ResponseModel from './utils/standar-response/response.model'
 import { ResponseCodes } from './utils/standar-response/response.codes'
 import { ResponseStatusCodes } from './utils/standar-response/response.status.codes'
@@ -18,6 +19,7 @@ import projectRouter from './routes/project.routes'
 import creditRequestRouter from './routes/credit.request.routes'
 import assistanceTypeRouter from './routes/assistance.type.routes'
 import technicalRouter from './routes/technical.routes'
+import logRecordRouter from './routes/log.record.routes'
 
 dotenv.config()
 const app = express()
@@ -48,6 +50,7 @@ app.use('/api/v1/projects', projectRouter)
 app.use('/api/v1/credit-requests', creditRequestRouter)
 app.use('/api/v1/assistance-type', assistanceTypeRouter)
 app.use('/api/v1/technical', technicalRouter)
+app.use('/api/v1/log-record', logRecordRouter)
 
 app.use(notFound)
 app.use(responseError)
