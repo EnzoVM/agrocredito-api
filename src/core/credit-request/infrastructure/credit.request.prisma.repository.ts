@@ -53,14 +53,14 @@ export default class CreditRequestPrimaRepository implements CreditRequestPersis
     }
   }
 
-  async listCreditRequest ({ campaignId, farmerType, creditRequestStatus, farmerFullNames, farmerSocialReason }: { campaignId: string, farmerType: "Individual" | "Asociación", creditRequestStatus?: string, farmerFullNames?: string | undefined, farmerSocialReason?: string | undefined }): Promise<{ creditRequests: CreditRequestList[], count: number }> {
+  async listCreditRequest ({ campaignId, farmerType, creditRequestStatus, farmerFullNames, farmerSocialReason }: { campaignId: string, farmerType: 'Individual' | 'Asociación' | 'All', creditRequestStatus?: string, farmerFullNames?: string | undefined, farmerSocialReason?: string | undefined }): Promise<{ creditRequests: CreditRequestList[], count: number }> {
     try {
       const creaditRequestFound = await prisma.credit_request.findMany({
         where: {
           campaign_id: campaignId,
           credit_request_status: creditRequestStatus,
           farmer: {
-            farmer_type: farmerType,
+            farmer_type: farmerType === 'All' ? undefined : farmerType,
             full_names: {
               contains: farmerFullNames
             },
