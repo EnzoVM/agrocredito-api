@@ -25,9 +25,9 @@ export default class ListCreditRequestUseCase {
     limit: number
   }): Promise<{ creditRequests: CreditRequestList[], count: number }> {
     if (
-      !campaignId ||
-      !page ||
-      !limit
+      typeof campaignId === 'undefined' ||
+      typeof page === 'undefined' ||
+      typeof limit === 'undefined'
     ) {
       throw new BadRequestError({ message: 'Body of the request are null or invalid', core: 'credit-request' })
     }
@@ -74,13 +74,15 @@ export default class ListCreditRequestUseCase {
       finalCount = count
     }
 
-    const startIndex = (page - 1) * limit
-    const endIndex = page * limit
-
-    const creditRequestsSliced = finalCreditRequest.slice(startIndex, endIndex)
+    if (limit > 0) {
+      const startIndex = (page - 1) * limit
+      const endIndex = page * limit
+  
+      finalCreditRequest = finalCreditRequest.slice(startIndex, endIndex)
+    }
 
     return {
-      creditRequests: creditRequestsSliced,
+      creditRequests: finalCreditRequest,
       count: finalCount
     }
   }
