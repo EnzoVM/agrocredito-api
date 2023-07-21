@@ -85,6 +85,20 @@ describe('Create Campaign module test suites', () => {
       expect(creditRequests.creditRequests.length).toBe(2)
       expect(creditRequests.count).toBe(3)
     })
+
+    test('List asociation farmers successfully', async () => {
+      const creditRequests = await listCreditRequestUseCase.list({
+        campaignId: 'ARR012023',
+        farmerType: FarmerType.ALL, 
+        creditRequestStatus: CreditRequestStatusType.APROVED, 
+        farmerSocialReason: "Josue", 
+        page: 1,
+        limit: 2
+      })
+
+      expect(creditRequests.creditRequests.length).toBe(2)
+      expect(creditRequests.count).toBe(3)
+    })
   })
 
   describe('BAD REQUEST', () => {

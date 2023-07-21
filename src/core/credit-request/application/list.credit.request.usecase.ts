@@ -67,6 +67,13 @@ export default class ListCreditRequestUseCase {
       finalCount = count
     }
 
+    if (farmerType === FarmerType.ALL) {
+      const { creditRequests, count } = await this.creditRequestPersistanceRepository.listCreditRequest({ campaignId, farmerType, creditRequestStatus })
+  
+      finalCreditRequest = creditRequests
+      finalCount = count
+    }
+
     const startIndex = (page - 1) * limit
     const endIndex = page * limit
 
