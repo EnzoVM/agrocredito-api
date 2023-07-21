@@ -27,6 +27,7 @@ export const listCreditRequestHandler = async (request: Request, response: Respo
 
   try {
     const {
+      campaignId,
       farmerType, 
       creditRequestStatus, 
       farmerFullNames, 
@@ -36,6 +37,7 @@ export const listCreditRequestHandler = async (request: Request, response: Respo
     } = JSON.parse(filters)
 
     const { creditRequests, count } = await listCreditRequestUseCase.list({
+      campaignId,
       farmerType,
       creditRequestStatus,
       farmerFullNames,
