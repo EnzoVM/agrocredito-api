@@ -10,11 +10,11 @@ const logRecordSchema = new Schema({
     require: true
   },
   initRequestTime: {
-    type: String,
+    type: Date,
     require: true
   },
   endRequestTime: {
-    type: String,
+    type: Date,
     default: null
   }
 }, {
