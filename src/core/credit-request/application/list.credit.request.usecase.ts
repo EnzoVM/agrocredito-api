@@ -8,6 +8,7 @@ export default class ListCreditRequestUseCase {
   constructor (private readonly creditRequestPersistanceRepository: CreditRequestPersistanceRepository) {}
 
   async list ({ 
+    campaignId,
     farmerType,
     creditRequestStatus,
     farmerFullNames,
@@ -15,6 +16,7 @@ export default class ListCreditRequestUseCase {
     page,
     limit
   }: {
+    campaignId: string,
     farmerType: FarmerType, 
     creditRequestStatus?: CreditRequestStatusType, 
     farmerFullNames?: string, 
@@ -23,6 +25,7 @@ export default class ListCreditRequestUseCase {
     limit: number
   }): Promise<{ creditRequests: CreditRequestList[], count: number }> {
     if (
+      !campaignId ||
       !page ||
       !limit
     ) {
@@ -47,7 +50,7 @@ export default class ListCreditRequestUseCase {
         throw new BadRequestError({ message: 'Body of the request are null or invalid', core: 'credit-request' })
       }
 
-      const { creditRequests, count } = await this.creditRequestPersistanceRepository.listCreditRequest({ farmerType, creditRequestStatus, farmerFullNames })
+      const { creditRequests, count } = await this.creditRequestPersistanceRepository.listCreditRequest({ campaignId, farmerType, creditRequestStatus, farmerFullNames })
 
       finalCreditRequest = creditRequests
       finalCount = count
@@ -58,7 +61,7 @@ export default class ListCreditRequestUseCase {
         throw new BadRequestError({ message: 'Body of the request are null or invalid', core: 'credit-request' })
       }
   
-      const { creditRequests, count } = await this.creditRequestPersistanceRepository.listCreditRequest({ farmerType, creditRequestStatus, farmerFullNames })
+      const { creditRequests, count } = await this.creditRequestPersistanceRepository.listCreditRequest({ campaignId, farmerType, creditRequestStatus, farmerFullNames })
   
       finalCreditRequest = creditRequests
       finalCount = count

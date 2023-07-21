@@ -60,6 +60,7 @@ describe('Create Campaign module test suites', () => {
   describe('OPERATION SUCCESS', () => {
     test('List indiivduals farmers successfully', async () => {
       const creditRequests = await listCreditRequestUseCase.list({
+        campaignId: 'ARR012023',
         farmerType: FarmerType.INDIVIDUAL, 
         creditRequestStatus: CreditRequestStatusType.APROVED, 
         farmerFullNames: "Josue", 
@@ -73,6 +74,7 @@ describe('Create Campaign module test suites', () => {
 
     test('List asociation farmers successfully', async () => {
       const creditRequests = await listCreditRequestUseCase.list({
+        campaignId: 'ARR012023',
         farmerType: FarmerType.ASSOCIATION, 
         creditRequestStatus: CreditRequestStatusType.APROVED, 
         farmerSocialReason: "Josue", 
@@ -90,6 +92,7 @@ describe('Create Campaign module test suites', () => {
       try {
         // @ts-ignore
         await listCreditRequestUseCase.list({
+          campaignId: 'ARR012023',
           farmerType: FarmerType.ASSOCIATION, 
           creditRequestStatus: CreditRequestStatusType.APROVED, 
           farmerSocialReason: "Josue", 
@@ -104,6 +107,7 @@ describe('Create Campaign module test suites', () => {
     test('Should throw bad request error when send invalid farmer type', async () => {
       try {
         await listCreditRequestUseCase.list({
+          campaignId: 'ARR012023',
           // @ts-ignore
           farmerType: 'test', 
           creditRequestStatus: CreditRequestStatusType.APROVED, 
@@ -119,6 +123,7 @@ describe('Create Campaign module test suites', () => {
     test('Should throw bad request error when send invalid credit request type', async () => {
       try {
         await listCreditRequestUseCase.list({
+          campaignId: 'ARR012023',
           farmerType: FarmerType.INDIVIDUAL,
           // @ts-ignore
           creditRequestStatus: 'test', 
@@ -134,6 +139,7 @@ describe('Create Campaign module test suites', () => {
     test('Should throw bad request error when no send full names', async () => {
       try {
         await listCreditRequestUseCase.list({
+          campaignId: 'ARR012023',
           farmerType: FarmerType.INDIVIDUAL,
           creditRequestStatus: CreditRequestStatusType.APROVED,
           page: 1,
@@ -147,6 +153,7 @@ describe('Create Campaign module test suites', () => {
     test('Should throw bad request error when no send social reason', async () => {
       try {
         await listCreditRequestUseCase.list({
+          campaignId: 'ARR012023',
           farmerType: FarmerType.ASSOCIATION,
           creditRequestStatus: CreditRequestStatusType.APROVED,
           page: 1,
