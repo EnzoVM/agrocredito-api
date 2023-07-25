@@ -139,7 +139,15 @@ export default class CreditRequestPrimaRepository implements CreditRequestPersis
     try {
       const creditRequestFound = await prisma.credit_request.findMany({
         where: {
-          farmer_id: farmerId
+          farmer_id: farmerId,
+          OR: [
+            { 
+              credit_request_status: 'Aprobado'
+            },
+            { 
+              credit_request_status: 'Pendiente'
+            }
+          ]
         }
       })
 

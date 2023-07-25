@@ -8,7 +8,7 @@ import {
 const listDepartureDetailUseCase = new ListDepartureDetailUseCase(departureDetailPrismaRepositoryMock)
 
 describe('OPERATION SUCCESS', () => {
-  test('Should list departure details successfully', async () => {
+  test('Should return a list departure details successfully', async () => {
     departureDetailPrismaRepositoryMock.listDepartureDetail.mockResolvedValue(departureDetailListMock)
     const departureDetailList = await listDepartureDetailUseCase.invoke({ deliveryPlanModelId: deliveryPlanModelIdMock})
     
