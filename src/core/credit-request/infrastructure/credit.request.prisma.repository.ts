@@ -71,6 +71,9 @@ export default class CreditRequestPrimaRepository implements CreditRequestPersis
         },
         include: {
           farmer: true
+        },
+        orderBy: {
+          create_datetime: 'desc'
         }
       })
 
