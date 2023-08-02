@@ -22,10 +22,10 @@ INSERT INTO property_legal_condition (property_legal_condition_description) VALU
 ("Posesión"),
 ("Titulado");
 
-INSERT INTO sector (sector_description) VALUES
-("Margen izquierda"),
-("Tumbes"),
-("Margen derecha");
+INSERT INTO sector (sector_id, sector_description) VALUES
+(2, "Margen izquierda"),
+(3, "Tumbes"),
+(4, "Margen derecha");
 
 INSERT INTO project (code, project_description, sector_id) VALUES
 (1, "El Palmar", 2),
@@ -94,3 +94,12 @@ INSERT INTO technical (assistance_type_id, technical_name) VALUES
 (5, 'Vinces Martinez Pedro'),
 (5, 'Alvines Sullon Jose Pascu'),
 (5, 'No requiere');
+
+INSERT INTO provider (provider_description) VALUES 
+('BANCO DE LA NACIÓN');
+
+INSERT INTO financial_source (financial_source_description) VALUES 
+('Recuperaciones M.E.');
+
+INSERT INTO current_account (current_account_description) VALUES 
+('007251-1-32');

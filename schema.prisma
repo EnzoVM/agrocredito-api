@@ -151,7 +151,7 @@ model user {
 }
 
 model delivery {
-  departure_detail_id   Int               @id @unique @default(autoincrement())
+  delivery_id   Int               @id @unique @default(autoincrement())
   credit_request_id     String            @db.VarChar(255)
   delivery_datetime     DateTime
   provider_id           Int
