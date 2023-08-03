@@ -24,7 +24,7 @@ const HANDLER_ERROR: ErrorHandler = {
 
 const responseError = (error: NotFoundError | UnauthorizateError | UnavailableError | BadRequestError | ProcessError, request: Request, response: Response, _next: NextFunction) => {
   const responseError = HANDLER_ERROR[error.code || 'default']
-  console.log(error)
+  console.error(error)
   responseError(error, request, response)
 }
 

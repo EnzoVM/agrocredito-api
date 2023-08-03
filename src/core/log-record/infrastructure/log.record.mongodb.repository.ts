@@ -5,11 +5,6 @@ import LogRecord from "./model/log.record.model"
 export default class LogRecordMongoDBRepository implements LogRecordPersistanceRepository {
   async createNewRecord({ resource, method, initRequestTime }: { resource: string, method: string, initRequestTime: Date }): Promise<string> {
     try {
-      console.log({
-        resource,
-        method,
-        initRequestTime
-      })
       const newLogRecord = new LogRecord({
         resource,
         method,
