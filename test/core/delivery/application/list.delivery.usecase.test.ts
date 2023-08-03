@@ -103,7 +103,6 @@ describe('Create Campaign module test suites', () => {
   describe('OPERATION SUCCESS', () => {
     test('List deliveries by individual farmer type successfully', async () => {
       const deliveries = await listDeliveryUseCase.list({
-        campaignId: 'a',
         farmerType: FarmerType.INDIVIDUAL,
         fullNames: 'Josue Medina', 
         page: 1,
@@ -116,7 +115,6 @@ describe('Create Campaign module test suites', () => {
 
     test('List deliveries by individual farmer type successfully', async () => {
       const deliveries = await listDeliveryUseCase.list({
-        campaignId: 'a',
         farmerType: FarmerType.ASSOCIATION,
         socialReason: 'Josue Medina', 
         page: 1,
@@ -133,7 +131,6 @@ describe('Create Campaign module test suites', () => {
       try {
         // @ts-ignore
         await listDeliveryUseCase.list({
-          campaignId: 'a',
           farmerType: FarmerType.ASSOCIATION,
           socialReason: 'Josue Medina', 
           // page: 1,
@@ -147,7 +144,6 @@ describe('Create Campaign module test suites', () => {
     test('Should throw bad request error when send invalid farmer type', async () => {
       try {
         await listDeliveryUseCase.list({
-          campaignId: 'a',
           // @ts-ignore
           farmerType: 'test',
           socialReason: 'Josue Medina', 
@@ -162,7 +158,6 @@ describe('Create Campaign module test suites', () => {
     test('Should throw bad request error when send invalid farmer type', async () => {
       try {
         await listDeliveryUseCase.list({
-          campaignId: 'a',
           farmerType: FarmerType.ALL,
           socialReason: 'Josue Medina', 
           page: 1,
@@ -176,7 +171,6 @@ describe('Create Campaign module test suites', () => {
     test('Should throw bad request error when no send full names', async () => {
       try {
         await listDeliveryUseCase.list({
-          campaignId: 'a',
           farmerType: FarmerType.INDIVIDUAL, 
           page: 1,
           limit: 0
@@ -189,7 +183,6 @@ describe('Create Campaign module test suites', () => {
     test('Should throw bad request error when no send social reason', async () => {
       try {
         await listDeliveryUseCase.list({
-          campaignId: 'a',
           farmerType: FarmerType.ASSOCIATION, 
           page: 1,
           limit: 0

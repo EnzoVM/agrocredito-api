@@ -7,14 +7,12 @@ export default class ListDeliveryUseCase {
   constructor (private readonly deliveryPersistanceRepository: DeliveryPersistanceRepository) {}
 
   async list ({ 
-    campaignId,
     farmerType, 
     fullNames, 
     socialReason,
     page,
     limit
   } : { 
-    campaignId: string,
     farmerType: FarmerType, 
     fullNames?: string, 
     socialReason?: string,
@@ -22,7 +20,6 @@ export default class ListDeliveryUseCase {
     limit: number
   }) {
     if (
-      typeof campaignId === 'undefined' ||
       typeof farmerType === 'undefined' ||
       typeof page === 'undefined' ||
       typeof limit === 'undefined'
@@ -46,7 +43,7 @@ export default class ListDeliveryUseCase {
         throw new BadRequestError({ message: 'You must to specify a valid json', core: 'delivery' })
       }
 
-      const { deliveries, count } = await this.deliveryPersistanceRepository.listDeliveriesByFullNames({ campaignId, fullNames })
+      const { deliveries, count } = await this.deliveryPersistanceRepository.listDeliveriesByFullNames({ fullNames })
       finalDeliveries = deliveries
       finalCount = count
     }
@@ -56,7 +53,7 @@ export default class ListDeliveryUseCase {
         throw new BadRequestError({ message: 'You must to specify a valid json', core: 'delivery' })
       }
   
-      const { deliveries, count } = await this.deliveryPersistanceRepository.listDeliveriesBySocialReason({ campaignId, socialReason })
+      const { deliveries, count } = await this.deliveryPersistanceRepository.listDeliveriesBySocialReason({ socialReason })
   
       finalDeliveries = deliveries
       finalCount = count

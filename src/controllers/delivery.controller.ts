@@ -13,7 +13,6 @@ export const listDeliveriesHandler = async (request: Request, response: Response
 
   try {
     const {
-      campaignId,
       farmerType,
       fullNames,
       socialReason,
@@ -22,7 +21,6 @@ export const listDeliveriesHandler = async (request: Request, response: Response
     } = JSON.parse(filters)
 
     const deliveriesFound = await listDeliveryUseCase.list({
-      campaignId,
       farmerType,
       fullNames,
       socialReason,

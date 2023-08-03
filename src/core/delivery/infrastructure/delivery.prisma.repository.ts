@@ -5,7 +5,7 @@ import DeliveryPersistanceRepository from "../domain/delivery.persistance.respos
 const prisma = new PrismaConnection().connection
 
 export default class DeliveryPrismaRepository implements DeliveryPersistanceRepository {
-  async listDeliveriesBySocialReason ({ campaignId, socialReason }: { campaignId: string, socialReason: string }): Promise<{ deliveries: DeliveryListModel[], count: number }> {
+  async listDeliveriesBySocialReason ({ socialReason }: { socialReason: string }): Promise<{ deliveries: DeliveryListModel[], count: number }> {
     const deliveries = await prisma.delivery.findMany({
       include: {
         provider: true,
@@ -24,8 +24,7 @@ export default class DeliveryPrismaRepository implements DeliveryPersistanceRepo
               contains: socialReason
             },
             farmer_type: 'Asociación'
-          },
-          campaign_id: campaignId
+          }
         }
       }
     })
@@ -49,7 +48,7 @@ export default class DeliveryPrismaRepository implements DeliveryPersistanceRepo
     }
   }
 
-  async listDeliveriesByFullNames ({ campaignId, fullNames }: { campaignId: string, fullNames: string }): Promise<{ deliveries: DeliveryListModel[], count: number }> {
+  async listDeliveriesByFullNames ({ fullNames }: { fullNames: string }): Promise<{ deliveries: DeliveryListModel[], count: number }> {
     const deliveries = await prisma.delivery.findMany({
       include: {
         provider: true,
@@ -68,8 +67,7 @@ export default class DeliveryPrismaRepository implements DeliveryPersistanceRepo
               contains: fullNames
             },
             farmer_type: 'Individual'
-          },
-          campaign_id: campaignId
+          }
         }
       }
     })
