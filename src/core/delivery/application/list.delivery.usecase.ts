@@ -34,10 +34,6 @@ export default class ListDeliveryUseCase {
       throw new BadRequestError({ message: 'Farmer type is invalid', core: 'farmer' })
     }
 
-    if (farmerType === FarmerType.ALL) {
-      throw new BadRequestError({ message: 'Farmer type all is not valid', core: 'delivery' })
-    }
-
     let finalCount: number = 0
     let finalDeliveries: DeliveryListModel[] = []
 
@@ -46,7 +42,7 @@ export default class ListDeliveryUseCase {
         throw new BadRequestError({ message: 'You must to specify a valid json', core: 'delivery' })
       }
 
-      const { deliveries, count } = await this.deliveryPersistanceRepository.listDeliveriesByFullNames({ campaignId, fullNames })
+      const { deliveries, count } = await this.deliveryPersistanceRepository.listDeliveries({ campaignId, farmerType, fullNames })
       finalDeliveries = deliveries
       finalCount = count
     }
@@ -56,7 +52,14 @@ export default class ListDeliveryUseCase {
         throw new BadRequestError({ message: 'You must to specify a valid json', core: 'delivery' })
       }
   
-      const { deliveries, count } = await this.deliveryPersistanceRepository.listDeliveriesBySocialReason({ campaignId, socialReason })
+      const { deliveries, count } = await this.deliveryPersistanceRepository.listDeliveries({ campaignId, farmerType, socialReason })
+  
+      finalDeliveries = deliveries
+      finalCount = count
+    }
+
+    if (farmerType === FarmerType.ALL) {  
+      const { deliveries, count } = await this.deliveryPersistanceRepository.listDeliveries({ campaignId, farmerType })
   
       finalDeliveries = deliveries
       finalCount = count

@@ -3,12 +3,11 @@ import DeliveryListModel from '../../../../src/core/delivery/domain/delivery.lis
 import { FarmerType } from '../../../../src/core/farmer/domain/farmer.type'
 import DeliveryPrismaRepository from '../../../../src/core/delivery/infrastructure/delivery.prisma.repository'
 import BadRequestError from '../../../../src/utils/custom-errors/application-errors/bad.request.error'
-import { CreditRequestStatusType } from '../../../../src/core/credit-request/domain/credit.request.status.type'
 
 jest.mock("../../../../src/core/delivery/infrastructure/delivery.prisma.repository")
 
 describe('Create Campaign module test suites', () => {
-  const mockDeliveryByFullNamesList: {
+  const mockDeliveryList: {
     deliveries: DeliveryListModel[], 
     count: number
   } = {
@@ -36,45 +35,6 @@ describe('Create Campaign module test suites', () => {
       {
         deliveryId: 3,
         fullNames: "Josue Emmanuel Medina Garcia",
-        deliveryDateTime: new Date(),
-        providerDescription: "BANCO DE LA NACIÓN",
-        financialSourceDescription: "Recuperaciones M.E.",
-        currentAccountDescription: "Descriptiuon",
-        gloss: "RELACION GIROS 001",
-        deliveryAmount: 1440
-      },
-    ],
-    count: 3
-  }
-
-  const mockDeliveryBySocialReasonList: {
-    deliveries: DeliveryListModel[], 
-    count: number
-  } = {
-    deliveries: [
-      {
-        deliveryId: 1,
-        socialReason: "Josue Emmanuel Medina Garcia",
-        deliveryDateTime: new Date(),
-        providerDescription: "BANCO DE LA NACIÓN",
-        financialSourceDescription: "Recuperaciones M.E.",
-        currentAccountDescription: "Descriptiuon",
-        gloss: "RELACION GIROS 001",
-        deliveryAmount: 14400
-      },
-      {
-        deliveryId: 2,
-        socialReason: "Josue Emmanuel Medina Garcia",
-        deliveryDateTime: new Date(),
-        providerDescription: "BANCO DE LA NACIÓN",
-        financialSourceDescription: "Recuperaciones M.E.",
-        currentAccountDescription: "Descriptiuon",
-        gloss: "RELACION GIROS 002",
-        deliveryAmount: 14
-      },
-      {
-        deliveryId: 3,
-        socialReason: "Josue Emmanuel Medina Garcia",
         deliveryDateTime: new Date(),
         providerDescription: "BANCO DE LA NACIÓN",
         financialSourceDescription: "Recuperaciones M.E.",
@@ -94,8 +54,7 @@ describe('Create Campaign module test suites', () => {
   })
 
   beforeEach(() => {
-    jest.spyOn(deliveryPrismaRepository, 'listDeliveriesByFullNames').mockResolvedValue(mockDeliveryByFullNamesList)
-    jest.spyOn(deliveryPrismaRepository, 'listDeliveriesBySocialReason').mockResolvedValue(mockDeliveryBySocialReasonList)
+    jest.spyOn(deliveryPrismaRepository, 'listDeliveries').mockResolvedValue(mockDeliveryList)
 
     listDeliveryUseCase = new ListDeliveryUseCase(deliveryPrismaRepository)
   })
@@ -118,6 +77,19 @@ describe('Create Campaign module test suites', () => {
       const deliveries = await listDeliveryUseCase.list({
         campaignId: 'a',
         farmerType: FarmerType.ASSOCIATION,
+        socialReason: 'Josue Medina', 
+        page: 1,
+        limit: 0
+      })
+
+      expect(deliveries.deliveries.length).toBe(3)
+      expect(deliveries.count).toBe(3)
+    })
+
+    test('List deliveries by individual farmer type successfully', async () => {
+      const deliveries = await listDeliveryUseCase.list({
+        campaignId: 'a',
+        farmerType: FarmerType.ALL,
         socialReason: 'Josue Medina', 
         page: 1,
         limit: 0
@@ -150,20 +122,6 @@ describe('Create Campaign module test suites', () => {
           campaignId: 'a',
           // @ts-ignore
           farmerType: 'test',
-          socialReason: 'Josue Medina', 
-          page: 1,
-          limit: 0
-        })
-      } catch (error) {
-        expect(error).toBeInstanceOf(BadRequestError)
-      }
-    })
-
-    test('Should throw bad request error when send invalid farmer type', async () => {
-      try {
-        await listDeliveryUseCase.list({
-          campaignId: 'a',
-          farmerType: FarmerType.ALL,
           socialReason: 'Josue Medina', 
           page: 1,
           limit: 0
