@@ -39,6 +39,7 @@ export default class DeliveryPrismaRepository implements DeliveryPersistanceRepo
       deliveries: deliveries.map(delivery => {
         return {
           deliveryId: delivery.delivery_id,
+          fullNames: delivery.credit_request.farmer.full_names || undefined,
           socialReason: delivery.credit_request.farmer.social_reason || undefined,
           deliveryDateTime: delivery.delivery_datetime,
           providerDescription: delivery.provider.provider_description,
