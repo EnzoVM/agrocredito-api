@@ -7,6 +7,7 @@ export default class Campaign {
   periodName: string
   startDate: string
   finishDate: string
+  campaignInterest: number
 
   constructor({
     campaignId, 
@@ -15,7 +16,8 @@ export default class Campaign {
     campaignYear, 
     periodName, 
     startDate, 
-    finishDate
+    finishDate,
+    campaignInterest
   }:{
     campaignId: string, 
     campaignDescription: string, 
@@ -23,7 +25,8 @@ export default class Campaign {
     campaignYear: string, 
     periodName: string, 
     startDate: string, 
-    finishDate: string
+    finishDate: string,
+    campaignInterest: number
   }) {
     this.campaignId = campaignId
     this.campaignDescription = campaignDescription
@@ -31,6 +34,7 @@ export default class Campaign {
     this.campaignYear = campaignYear
     this.periodName = periodName
     this.startDate = startDate
-    this.finishDate = finishDate        
+    this.finishDate = finishDate
+    this.campaignInterest = campaignInterest    
   }
 }

@@ -111,7 +111,8 @@ model campaign {
   period_name           String                @db.VarChar(255)
   start_date            String                @db.VarChar(255)
   finish_date           String                @db.VarChar(255)
-
+  campaign_interest     Decimal               @db.Decimal(19, 4)
+  
   credit_requests       credit_request[]
   campaign_type         campaign_type          @relation(fields: [campaign_type_id], references: [campaign_type_id])
   delivery_plan_model   delivery_plan_model?
