@@ -18,7 +18,8 @@ export default class CampaignPrismaRepository implements CampaignPersistanceRepo
           campaign_year: campaign.campaignYear,
           period_name: campaign.periodName,
           start_date: campaign.startDate,
-          finish_date: campaign.finishDate
+          finish_date: campaign.finishDate,
+          campaign_interest: campaign.campaignInterest
         }
       })
       
@@ -29,7 +30,8 @@ export default class CampaignPrismaRepository implements CampaignPersistanceRepo
         campaignYear: campaignCreated.campaign_year,
         periodName: campaignCreated.period_name,
         startDate: campaignCreated.start_date,
-        finishDate: campaignCreated.finish_date
+        finishDate: campaignCreated.finish_date,
+        campaignInterest: Number(campaignCreated.campaign_interest)
       }
 
     } catch (error: any) {
@@ -90,7 +92,8 @@ export default class CampaignPrismaRepository implements CampaignPersistanceRepo
           campaignYear: campaign.campaign_year,
           periodName: campaign.period_name,
           startDate: campaign.start_date,
-          finishDate: campaign.finish_date
+          finishDate: campaign.finish_date,
+          campaignInterest: Number(campaign.campaign_interest)
         }
       })
 
@@ -234,7 +237,8 @@ export default class CampaignPrismaRepository implements CampaignPersistanceRepo
         campaignYear: campaignFound.campaign_year,
         periodName: campaignFound.period_name,
         startDate: campaignFound.start_date,
-        finishDate: campaignFound.finish_date
+        finishDate: campaignFound.finish_date,
+        campaignInterest: Number(campaignFound.campaign_interest)
       }
 
     } catch (error: any) {
