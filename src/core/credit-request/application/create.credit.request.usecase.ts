@@ -84,7 +84,8 @@ export default class CreateCreditRequestUseCase {
     }
     
     if(hectareNumber+suma > farmerFound.propertyHectareQuantity){
-      throw new ProcessError({ message: 'El número de hectareas supera el limite del usuario', core: 'Credit Request'})
+      const hectaresAvailable = farmerFound.propertyHectareQuantity - suma
+      throw new ProcessError({ message: 'El número de hectáreas ingresado para esta solicitud de crédito supera el límite de '+farmerFound.propertyHectareQuantity+' hectáreas del usuario. Actualmente solo tiene disponible '+hectaresAvailable+' hectáreas', core: 'Credit Request'})
     }
     
     const creditRequestId = this.creditRequestIdGeneratorRepository.generateCreditRequestId()
