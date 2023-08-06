@@ -155,7 +155,7 @@ model user {
 model delivery {
   delivery_id           Int               @id @unique @default(autoincrement())
   credit_request_id     String            @db.VarChar(255)
-  delivery_datetime     DateTime          @default(now())
+  delivery_datetime     DateTime          
   provider_id           Int
   financial_source_id   Int
   current_account_id    Int

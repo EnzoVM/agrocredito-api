@@ -12,5 +12,5 @@ export default interface CreditRequestPersistanceRepository {
   getCreditRequestByFarmerId: ({ farmerId }: { farmerId: string }) => Promise<CreditRequestCreate[]>
   getCreditRequestById: ({ creditRequestId }: { creditRequestId: string }) => Promise<CreditRequestDetail | null>
   updateCreditRequestStatusById: ({ creditRequestStatus, creditRequestId, updateStatusDateTime }: { creditRequestStatus: CreditRequestStatusType, creditRequestId: string, updateStatusDateTime: Date }) => Promise<string>
-  listApprovedCreditRequestByFarmerId: ({ farmerId }: { farmerId: string }) => Promise<CreditRequestCreate[]>
+  listApprovedCreditRequestByFarmerId: ({ farmerId, campaignId }: { farmerId: string, campaignId: string }) => Promise<CreditRequestCreate[]>
 }

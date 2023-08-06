@@ -135,11 +135,11 @@ export const UpdateCreditRequestStatusHandler = async (request: Request, respons
 }
 
 export const listApprovedCreditRequestByFarmerHandle = async (req: Request, res: Response, next: NextFunction) => {
-  const { farmerId } = req.params
+  const { farmerId, campaignId } = req.params
 
   try {
-    const creditRequestList = await listApprovedCreditRequestByFarmerUseCase.invoke({farmerId})
-
+    const creditRequestList = await listApprovedCreditRequestByFarmerUseCase.invoke({farmerId, campaignId})
+    
     new ResponseModel({
       statusCode: ResponseStatusCodes.SUCCESS_REQUEST,
       code: ResponseCodes.SUCCESS_REQUEST,

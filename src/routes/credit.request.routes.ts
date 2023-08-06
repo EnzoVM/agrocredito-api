@@ -15,6 +15,6 @@ creditRequestRouter
   .get('/:creditRequestId', isAuthenticated, GetCreditRequestHandler)
   .post('/', isAuthenticated, createCreditRequestHandler)
   .put('/:creditRequestId', isAuthenticated, UpdateCreditRequestStatusHandler)
-  .get('/list/approved/:farmerId', isAuthenticated, listApprovedCreditRequestByFarmerHandle)
+  .get('/list/approved/:farmerId/:campaignId', isAuthenticated, listApprovedCreditRequestByFarmerHandle)
 
 export default creditRequestRouter

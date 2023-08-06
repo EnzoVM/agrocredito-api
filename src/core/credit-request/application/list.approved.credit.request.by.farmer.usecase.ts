@@ -7,8 +7,8 @@ export default class ListApprovedCreditRequestByFarmerUseCase {
     private readonly creditRequestPersistanceRepository: CreditRequestPersistanceRepository
   ) {}
 
-  async invoke ({farmerId}:{farmerId: string}): Promise<CreditRequestCreate[]>{
-    const creditRequestList = await this.creditRequestPersistanceRepository.listApprovedCreditRequestByFarmerId({farmerId})
+  async invoke ({farmerId, campaignId}:{farmerId: string, campaignId: string}): Promise<CreditRequestCreate[]>{
+    const creditRequestList = await this.creditRequestPersistanceRepository.listApprovedCreditRequestByFarmerId({farmerId, campaignId})
     if(creditRequestList.length === 0){
       throw new NotFoundError({ message: 'No se ha encontrado creditos aprobados para este usuario', core: 'Credit Request'})
     }

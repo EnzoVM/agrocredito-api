@@ -62,6 +62,7 @@ export default class DeliveryPrismaRepository implements DeliveryPersistanceRepo
       const deliveryAdded = await prisma.delivery.create({
         data: {
           credit_request_id: delivery.creditRequestId,
+          delivery_datetime: delivery.deliveryDatetime,
           provider_id: delivery.providerId,
           financial_source_id: delivery.financialSourceId,
           current_account_id: delivery.currentAccountId,

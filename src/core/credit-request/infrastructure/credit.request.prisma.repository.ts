@@ -234,13 +234,16 @@ export default class CreditRequestPrimaRepository implements CreditRequestPersis
   }
 
   async listApprovedCreditRequestByFarmerId ({ 
-    farmerId
+    farmerId,
+    campaignId
   }:{ 
-    farmerId: string
+    farmerId: string,
+    campaignId: string
   }): Promise<CreditRequestCreate[]> {
     try {
       const creditRequestList = await prisma.credit_request.findMany({
         where: {
+          campaign_id: campaignId,
           farmer_id: farmerId,
           credit_request_status: 'Aprobado'
         }

@@ -15,12 +15,14 @@ export default class CreateDeliveryUseCase {
 
   async invoke ({
     creditRequestId,
+    deliveryDatetime,
     providerId,
     financialSourceId,
     currentAccountId,
     gloss
   }:{
-    creditRequestId: string
+    creditRequestId: string,
+    deliveryDatetime: string
     providerId: number
     financialSourceId: number
     currentAccountId: number
@@ -30,6 +32,7 @@ export default class CreateDeliveryUseCase {
 
     if(
       !creditRequestId ||
+      !deliveryDatetime ||
       !providerId ||
       !financialSourceId ||
       !currentAccountId ||
@@ -40,6 +43,7 @@ export default class CreateDeliveryUseCase {
 
     if(
       typeof creditRequestId !== 'string' ||
+      typeof deliveryDatetime !== 'string' ||
       typeof providerId !== 'number' ||
       typeof financialSourceId !== 'number' ||
       typeof currentAccountId !== 'number' ||
@@ -67,6 +71,7 @@ export default class CreateDeliveryUseCase {
     
     const newDelivery: DeliveryCreateModel = {
       creditRequestId,
+      deliveryDatetime: new Date(deliveryDatetime),
       providerId,
       financialSourceId,
       currentAccountId,

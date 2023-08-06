@@ -11,7 +11,10 @@ export const creditRequestPrimaRepositoryMock = {
   listApprovedCreditRequestByFarmerId: jest.fn()
 }
 
-export const farmerIdMock = '3.1.2'
+export const paramsMock = {
+  farmerId: '3.1.2',
+  campaignId: 'ARR022023'
+}
 
 export const creditRequestFoundMock: CreditRequestCreate[] = [
   {

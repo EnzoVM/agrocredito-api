@@ -47,6 +47,7 @@ export const listDeliveriesHandler = async (request: Request, response: Response
 export const createDeliveryHandle = async (req: Request, res: Response, next: NextFunction) => {
   const {
     creditRequestId,
+    deliveryDatetime,
     providerId,
     financialSourceId,
     currentAccountId,
@@ -56,6 +57,7 @@ export const createDeliveryHandle = async (req: Request, res: Response, next: Ne
   try {
     const deliveryAdded = await createDeliveryUseCase.invoke({
       creditRequestId,
+      deliveryDatetime,
       providerId,
       financialSourceId,
       currentAccountId,
