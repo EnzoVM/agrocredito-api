@@ -10,6 +10,7 @@ import DepartureDetailPrismaRepository from "../core/departure-detail/infrastruc
 import FarmerPrismaRepository from "../core/farmer/infrastructure/farmer.prisma.repository"
 import GetCreditRequestUseCase from "../core/credit-request/application/get.credit.request.usecase"
 import UpdateCreditRequestStatusUseCase from "../core/credit-request/application/update.credit.request.status.usecase"
+import ListApprovedCreditRequestByFarmerUseCase from "../core/credit-request/application/list.approved.credit.request.by.farmer.usecase"
 
 const creditRequestPrimaRepository = new CreditRequestPrimaRepository()
 const listCreditRequestUseCase = new ListCreditRequestUseCase(creditRequestPrimaRepository)
@@ -21,6 +22,7 @@ const createCreditRequestUseCase = new CreateCreditRequestUseCase(
 )
 const getCreditRequestUseCase = new GetCreditRequestUseCase(creditRequestPrimaRepository)
 const updateCreditRequestStatusUseCase = new UpdateCreditRequestStatusUseCase(creditRequestPrimaRepository) 
+const listApprovedCreditRequestByFarmerUseCase = new ListApprovedCreditRequestByFarmerUseCase(new CreditRequestPrimaRepository)
 
 export const listCreditRequestHandler = async (request: Request, response: Response, next: NextFunction) => {
   const { filters } = request.params
@@ -127,6 +129,24 @@ export const UpdateCreditRequestStatusHandler = async (request: Request, respons
       code: ResponseCodes.SUCCESS_REQUEST,
       message
     }).send(response)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const listApprovedCreditRequestByFarmerHandle = async (req: Request, res: Response, next: NextFunction) => {
+  const { farmerId } = req.params
+
+  try {
+    const creditRequestList = await listApprovedCreditRequestByFarmerUseCase.invoke({farmerId})
+
+    new ResponseModel({
+      statusCode: ResponseStatusCodes.SUCCESS_REQUEST,
+      code: ResponseCodes.SUCCESS_REQUEST,
+      message: 'List of credit request by farmer',
+      data: creditRequestList
+    }).send(res)
+    
   } catch (error) {
     next(error)
   }

@@ -19,14 +19,16 @@ export default class CreateCampaignUseCase {
     campaignYear,
     startDate, 
     finishDate,
-    campaignInterest
+    campaignInterest,
+    campaignDelinquentInterest
   }:{
     campaignDescription: string,
     campaignTypeId: number,
     campaignYear: string,
     startDate: string,
     finishDate: string,
-    campaignInterest: number
+    campaignInterest: number,
+    campaignDelinquentInterest: number
   }): Promise<Campaign> {
     
     const campaignTypeFound = await this.campaignTypePersistanceRepository.getCampaignTypeById(campaignTypeId)
@@ -81,7 +83,8 @@ export default class CreateCampaignUseCase {
       periodName,
       startDate,
       finishDate,
-      campaignInterest
+      campaignInterest,
+      campaignDelinquentInterest
     })
 
     const campaignCreated = await this.campaignPersistanceRepository.createCampaign(newCampaign)

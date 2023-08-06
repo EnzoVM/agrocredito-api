@@ -3,7 +3,8 @@ import {
   listCreditRequestHandler,
   createCreditRequestHandler,
   GetCreditRequestHandler,
-  UpdateCreditRequestStatusHandler
+  UpdateCreditRequestStatusHandler,
+  listApprovedCreditRequestByFarmerHandle
 } from '../controllers/credit.request.controller'
 import isAuthenticated from '../middlewares/isAuthenticated'
 
@@ -14,5 +15,6 @@ creditRequestRouter
   .get('/:creditRequestId', isAuthenticated, GetCreditRequestHandler)
   .post('/', isAuthenticated, createCreditRequestHandler)
   .put('/:creditRequestId', isAuthenticated, UpdateCreditRequestStatusHandler)
+  .get('/list/approved/:farmerId', isAuthenticated, listApprovedCreditRequestByFarmerHandle)
 
 export default creditRequestRouter

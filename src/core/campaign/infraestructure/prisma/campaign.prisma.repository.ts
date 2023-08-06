@@ -19,7 +19,8 @@ export default class CampaignPrismaRepository implements CampaignPersistanceRepo
           period_name: campaign.periodName,
           start_date: campaign.startDate,
           finish_date: campaign.finishDate,
-          campaign_interest: campaign.campaignInterest
+          campaign_interest: campaign.campaignInterest,
+          campaign_delinquent_interest: campaign.campaignDelinquentInterest
         }
       })
       
@@ -31,7 +32,8 @@ export default class CampaignPrismaRepository implements CampaignPersistanceRepo
         periodName: campaignCreated.period_name,
         startDate: campaignCreated.start_date,
         finishDate: campaignCreated.finish_date,
-        campaignInterest: Number(campaignCreated.campaign_interest)
+        campaignInterest: Number(campaignCreated.campaign_interest),
+        campaignDelinquentInterest: Number(campaignCreated.campaign_delinquent_interest)
       }
 
     } catch (error: any) {
@@ -93,7 +95,8 @@ export default class CampaignPrismaRepository implements CampaignPersistanceRepo
           periodName: campaign.period_name,
           startDate: campaign.start_date,
           finishDate: campaign.finish_date,
-          campaignInterest: Number(campaign.campaign_interest)
+          campaignInterest: Number(campaign.campaign_interest),
+          campaignDelinquentInterest: Number(campaign.campaign_delinquent_interest)
         }
       })
 
@@ -238,9 +241,10 @@ export default class CampaignPrismaRepository implements CampaignPersistanceRepo
         periodName: campaignFound.period_name,
         startDate: campaignFound.start_date,
         finishDate: campaignFound.finish_date,
-        campaignInterest: Number(campaignFound.campaign_interest)
+        campaignInterest: Number(campaignFound.campaign_interest),
+        campaignDelinquentInterest: Number(campaignFound.campaign_delinquent_interest)
       }
-
+      
     } catch (error: any) {
       throw new UnavailableError({ message: error.message, core: 'Campaign'})
     }
