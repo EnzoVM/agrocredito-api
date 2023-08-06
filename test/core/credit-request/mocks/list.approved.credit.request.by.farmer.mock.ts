@@ -1,4 +1,4 @@
-import CreditRequestCreate from "../../../../src/core/credit-request/domain/credit.request.create.model"
+import CreditRequestListApproved from "../../../../src/core/credit-request/domain/credit.request.list.approved"
 
 export const creditRequestPrimaRepositoryMock = {
   listCreditRequestByCampaignId: jest.fn(),
@@ -16,31 +16,13 @@ export const paramsMock = {
   campaignId: 'ARR022023'
 }
 
-export const creditRequestFoundMock: CreditRequestCreate[] = [
+export const creditRequestFoundMock: CreditRequestListApproved[] = [
   {
-    creditRequestId: "c30a928d-e352-4281-a8d8-b1e115dd298b",
-    farmerId: "4.2.1",
-    campaignId: "ARR012023",
-    hectareNumber: 5,
-    creditReason: "test",
     creditAmount: 2000,
-    guaranteeDescription: "test v2",
-    guaranteeAmount: 5000,
-    technicalId: 1,
-    creditRequestStatus: "Aprobado",
-    creditRequestObservation: "test v3"
+    createDateTime: new Date('20/02/2023')
   },
   {
-    creditRequestId: "c30a928d-e352-4281-a8d8-b1e115dd298b",
-    farmerId: "4.2.1",
-    campaignId: "ARR012023",
-    hectareNumber: 5,
-    creditReason: "test",
     creditAmount: 2000,
-    guaranteeDescription: "test v2",
-    guaranteeAmount: 5000,
-    technicalId: 1,
-    creditRequestStatus: "Aprobado",
-    creditRequestObservation: "test v3"
+    createDateTime: new Date('20/02/2023')
   }
 ]

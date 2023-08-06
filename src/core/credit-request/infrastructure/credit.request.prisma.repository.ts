@@ -5,6 +5,7 @@ import UnavailableError from "../../../utils/custom-errors/infrastructure-errors
 import CreditRequestList from "../domain/credit.request.list.model"
 import CreditRequestDetail from "../domain/credit.request.detail.model"
 import { CreditRequestStatusType } from "../domain/credit.request.status.type"
+import CreditRequestListApproved from "../domain/credit.request.list.approved"
 
 const prisma = new PrismaConnection().connection
 
@@ -239,7 +240,7 @@ export default class CreditRequestPrimaRepository implements CreditRequestPersis
   }:{ 
     farmerId: string,
     campaignId: string
-  }): Promise<CreditRequestCreate[]> {
+  }): Promise<CreditRequestListApproved[]> {
     try {
       const creditRequestList = await prisma.credit_request.findMany({
         where: {
@@ -251,17 +252,8 @@ export default class CreditRequestPrimaRepository implements CreditRequestPersis
       
       return creditRequestList.map(credit => {
         return {
-          creditRequestId: credit.credit_request_id,
-          farmerId: credit.farmer_id,
-          campaignId: credit.campaign_id,
-          hectareNumber: credit.hectare_number,
-          creditReason: credit.credit_reason,
           creditAmount: Number(credit.credit_amount),
-          guaranteeDescription: credit.guarantee_description,
-          guaranteeAmount: Number(credit.guarantee_amount),
-          technicalId: credit.technical_id,
-          creditRequestStatus: credit.credit_request_status,
-          creditRequestObservation: credit.credit_request_observation
+          createDateTime: credit.create_datetime
         }
       })
       
