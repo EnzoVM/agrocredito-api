@@ -9,7 +9,8 @@ export const creditRequestPrimaRepositoryMock = {
   createCreditRequest: jest.fn(),
   getCreditRequestByFarmerId: jest.fn(),
   getCreditRequestById: jest.fn(),
-  updateCreditRequestStatusById: jest.fn()
+  updateCreditRequestStatusById: jest.fn(),
+  listApprovedCreditRequestByFarmerId: jest.fn()
 }
 
 export const creditRequestUuidRepositoryMock = {

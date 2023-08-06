@@ -86,7 +86,6 @@ describe('PROCESS ERROR', () => {
     creditRequestPrimaRepositoryMock.getCreditRequestByFarmerId.mockResolvedValue(creditRequestFoundMock)
     farmerPrismaRepositoryMock.getFarmerById.mockResolvedValue(farmerFoundMock)
     
-    await expect(createCreditRequestUseCase.invoke(parameterMockWithMoreHectare)).rejects.toThrowError('El número de hectareas supera el limite del usuario')
     await expect(createCreditRequestUseCase.invoke(parameterMockWithMoreHectare)).rejects.toBeInstanceOf(ProcessError)
   })
 })

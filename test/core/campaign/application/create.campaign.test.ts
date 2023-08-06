@@ -17,7 +17,9 @@ describe('Create Campaign module test suites', () => {
     campaignYear: '2023',
     periodName: 'Periodo 1',
     startDate: '02/10',
-    finishDate: '03/11'
+    finishDate: '03/11',
+    campaignInterest: 20,
+    campaignDelinquentInterest: 25
   }
 
   const mockCampaingTypeResponse = {
@@ -34,7 +36,9 @@ describe('Create Campaign module test suites', () => {
       campaignYear: '2023',
       periodName: 'Periodo 1',
       startDate: '02/10',
-      finishDate: '03/11'
+      finishDate: '03/11',
+      campaignInterest: 20,
+      campaignDelinquentInterest: 25
     },
     {
       campaignId: 'ARR012023',
@@ -43,7 +47,9 @@ describe('Create Campaign module test suites', () => {
       campaignYear: '2023',
       periodName: 'Periodo 1',
       startDate: '03/12',
-      finishDate: '03/14'
+      finishDate: '03/14',
+      campaignInterest: 20,
+      campaignDelinquentInterest: 25
     }
   ]
 
@@ -54,7 +60,9 @@ describe('Create Campaign module test suites', () => {
     campaignYear: '2023',
     periodName: 'Periodo 1',
     startDate: '02/10',
-    finishDate: '03/11'
+    finishDate: '03/11',
+    campaignInterest: 25,
+    campaignDelinquentInterest: 30
   }
 
   let campaignPrismaRepository: CampaignPrismaRepository
@@ -106,7 +114,9 @@ describe('Create Campaign module test suites', () => {
         campaignTypeId: 1,
         campaignYear: '2023',
         startDate: '02/13',
-        finishDate: '02/11'
+        finishDate: '02/11',
+        campaignInterest: 20,
+        campaignDelinquentInterest: 30
       })).rejects.toBeInstanceOf(BadRequestError)
     })
     
@@ -135,6 +145,8 @@ describe('Create Campaign module test suites', () => {
         campaignYear: '2023',
         startDate: '03/12',
         finishDate: '05/12',
+        campaignInterest: 20,
+        campaignDelinquentInterest: 30
       })).rejects.toBeInstanceOf(ProcessError)
     })
     

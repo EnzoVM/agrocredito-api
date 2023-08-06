@@ -17,7 +17,15 @@ const deleteCampaignUseCase = new DeleteCampaignUseCase(new CampaignPrismaReposi
 const listCampaignUseCase = new ListCampaignUseCase(new CampaignPrismaRepository)
 
 export const createCampaignHandler = async (req: Request, res: Response, next: NextFunction) => {
-  const {campaignDescription, campaignTypeId, campaignYear, startDate, finishDate} = req.body
+  const {
+    campaignDescription, 
+    campaignTypeId, 
+    campaignYear, 
+    startDate, 
+    finishDate, 
+    campaignInterest,
+    campaignDelinquentInterest
+  } = req.body
 
   try {
     const errorDataCampaign = await validate(new CampaignDTO({
@@ -25,7 +33,9 @@ export const createCampaignHandler = async (req: Request, res: Response, next: N
       campaignTypeId,
       campaignYear,
       startDate,
-      finishDate
+      finishDate,
+      campaignInterest,
+      campaignDelinquentInterest
     }))
 
     if(errorDataCampaign.length > 0) {
@@ -38,7 +48,9 @@ export const createCampaignHandler = async (req: Request, res: Response, next: N
       campaignTypeId, 
       campaignYear,
       startDate, 
-      finishDate
+      finishDate,
+      campaignInterest,
+      campaignDelinquentInterest
     })
 
     new ResponseModel({

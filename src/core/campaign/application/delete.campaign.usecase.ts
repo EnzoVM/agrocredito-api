@@ -15,7 +15,7 @@ export default class DeleteCampaignUseCase {
 
     const creditRequestList = await this.creditRequestPersistanceRepository.listCreditRequestByCampaignId({campaignId})
     if(creditRequestList.length > 0) {
-      throw new ProcessError({ message: 'It cannot be deleted because there are requests for associated credits', core: 'Campaign'})
+      throw new ProcessError({ message: 'No se puede borrar esta campaña porque tiene créditos asociados', core: 'Campaign'})
     }  
     
     const campaignMessageDeleted = await this.campaignPersistanceRepository.deleteCampaign(campaignId)

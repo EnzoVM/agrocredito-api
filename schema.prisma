@@ -104,14 +104,16 @@ model assistance_type {
 }
 
 model campaign {
-  campaign_id           String                @id @unique @db.VarChar(255)
-  campaign_description  String                @db.VarChar(255)
-  campaign_type_id      Int
-  campaign_year         String                @db.VarChar(10)
-  period_name           String                @db.VarChar(255)
-  start_date            String                @db.VarChar(255)
-  finish_date           String                @db.VarChar(255)
-
+  campaign_id                     String                @id @unique @db.VarChar(255)
+  campaign_description            String                @db.VarChar(255)
+  campaign_type_id                Int
+  campaign_year                   String                @db.VarChar(10)
+  period_name                     String                @db.VarChar(255)
+  start_date                      String                @db.VarChar(255)
+  finish_date                     String                @db.VarChar(255)
+  campaign_interest               Decimal               @db.Decimal(19, 4)
+  campaign_delinquent_interest    Decimal               @db.Decimal(19, 4)
+  
   credit_requests       credit_request[]
   campaign_type         campaign_type          @relation(fields: [campaign_type_id], references: [campaign_type_id])
   delivery_plan_model   delivery_plan_model?
@@ -151,9 +153,9 @@ model user {
 }
 
 model delivery {
-  delivery_id   Int               @id @unique @default(autoincrement())
+  delivery_id           Int               @id @unique @default(autoincrement())
   credit_request_id     String            @db.VarChar(255)
-  delivery_datetime     DateTime
+  delivery_datetime     DateTime          
   provider_id           Int
   financial_source_id   Int
   current_account_id    Int
@@ -164,7 +166,6 @@ model delivery {
   financial_source      financial_source  @relation(fields: [financial_source_id], references: [financial_source_id])
   current_account       current_account   @relation(fields: [current_account_id], references: [current_account_id])
   provider              provider          @relation(fields: [provider_id], references: [provider_id])
-
 }
 
 model financial_source {

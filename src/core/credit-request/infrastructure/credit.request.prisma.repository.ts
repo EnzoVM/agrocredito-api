@@ -5,11 +5,12 @@ import UnavailableError from "../../../utils/custom-errors/infrastructure-errors
 import CreditRequestList from "../domain/credit.request.list.model"
 import CreditRequestDetail from "../domain/credit.request.detail.model"
 import { CreditRequestStatusType } from "../domain/credit.request.status.type"
+import CreditRequestListApproved from "../domain/credit.request.list.approved"
 
 const prisma = new PrismaConnection().connection
 
 export default class CreditRequestPrimaRepository implements CreditRequestPersistanceRepository {
-
+  
   async listCreditRequestByCampaignId({ campaignId }: { campaignId: string }): Promise<CreditRequestCreate[]> {
     try {
       const creditRequestList = await prisma.credit_request.findMany({
@@ -228,6 +229,35 @@ export default class CreditRequestPrimaRepository implements CreditRequestPersis
       })
 
       return 'Update successfully'
+    } catch (error: any) {
+      throw new UnavailableError({ message: error.message, core: 'credit-request' })
+    }
+  }
+
+  async listApprovedCreditRequestByFarmerId ({ 
+    farmerId,
+    campaignId
+  }:{ 
+    farmerId: string,
+    campaignId: string
+  }): Promise<CreditRequestListApproved[]> {
+    try {
+      const creditRequestList = await prisma.credit_request.findMany({
+        where: {
+          campaign_id: campaignId,
+          farmer_id: farmerId,
+          credit_request_status: 'Aprobado'
+        }
+      })
+      
+      return creditRequestList.map(credit => {
+        return {
+          creditRequestId: credit.credit_request_id,
+          creditAmount: Number(credit.credit_amount),
+          createDateTime: credit.create_datetime
+        }
+      })
+      
     } catch (error: any) {
       throw new UnavailableError({ message: error.message, core: 'credit-request' })
     }

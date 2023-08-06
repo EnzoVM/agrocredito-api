@@ -18,25 +18,29 @@ export default class CreateCampaignUseCase {
     campaignTypeId, 
     campaignYear,
     startDate, 
-    finishDate
+    finishDate,
+    campaignInterest,
+    campaignDelinquentInterest
   }:{
     campaignDescription: string,
     campaignTypeId: number,
     campaignYear: string,
     startDate: string,
-    finishDate: string
+    finishDate: string,
+    campaignInterest: number,
+    campaignDelinquentInterest: number
   }): Promise<Campaign> {
     
     const campaignTypeFound = await this.campaignTypePersistanceRepository.getCampaignTypeById(campaignTypeId)
     if(!campaignTypeFound){
-      throw new BadRequestError({ message: 'Id of the campaign does not exist', core: 'Campaign'})
+      throw new BadRequestError({ message: 'El id del tipo de campaña no existe', core: 'Campaign'})
     }
 
     const campaignByYear = await this.campaignPersistanceRepository.getCampaignByYearAndType(campaignYear, campaignTypeId)
     const numberOfCampaignByYear = campaignByYear.length
   
     if(numberOfCampaignByYear >= campaignTypeFound.periodQuantity){
-      throw new ProcessError({ message: 'Has exceeded the number of campaigns for this year', core: 'Campaign'})
+      throw new ProcessError({ message: 'Ha superado el número de campañas de este año', core: 'Campaign'})
     }
 
     const periodName = `Periodo ${numberOfCampaignByYear + 1}`
@@ -46,10 +50,10 @@ export default class CreateCampaignUseCase {
     const [finishDateDay, finishDateMonth] = finishDate.split('/').map(Number)
 
     if(startDateDay <= 0 ||  startDateDay > 31 || finishDateDay <= 0 || finishDateDay > 31) {
-      throw new BadRequestError({ message: 'Day cannot be less than 0 or greater than 31', core: 'Campaign'})
+      throw new BadRequestError({ message: 'El día no puede ser menor que 0 ni mayor que 31', core: 'Campaign'})
     }
     if(startDateMonth <= 0 ||  startDateMonth > 12 || finishDateMonth <= 0 || finishDateMonth > 12) {
-      throw new BadRequestError({ message: 'Month cannot be less than 0 or greater than 12', core: 'Campaign'})
+      throw new BadRequestError({ message: 'El mes no puede ser menor que 0 ni mayor que 12', core: 'Campaign'})
     }
 
     const startDateNumberToSave = Number(`${startDate.split('/').join('')}`)
@@ -58,7 +62,7 @@ export default class CreateCampaignUseCase {
     const finishDateNumberForValidation = Number(`${finishDate.split('/').reverse().join('')}`)
     
     if (startDateNumberForValidation >= finishDateNumberForValidation) {
-      throw new BadRequestError({ message: 'Start date dont must to be grater than finish date', core: 'Campaign'})
+      throw new BadRequestError({ message: 'La fecha de inicio no debe ser mayor que la fecha de finalización.', core: 'Campaign'})
     }
 
     const finishDatesNumber = campaignByYear.map(campaign => {
@@ -68,7 +72,7 @@ export default class CreateCampaignUseCase {
     const startDateIsValid = finishDatesNumber.every((finishDate) => finishDate < startDateNumberToSave)
 
     if (!startDateIsValid) {
-      throw new ProcessError({ message: 'The start date must be grater than the finish date of the last campaign', core: 'Campaign'})
+      throw new ProcessError({ message: 'La fecha de inicio debe ser posterior a la fecha de finalización de la última campaña.', core: 'Campaign'})
     }
   
     const newCampaign = new Campaign({
@@ -78,7 +82,9 @@ export default class CreateCampaignUseCase {
       campaignYear,
       periodName,
       startDate,
-      finishDate
+      finishDate,
+      campaignInterest,
+      campaignDelinquentInterest
     })
 
     const campaignCreated = await this.campaignPersistanceRepository.createCampaign(newCampaign)

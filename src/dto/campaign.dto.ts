@@ -22,23 +22,37 @@ export default class CampaignDTO {
     @IsString({ message: 'Finish date of campaign must be a string'})
       finishDate: string
 
+    @IsNotEmpty({ message: 'Interest of campaign is empty'})
+    @IsNumber({}, { message: 'Interest of campaign must be a number'})
+      campaignInterest: number
+
+    @IsNotEmpty({ message: 'Delinquent interest of campaign is empty'})
+    @IsNumber({}, { message: 'Delinquent interest of campaign must be a number'})
+      campaignDelinquentInterest: number
+    
     constructor({ 
       campaignDescription, 
       campaignTypeId, 
       campaignYear, 
       startDate, 
-      finishDate
+      finishDate,
+      campaignInterest,
+      campaignDelinquentInterest
     }:{
       campaignDescription: string, 
       campaignTypeId: number, 
       campaignYear: string, 
       startDate: string, 
-      finishDate: string
+      finishDate: string,
+      campaignInterest: number,
+      campaignDelinquentInterest: number
     }) {
       this.campaignDescription = campaignDescription
       this.campaignTypeId = campaignTypeId
       this.campaignYear = campaignYear
       this.startDate = startDate
       this.finishDate = finishDate
+      this.campaignInterest = campaignInterest
+      this.campaignDelinquentInterest = campaignDelinquentInterest
     }
 }
