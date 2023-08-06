@@ -252,6 +252,7 @@ export default class CreditRequestPrimaRepository implements CreditRequestPersis
       
       return creditRequestList.map(credit => {
         return {
+          creditRequestId: credit.credit_request_id,
           creditAmount: Number(credit.credit_amount),
           createDateTime: credit.create_datetime
         }

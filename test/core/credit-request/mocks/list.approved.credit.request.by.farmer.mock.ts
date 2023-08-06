@@ -18,10 +18,12 @@ export const paramsMock = {
 
 export const creditRequestFoundMock: CreditRequestListApproved[] = [
   {
+    creditRequestId: "6dea515e-4255-438b-a7e7-c2de65718c23",
     creditAmount: 2000,
     createDateTime: new Date('20/02/2023')
   },
   {
+    creditRequestId: "6dea515e-4255-438b-a7e7-c2de65718c23",
     creditAmount: 2000,
     createDateTime: new Date('20/02/2023')
   }
