@@ -5,5 +5,6 @@ export default interface DeliveryCreateModel {
   financialSourceId: number
   currentAccountId: number
   gloss: string
-  deliveryAmount: number
+  deliveryAmountUSD: number
+  deliveryAmountPEN: number
 }

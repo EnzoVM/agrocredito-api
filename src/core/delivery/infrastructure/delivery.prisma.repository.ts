@@ -51,7 +51,7 @@ export default class DeliveryPrismaRepository implements DeliveryPersistanceRepo
             financialSourceDescription: delivery.financial_source.financial_source_description,
             currentAccountDescription: delivery.current_account.current_account_description,
             gloss: delivery.gloss,
-            deliveryAmount: Number(delivery.delivery_amount)
+            deliveryAmount: Number(delivery.delivery_amount_USD)
           }
         }),
         count
@@ -89,7 +89,7 @@ export default class DeliveryPrismaRepository implements DeliveryPersistanceRepo
           financialSourceDescription: delivery.financial_source.financial_source_description,
           currentAccountDescription: delivery.current_account.current_account_description,
           gloss: delivery.gloss,
-          deliveryAmount: Number(delivery.delivery_amount)
+          deliveryAmount: Number(delivery.delivery_amount_USD)
         }
       })
     } catch (error: any) {
@@ -107,10 +107,11 @@ export default class DeliveryPrismaRepository implements DeliveryPersistanceRepo
           financial_source_id: delivery.financialSourceId,
           current_account_id: delivery.currentAccountId,
           gloss: delivery.gloss,
-          delivery_amount: delivery.deliveryAmount
+          delivery_amount_USD: delivery.deliveryAmountUSD,
+          delivery_amount_PEN: delivery.deliveryAmountPEN
         }
       })
-
+      
       return {
         deliveryId: deliveryAdded.delivery_id,
         creditRequestId: deliveryAdded.credit_request_id,
@@ -119,15 +120,16 @@ export default class DeliveryPrismaRepository implements DeliveryPersistanceRepo
         financialSourceId: deliveryAdded.financial_source_id,
         currentAccountId: deliveryAdded.current_account_id,
         gloss: deliveryAdded.gloss,
-        deliveryAmount: Number(deliveryAdded.delivery_amount)
+        deliveryAmountUSD: Number(deliveryAdded.delivery_amount_USD),
+        deliveryAmountPEN: Number(deliveryAdded.delivery_amount_PEN)
       }
-
+      
     } catch (error: any) {
       throw new UnavailableError({ message: error.message, core: 'Delivery'})
     }
   }
 
-  async getDeliveriesByCreditRequestId ({ 
+  async countDeliveriesByCreditRequestId ({ 
     creditRequestId 
   }:{ 
     creditRequestId: string 

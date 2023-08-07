@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,182 +8,185 @@ datasource db {
 }
 
 model farmer {
-  farmer_id                     String                      @id @unique @db.VarChar(255)
-  property_sector_id            Int 
-  property_project_code         Int 
-  property_project_id           Int 
-  correlative                   Int         
-  farmer_quality_id             Int
-  farmer_type                   String                      @db.VarChar(255)
-  social_reason                 String?                     @db.VarChar(255)
-  full_names                    String?                     @db.VarChar(255)
-  dni                           String?                     @db.VarChar(8) @unique
-  ruc                           String?                     @db.VarChar(11) @unique
-  property_location             String                      @db.VarChar(255)
-  property_legal_condition_id   Int  
-  cadastral_registry            String                      @db.VarChar(255)
-  farmer_address                String                      @db.VarChar(255)
-  farmer_project_id             Int 
-  property_hectare_quantity     Int
+  farmer_id                   String                   @id @unique @db.VarChar(255)
+  property_sector_id          Int
+  property_project_code       Int
+  property_project_id         Int
+  correlative                 Int
+  farmer_quality_id           Int
+  farmer_type                 String                   @db.VarChar(255)
+  social_reason               String?                  @db.VarChar(255)
+  full_names                  String?                  @db.VarChar(255)
+  dni                         String?                  @unique @db.VarChar(8)
+  ruc                         String?                  @unique @db.VarChar(11)
+  property_location           String                   @db.VarChar(255)
+  property_legal_condition_id Int
+  cadastral_registry          String                   @db.VarChar(255)
+  farmer_address              String                   @db.VarChar(255)
+  farmer_project_id           Int
+  property_hectare_quantity   Int
+  credit_requests             credit_request[]
+  farmer_project              project                  @relation("FarmerFarmerProject", fields: [farmer_project_id], references: [project_id])
+  farmer_quality              farmer_quality           @relation(fields: [farmer_quality_id], references: [farmer_quality_id])
+  property_legal_condition    property_legal_condition @relation(fields: [property_legal_condition_id], references: [property_legal_condition_id])
+  property_project            project                  @relation("FarmerPropertyProject", fields: [property_project_id], references: [project_id])
 
-  property_project              project                     @relation(name: "FarmerPropertyProject", fields: [property_project_id], references: [project_id])
-  farmer_project                project                     @relation(name: "FarmerFarmerProject", fields: [farmer_project_id], references: [project_id])
-  farmer_quality                farmer_quality              @relation(fields: [farmer_quality_id], references: [farmer_quality_id])
-  property_legal_condition      property_legal_condition    @relation(fields: [property_legal_condition_id], references: [property_legal_condition_id])
-  credit_requests               credit_request[]
+  @@index([farmer_project_id], map: "farmer_farmer_project_id_fkey")
+  @@index([farmer_quality_id], map: "farmer_farmer_quality_id_fkey")
+  @@index([property_legal_condition_id], map: "farmer_property_legal_condition_id_fkey")
+  @@index([property_project_id], map: "farmer_property_project_id_fkey")
 }
 
 model sector {
-  sector_id             Int       @id @unique @default(autoincrement())
-  sector_description    String    @db.VarChar(255)
-
-  projects              project[]
+  sector_id          Int       @id @unique @default(autoincrement())
+  sector_description String    @db.VarChar(255)
+  projects           project[]
 }
 
 model project {
-  project_id            Int         @id @unique @default(autoincrement())
-  code                  Int         
-  project_description   String      @db.VarChar(255)
-  sector_id             Int  
+  project_id          Int      @id @unique @default(autoincrement())
+  code                Int
+  project_description String   @db.VarChar(255)
+  sector_id           Int
+  farmers_address     farmer[] @relation("FarmerFarmerProject")
+  farmers_property    farmer[] @relation("FarmerPropertyProject")
+  sector              sector   @relation(fields: [sector_id], references: [sector_id])
 
-  farmers_property      farmer[]    @relation(name: "FarmerPropertyProject")
-  farmers_address       farmer[]    @relation(name: "FarmerFarmerProject")
-  sector                sector      @relation(fields: [sector_id], references: [sector_id])   
+  @@index([sector_id], map: "project_sector_id_fkey")
 }
 
 model farmer_quality {
-  farmer_quality_id             Int       @id @unique @default(autoincrement())
-  farmer_quality_description    String    @db.VarChar(255)
-
-  farmers                       farmer[]
+  farmer_quality_id          Int      @id @unique @default(autoincrement())
+  farmer_quality_description String   @db.VarChar(255)
+  farmers                    farmer[]
 }
 
 model property_legal_condition {
-  property_legal_condition_id             Int       @id @unique @default(autoincrement())
-  property_legal_condition_description    String    @db.VarChar(255)
-
-  farmers                                 farmer[]
+  property_legal_condition_id          Int      @id @unique @default(autoincrement())
+  property_legal_condition_description String   @db.VarChar(255)
+  farmers                              farmer[]
 }
 
 model credit_request {
-  credit_request_id           String      @id @unique @db.VarChar(255)
-  farmer_id                   String      @db.VarChar(255)
-  campaign_id                 String      @db.VarChar(35)
-  hectare_number              Int       
-  credit_reason               String      @db.VarChar(255)
-  credit_amount               Decimal     @db.Decimal(19, 4)
-  guarantee_description       String      @db.VarChar(255)
-  guarantee_amount            Decimal     @db.Decimal(19, 4)
-  technical_id                 Int
-  credit_request_status       String      @db.VarChar(255) @default("Pendiente")
-  credit_request_observation  String      @db.VarChar(255)
-  create_datetime             DateTime    @default(now())
-  update_status_datetime      DateTime?
+  credit_request_id          String     @id @unique @db.VarChar(255)
+  farmer_id                  String     @db.VarChar(255)
+  campaign_id                String     @db.VarChar(35)
+  hectare_number             Int
+  credit_reason              String     @db.VarChar(255)
+  credit_amount              Decimal    @db.Decimal(19, 4)
+  guarantee_description      String     @db.VarChar(255)
+  guarantee_amount           Decimal    @db.Decimal(19, 4)
+  technical_id               Int
+  credit_request_status      String     @default("Pendiente") @db.VarChar(255)
+  credit_request_observation String     @db.VarChar(255)
+  create_datetime            DateTime   @default(now())
+  update_status_datetime     DateTime?
+  campaign                   campaign   @relation(fields: [campaign_id], references: [campaign_id])
+  farmer                     farmer     @relation(fields: [farmer_id], references: [farmer_id])
+  technical                  technical  @relation(fields: [technical_id], references: [technical_id])
+  delivery                   delivery[]
 
-  farmer                      farmer      @relation(fields: [farmer_id], references: [farmer_id])
-  technical                   technical   @relation(fields: [technical_id], references: [technical_id])
-  campaign                    campaign    @relation(fields: [campaign_id], references: [campaign_id])
-  delivery                    delivery[]
+  @@index([campaign_id], map: "credit_request_campaign_id_fkey")
+  @@index([farmer_id], map: "credit_request_farmer_id_fkey")
+  @@index([technical_id], map: "credit_request_technical_id_fkey")
 }
 
 model technical {
-  technical_id           Int                 @id @unique @default(autoincrement())
-  assistance_type_id     Int
-  technical_name         String              @db.VarChar(255)
+  technical_id       Int              @id @unique @default(autoincrement())
+  assistance_type_id Int
+  technical_name     String           @db.VarChar(255)
+  credit_requests    credit_request[]
+  assistance_type    assistance_type  @relation(fields: [assistance_type_id], references: [assistance_type_id])
 
-  credit_requests       credit_request[]
-  assistance_type       assistance_type     @relation(fields: [assistance_type_id], references: [assistance_type_id])
+  @@index([assistance_type_id], map: "technical_assistance_type_id_fkey")
 }
 
 model assistance_type {
-  assistance_type_id            Int       @id @unique @default(autoincrement())
-  assistance_type_description   String    @db.VarChar(30)
-
-  technicals                    technical[]
+  assistance_type_id          Int         @id @unique @default(autoincrement())
+  assistance_type_description String      @db.VarChar(30)
+  technicals                  technical[]
 }
 
 model campaign {
-  campaign_id                     String                @id @unique @db.VarChar(255)
-  campaign_description            String                @db.VarChar(255)
-  campaign_type_id                Int
-  campaign_year                   String                @db.VarChar(10)
-  period_name                     String                @db.VarChar(255)
-  start_date                      String                @db.VarChar(255)
-  finish_date                     String                @db.VarChar(255)
-  campaign_interest               Decimal               @db.Decimal(19, 4)
-  campaign_delinquent_interest    Decimal               @db.Decimal(19, 4)
-  
-  credit_requests       credit_request[]
-  campaign_type         campaign_type          @relation(fields: [campaign_type_id], references: [campaign_type_id])
-  delivery_plan_model   delivery_plan_model?
+  campaign_id                  String               @id @unique @db.VarChar(255)
+  campaign_description         String               @db.VarChar(255)
+  campaign_type_id             Int
+  campaign_year                String               @db.VarChar(10)
+  period_name                  String               @db.VarChar(255)
+  start_date                   String               @db.VarChar(255)
+  finish_date                  String               @db.VarChar(255)
+  campaign_interest            Decimal              @db.Decimal(19, 4)
+  campaign_delinquent_interest Decimal              @db.Decimal(19, 4)
+  campaign_type                campaign_type        @relation(fields: [campaign_type_id], references: [campaign_type_id])
+  credit_requests              credit_request[]
+  delivery_plan_model          delivery_plan_model?
+
+  @@index([campaign_type_id], map: "campaign_campaign_type_id_fkey")
 }
 
 model campaign_type {
-  campaign_type_id            Int       @id @unique @default(autoincrement())
-  campaign_type_description   String    @db.VarChar(255)
-  period_quantity             Int
-
-  campaigns                   campaign[]
+  campaign_type_id          Int        @id @unique @default(autoincrement())
+  campaign_type_description String     @db.VarChar(255)
+  period_quantity           Int
+  campaigns                 campaign[]
 }
 
 model delivery_plan_model {
-  delivery_plan_model_id            Int                   @id @unique @default(autoincrement())
-  campaign_id                       String                @db.VarChar(255) @unique
-  delivery_plan_model_description   String                @db.VarChar(255)
-
-  campaign                          campaign              @relation(fields: [campaign_id], references: [campaign_id])
-  departure_detail                  departure_detail[]
+  delivery_plan_model_id          Int                @id @unique @default(autoincrement())
+  campaign_id                     String             @unique @db.VarChar(255)
+  delivery_plan_model_description String             @db.VarChar(255)
+  campaign                        campaign           @relation(fields: [campaign_id], references: [campaign_id])
+  departure_detail                departure_detail[]
 }
 
 model departure_detail {
-  departure_detail_id                 Int                   @id @unique @default(autoincrement())
-  delivery_plan_model_id              Int   
-  departure_detail_description        String                @db.VarChar(255)
-  departure_type                      String                @db.VarChar(35)
-  resource                            String                @db.VarChar(35)
-  amount_per_hectare                  Decimal               @db.Decimal(19, 4)
+  departure_detail_id          Int                 @id @unique @default(autoincrement())
+  delivery_plan_model_id       Int
+  departure_detail_description String              @db.VarChar(255)
+  departure_type               String              @db.VarChar(35)
+  resource                     String              @db.VarChar(35)
+  amount_per_hectare           Decimal             @db.Decimal(19, 4)
+  delivery_plan_model          delivery_plan_model @relation(fields: [delivery_plan_model_id], references: [delivery_plan_model_id])
 
-  delivery_plan_model                 delivery_plan_model   @relation(fields: [delivery_plan_model_id], references: [delivery_plan_model_id])
+  @@index([delivery_plan_model_id], map: "departure_detail_delivery_plan_model_id_fkey")
 }
 
 model user {
-  email           String        @id @unique @db.VarChar(255)
-  password        String        @db.VarChar(255)
+  email    String @id @unique @db.VarChar(255)
+  password String @db.VarChar(255)
 }
 
 model delivery {
-  delivery_id           Int               @id @unique @default(autoincrement())
-  credit_request_id     String            @db.VarChar(255)
-  delivery_datetime     DateTime          
-  provider_id           Int
-  financial_source_id   Int
-  current_account_id    Int
-  gloss                 String            @db.VarChar(255)
-  delivery_amount       Decimal           @db.Decimal(19, 4)
+  delivery_id                 Int               @id @unique @default(autoincrement())
+  credit_request_id           String            @db.VarChar(255)
+  delivery_datetime           DateTime          
+  provider_id                 Int
+  financial_source_id         Int
+  current_account_id          Int
+  gloss                       String            @db.VarChar(255)
+  delivery_amount_USD         Decimal           @db.Decimal(19, 4)
+  delivery_amount_PEN         Decimal           @db.Decimal(19, 4)
 
-  credit_request        credit_request    @relation(fields: [credit_request_id], references: [credit_request_id])
-  financial_source      financial_source  @relation(fields: [financial_source_id], references: [financial_source_id])
-  current_account       current_account   @relation(fields: [current_account_id], references: [current_account_id])
-  provider              provider          @relation(fields: [provider_id], references: [provider_id])
+  credit_request              credit_request    @relation(fields: [credit_request_id], references: [credit_request_id])
+  financial_source            financial_source  @relation(fields: [financial_source_id], references: [financial_source_id])
+  current_account             current_account   @relation(fields: [current_account_id], references: [current_account_id])
+  provider                    provider          @relation(fields: [provider_id], references: [provider_id])
 }
 
 model financial_source {
-  financial_source_id           Int         @id @unique @default(autoincrement())
-  financial_source_description  String      @db.VarChar(255)
-
-  delivery                      delivery[]
+  financial_source_id          Int        @id @unique @default(autoincrement())
+  financial_source_description String     @db.VarChar(255)
+  delivery                     delivery[]
 }
 
 model current_account {
-  current_account_id            Int         @id @unique @default(autoincrement())
-  current_account_description   String      @db.VarChar(255)
-
-  delivery                      delivery[]
+  current_account_id          Int        @id @unique @default(autoincrement())
+  current_account_description String     @db.VarChar(255)
+  delivery                    delivery[]
 }
 
 model provider {
-  provider_id             Int         @id @unique @default(autoincrement())
-  provider_description    String      @db.VarChar(255)
-
-  delivery                delivery[]
+  provider_id          Int        @id @unique @default(autoincrement())
+  provider_description String     @db.VarChar(255)
+  delivery             delivery[]
 }
