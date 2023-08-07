@@ -14,7 +14,6 @@ jest.mock('../../../../src/core/credit-request/infrastructure/credit.request.pri
 jest.mock('../../../../src/core/delivery/domain/delivery.persistance.respository')
 jest.mock('../../../../src/core/campaign/domain/campaign.persistance.repository')
 
-
 describe('Create Campaign module test suites', () => {
   const date = new Date()
   const mockCreditRequest: CreditRequestDetail = {
