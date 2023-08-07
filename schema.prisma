@@ -157,24 +157,20 @@ model user {
 }
 
 model delivery {
-  delivery_id         Int              @id @unique @default(autoincrement())
-  credit_request_id   String           @db.VarChar(255)
-  delivery_datetime   DateTime
-  provider_id         Int
-  financial_source_id Int
-  current_account_id  Int
-  gloss               String           @db.VarChar(255)
-  delivery_amount_USD Decimal          @db.Decimal(19, 4)
-  delivery_amount_PEN Decimal          @db.Decimal(19, 4)
-  credit_request      credit_request   @relation(fields: [credit_request_id], references: [credit_request_id])
-  current_account     current_account  @relation(fields: [current_account_id], references: [current_account_id])
-  financial_source    financial_source @relation(fields: [financial_source_id], references: [financial_source_id])
-  provider            provider         @relation(fields: [provider_id], references: [provider_id])
+  delivery_id                 Int               @id @unique @default(autoincrement())
+  credit_request_id           String            @db.VarChar(255)
+  delivery_datetime           DateTime          
+  provider_id                 Int
+  financial_source_id         Int
+  current_account_id          Int
+  gloss                       String            @db.VarChar(255)
+  delivery_amount_USD         Decimal           @db.Decimal(19, 4)
+  delivery_amount_PEN         Decimal           @db.Decimal(19, 4)
 
-  @@index([credit_request_id], map: "delivery_credit_request_id_fkey")
-  @@index([current_account_id], map: "delivery_current_account_id_fkey")
-  @@index([financial_source_id], map: "delivery_financial_source_id_fkey")
-  @@index([provider_id], map: "delivery_provider_id_fkey")
+  credit_request              credit_request    @relation(fields: [credit_request_id], references: [credit_request_id])
+  financial_source            financial_source  @relation(fields: [financial_source_id], references: [financial_source_id])
+  current_account             current_account   @relation(fields: [current_account_id], references: [current_account_id])
+  provider                    provider          @relation(fields: [provider_id], references: [provider_id])
 }
 
 model financial_source {
