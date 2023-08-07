@@ -73,6 +73,7 @@ describe('Create Campaign module test suites', () => {
     "amountDelivered": 60,
     "amountDeliveredPercentage": 100,
     "delinquentInterest": 0,
+    "delinquentInterestPercentage": 30,
     "finalDebt": 75,
     "payments": [
       {
@@ -81,6 +82,7 @@ describe('Create Campaign module test suites', () => {
       }
     ],
     "interest": 15,
+    "interesPercentage": 25,
     "totalPayment": 0,
     "creditAmount": mockCreditRequest.creditAmount
   }
