@@ -52,7 +52,9 @@ export default class GetAccountStatusUseCase {
       finalDebt,
       payments,
       interest,
+      interesPercentage: campaignFound!.campaignInterest,
       delinquentInterest,
+      delinquentInterestPercentage: campaignFound!.campaignDelinquentInterest,
       totalPayment,
       creditAmount: creditRequestFound.creditAmount
     }
