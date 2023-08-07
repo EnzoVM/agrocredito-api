@@ -5,8 +5,9 @@ import { ResponseCodes } from '../utils/standar-response/response.codes'
 import GetAccountStatusUseCase from '../core/account-status/application/get.account.status.usecase'
 import CreditRequestPrimaRepository from '../core/credit-request/infrastructure/credit.request.prisma.repository'
 import DeliveryPrismaRepository from '../core/delivery/infrastructure/delivery.prisma.repository'
+import CampaignPrismaRepository from '../core/campaign/infraestructure/prisma/campaign.prisma.repository'
 
-const getAccountStatusUseCase = new GetAccountStatusUseCase(new CreditRequestPrimaRepository, new DeliveryPrismaRepository)
+const getAccountStatusUseCase = new GetAccountStatusUseCase(new CreditRequestPrimaRepository, new DeliveryPrismaRepository, new CampaignPrismaRepository)
 
 export const getAccountStatusHandler = async (req: Request, res: Response, next: NextFunction) => {
   const { creditRequestId } = req.params
