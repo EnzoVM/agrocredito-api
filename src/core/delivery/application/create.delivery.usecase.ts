@@ -19,14 +19,16 @@ export default class CreateDeliveryUseCase {
     providerId,
     financialSourceId,
     currentAccountId,
-    gloss
+    gloss,
+    exchangeRate
   }:{
     creditRequestId: string,
     deliveryDatetime: string
     providerId: number
     financialSourceId: number
     currentAccountId: number
-    gloss: string
+    gloss: string,
+    exchangeRate: number
   }
   ): Promise <DeliveryResponseModel> {
 
@@ -36,7 +38,8 @@ export default class CreateDeliveryUseCase {
       !providerId ||
       !financialSourceId ||
       !currentAccountId ||
-      !gloss
+      !gloss ||
+      !exchangeRate
     ) {
       throw new BadRequestError({ message: 'Body of the request are null or invalid', core: 'Delivery'})
     }
@@ -47,7 +50,8 @@ export default class CreateDeliveryUseCase {
       typeof providerId !== 'number' ||
       typeof financialSourceId !== 'number' ||
       typeof currentAccountId !== 'number' ||
-      typeof gloss !== 'string'
+      typeof gloss !== 'string' ||
+      typeof exchangeRate !== 'number'
     ) {
       throw new BadRequestError({ message: 'Body of the request are null or invalid', core: 'Delivery'})
     }
@@ -56,14 +60,14 @@ export default class CreateDeliveryUseCase {
     if(!creditRequestFound){
       throw new NotFoundError({ message: 'La solicitud de crédito especificado no existe', core: 'Delivery'})
     }
-
-    let deliveryAmount: number = 0
-    const deliveriesFound = await this.deliveryPersistanceRepository.getDeliveriesByCreditRequestId({creditRequestId})
+    
+    let deliveryAmountUSD: number = 0
+    const deliveriesFound = await this.deliveryPersistanceRepository.countDeliveriesByCreditRequestId({creditRequestId})
     if(deliveriesFound === 0){
-      deliveryAmount = 0.80*creditRequestFound.creditAmount
+      deliveryAmountUSD = 0.80*creditRequestFound.creditAmount
     }
     if(deliveriesFound === 1){
-      deliveryAmount = 0.20*creditRequestFound.creditAmount
+      deliveryAmountUSD = 0.20*creditRequestFound.creditAmount
     }
     if(deliveriesFound >= 2){
       throw new ProcessError({ message: 'No se puede realizar más entregas, porque ya se han hecho 2', core: 'Delivery'})
@@ -76,9 +80,10 @@ export default class CreateDeliveryUseCase {
       financialSourceId,
       currentAccountId,
       gloss,
-      deliveryAmount
+      deliveryAmountUSD,
+      deliveryAmountPEN: deliveryAmountUSD*exchangeRate
     }
-
+    
     const deliveryAdded = await this.deliveryPersistanceRepository.createDelivery({delivery: newDelivery})
 
     return deliveryAdded

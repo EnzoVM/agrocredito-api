@@ -5,11 +5,13 @@ import { ResponseStatusCodes } from "../utils/standar-response/response.status.c
 import DeliveryPrismaRepository from "../core/delivery/infrastructure/delivery.prisma.repository"
 import ListDeliveryUseCase from "../core/delivery/application/list.delivery.usecase"
 import CreateDeliveryUseCase from "../core/delivery/application/create.delivery.usecase"
+import CountDeliveriesByCreditRequestIdUseCase from "../core/delivery/application/count.deliveries.by.credit.request.id.usecase"
 import CreditRequestPrimaRepository from "../core/credit-request/infrastructure/credit.request.prisma.repository"
 
 const deliveryPrismaRepository = new DeliveryPrismaRepository()
 const listDeliveryUseCase = new ListDeliveryUseCase(deliveryPrismaRepository)
 const createDeliveryUseCase = new CreateDeliveryUseCase(new DeliveryPrismaRepository, new CreditRequestPrimaRepository)
+const countDeliveriesByCreditRequestIdUseCase = new CountDeliveriesByCreditRequestIdUseCase(new DeliveryPrismaRepository)
 
 export const listDeliveriesHandler = async (request: Request, response: Response, next: NextFunction) => {
   const { filters } = request.params
@@ -51,7 +53,8 @@ export const createDeliveryHandle = async (req: Request, res: Response, next: Ne
     providerId,
     financialSourceId,
     currentAccountId,
-    gloss
+    gloss,
+    exchangeRate
   } = req.body
 
   try {
@@ -61,9 +64,10 @@ export const createDeliveryHandle = async (req: Request, res: Response, next: Ne
       providerId,
       financialSourceId,
       currentAccountId,
-      gloss
+      gloss,
+      exchangeRate
     })
-
+    
     new ResponseModel({
       statusCode: ResponseStatusCodes.SUCCESS_REQUEST,
       code: ResponseCodes.SUCCESS_REQUEST,
@@ -71,6 +75,24 @@ export const createDeliveryHandle = async (req: Request, res: Response, next: Ne
       data: deliveryAdded
     }).send(res)
     
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const getDeliveriesByCreditRequestIdHandle = async (req: Request, res: Response, next: NextFunction) => {
+  const { creditRequestId } = req.params
+  
+  try {
+    const deliveriesCount = await countDeliveriesByCreditRequestIdUseCase.invoke({creditRequestId})
+
+    new ResponseModel({
+      statusCode: ResponseStatusCodes.SUCCESS_REQUEST,
+      code: ResponseCodes.SUCCESS_REQUEST,
+      message: 'Number of deliveries associated with a credit request',
+      data: deliveriesCount
+    }).send(res)
+  
   } catch (error) {
     next(error)
   }
