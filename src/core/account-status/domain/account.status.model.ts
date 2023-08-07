@@ -3,6 +3,7 @@ export default interface AccountStatusModel {
   amountDeliveredPercentage: number
   creditAmount: number
   interest: number
+  delinquentInterest: number
   totalPayment: number
   finalDebt: number
   payments: Payment[]

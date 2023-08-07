@@ -35,7 +35,7 @@ describe('Create Campaign module test suites', () => {
   }
 
   const mockCampaign: Campaign = {
-    campaignDelinquentInterest: 2,
+    campaignDelinquentInterest: 0,
     campaignDescription: '38383',
     campaignId: '93',
     campaignInterest: 25,
@@ -72,6 +72,7 @@ describe('Create Campaign module test suites', () => {
   const mockAccountSatusModel: AccountStatusModel = {
     "amountDelivered": 60,
     "amountDeliveredPercentage": 100,
+    "delinquentInterest": 0,
     "finalDebt": 75,
     "payments": [
       {
