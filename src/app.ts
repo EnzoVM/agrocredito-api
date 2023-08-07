@@ -21,6 +21,7 @@ import assistanceTypeRouter from './routes/assistance.type.routes'
 import technicalRouter from './routes/technical.routes'
 import logRecordRouter from './routes/log.record.routes'
 import deliveryRouter from './routes/delivery.routes'
+import accountStatusRouter from './routes/account.status.routes'
 import currentAccountRouter from './routes/current.account.routes'
 import financialSourceRouter from './routes/financial.source.routes'
 import providerRouter from './routes/provider.routes'
@@ -56,6 +57,7 @@ app.use('/api/v1/assistance-type', assistanceTypeRouter)
 app.use('/api/v1/technical', technicalRouter)
 app.use('/api/v1/log-record', logRecordRouter)
 app.use('/api/v1/deliveries', deliveryRouter)
+app.use('/api/v1/account-status', accountStatusRouter)
 app.use('/api/v1/current-account', currentAccountRouter)
 app.use('/api/v1/financial-source', financialSourceRouter)
 app.use('/api/v1/provider', providerRouter)
