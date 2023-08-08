@@ -43,7 +43,7 @@ export default class PaymentPrismaRepository implements PaymentPersistanceReposi
             paymentId: payment.payment_id,
             fullNames: payment.credit_request.farmer.full_names || undefined,
             socialReason: payment.credit_request.farmer.social_reason || undefined,
-            deliveryDateTime: payment.payment_datetime,
+            paymentDateTime: payment.payment_datetime,
             financialSourceDescription: payment.financial_source.financial_source_description,
             currentAccountDescription: payment.current_account.current_account_description,
             paymentDescription: payment.payment_description,
@@ -83,7 +83,7 @@ export default class PaymentPrismaRepository implements PaymentPersistanceReposi
           paymentId: payment.payment_id,
           fullNames: payment.credit_request.farmer.full_names || undefined,
           socialReason: payment.credit_request.farmer.social_reason || undefined,
-          deliveryDateTime: payment.payment_datetime,
+          paymentDateTime: payment.payment_datetime,
           financialSourceDescription: payment.financial_source.financial_source_description,
           currentAccountDescription: payment.current_account.current_account_description,
           paymentDescription: payment.payment_description,
@@ -91,7 +91,7 @@ export default class PaymentPrismaRepository implements PaymentPersistanceReposi
         }
       })
     } catch (error: any) {
-      throw new UnavailableError({ message: error.message, core: 'delivery' })
+      throw new UnavailableError({ message: error.message, core: 'payment' })
     }
   }
 }
