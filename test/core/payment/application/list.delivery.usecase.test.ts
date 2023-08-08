@@ -9,7 +9,8 @@ jest.mock("../../../../src/core/payment/infrastructure/payment.prisma.repository
 describe('Create Campaign module test suites', () => {
   const mockPaymentList: {
     payments: PaymentListModel[], 
-    count: number
+    count: number,
+    totalAmount: number
   } = {
     payments: [
       {
@@ -40,7 +41,8 @@ describe('Create Campaign module test suites', () => {
         "paymentAmount": 100
       }
     ],
-    count: 3
+    count: 3,
+    totalAmount: 10
   }
 
   let paymentPrismaRepository: PaymentPrismaRepository
@@ -52,6 +54,7 @@ describe('Create Campaign module test suites', () => {
 
   beforeEach(() => {
     jest.spyOn(paymentPrismaRepository, 'listPayments').mockResolvedValue(mockPaymentList)
+    jest.spyOn(paymentPrismaRepository, 'getTotalAmountByCampaignId').mockResolvedValue(10)
 
     listPaymentUseCase = new ListPaymentUseCase(paymentPrismaRepository)
   })

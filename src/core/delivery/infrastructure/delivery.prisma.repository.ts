@@ -97,6 +97,27 @@ export default class DeliveryPrismaRepository implements DeliveryPersistanceRepo
     }
   }
 
+  async getTotalAmountByCampaignId ({ campaignId }: { campaignId: string }): Promise<number> {
+    try {
+      const deliveries = await prisma.delivery.findMany({
+        include: {
+          credit_request: true
+        },
+        where: {
+          credit_request: {
+            campaign_id: campaignId
+          }
+        }
+      })
+  
+      const totalAmount = deliveries.reduce((accum, delivery) => accum + Number(delivery.delivery_amount_USD), 0)
+  
+      return totalAmount
+    } catch (error: any) {
+      throw new UnavailableError({ message: error.message, core: 'delivery' })
+    }
+  }
+
   async createDelivery ({ delivery }: { delivery: DeliveryCreateModel }): Promise<DeliveryResponseModel> {
     try {
       const deliveryAdded = await prisma.delivery.create({

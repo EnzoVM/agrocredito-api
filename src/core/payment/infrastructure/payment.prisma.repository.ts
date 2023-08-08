@@ -57,6 +57,27 @@ export default class PaymentPrismaRepository implements PaymentPersistanceReposi
     }
   }
 
+  async getTotalAmountByCampaignId ({ campaignId }: { campaignId: string }): Promise<number> {
+    try {
+      const payments = await prisma.payment.findMany({
+        include: {
+          credit_request: true
+        },
+        where: {
+          credit_request: {
+            campaign_id: campaignId
+          }
+        }
+      })
+  
+      const totalAmount = payments.reduce((accum, payment) => accum + Number(payment.payment_amount_USD), 0)
+  
+      return totalAmount
+    } catch (error: any) {
+      throw new UnavailableError({ message: error.message, core: 'payment' })
+    }
+  }
+
   async listPaymentsByCreditRequestId ({ creditRequestId, take }: { creditRequestId: string, take?: number }): Promise<PaymentListModel[]> {
     try {
       const payments = await prisma.payment.findMany({

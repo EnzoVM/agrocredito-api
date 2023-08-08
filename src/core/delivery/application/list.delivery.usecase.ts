@@ -36,6 +36,7 @@ export default class ListDeliveryUseCase {
 
     let finalCount: number = 0
     let finalDeliveries: DeliveryListModel[] = []
+    let finalTotalAmount: number = 0
 
     if (farmerType === FarmerType.INDIVIDUAL) {
       if (typeof fullNames === 'undefined') {
@@ -45,6 +46,7 @@ export default class ListDeliveryUseCase {
       const { deliveries, count } = await this.deliveryPersistanceRepository.listDeliveries({ campaignId, farmerType, fullNames })
       finalDeliveries = deliveries
       finalCount = count
+      finalTotalAmount = await this.deliveryPersistanceRepository.getTotalAmountByCampaignId({ campaignId })
     }
 
     if (farmerType === FarmerType.ASSOCIATION) {
@@ -56,6 +58,7 @@ export default class ListDeliveryUseCase {
   
       finalDeliveries = deliveries
       finalCount = count
+      finalTotalAmount = await this.deliveryPersistanceRepository.getTotalAmountByCampaignId({ campaignId })
     }
 
     if (farmerType === FarmerType.ALL) {  
@@ -63,6 +66,7 @@ export default class ListDeliveryUseCase {
   
       finalDeliveries = deliveries
       finalCount = count
+      finalTotalAmount = await this.deliveryPersistanceRepository.getTotalAmountByCampaignId({ campaignId })
     }
 
     if (limit > 0) {
@@ -74,7 +78,8 @@ export default class ListDeliveryUseCase {
 
     return {
       deliveries: finalDeliveries,
-      count: finalCount
+      count: finalCount,
+      totalAmount: finalTotalAmount
     }
   }
 }
