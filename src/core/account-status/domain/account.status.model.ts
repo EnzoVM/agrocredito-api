@@ -1,4 +1,5 @@
 export default interface AccountStatusModel {
+  campaignFinishDate: string
   amountDelivered: number
   amountDeliveredPercentage: number
   creditAmount: number

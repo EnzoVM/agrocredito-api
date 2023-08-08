@@ -69,6 +69,7 @@ describe('Create Campaign module test suites', () => {
   ]
   
   const mockAccountSatusModel: AccountStatusModel = {
+    "campaignFinishDate": '26/08',
     "amountDelivered": 60,
     "amountDeliveredPercentage": 100,
     "delinquentInterest": 0,
