@@ -7,4 +7,5 @@ export default interface DeliveryPersistanceRepository {
   listDeliveriesByCreditRequestId: ({ creditRequestId }: { creditRequestId: string }) => Promise<DeliveryListModel[]>
   createDelivery: ({delivery}:{delivery: DeliveryCreateModel}) => Promise<DeliveryResponseModel>
   countDeliveriesByCreditRequestId: ({creditRequestId}:{creditRequestId: string}) => Promise<number>
+  getTotalAmountByCampaignId ({ campaignId }: { campaignId: string }): Promise<number>
 }

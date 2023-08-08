@@ -6,16 +6,18 @@ import CreditRequestPersistanceRepository from "../../credit-request/domain/cred
 import { CreditRequestStatusType } from "../../credit-request/domain/credit.request.status.type"
 import DeliveryPersistanceRepository from "../../delivery/domain/delivery.persistance.respository"
 import FarmerPersistanceRepository from "../../farmer/domain/farmer.persistance.repository"
+import PaymentPersistanceRepository from "../../payment/domain/payment.persistance.repository"
 import AccountStatusModel, { Payment } from "../domain/account.status.model"
 
 export default class GetAccountStatusUseCase {
   constructor (
     private readonly creditRequestPersistanceRepository: CreditRequestPersistanceRepository,
     private readonly deliveryPersistanceRepository: DeliveryPersistanceRepository,
-    private readonly campaignPersistanceRepository: CampaignPersistanceRepository
+    private readonly campaignPersistanceRepository: CampaignPersistanceRepository,
+    private readonly paymentPersistanceRepository: PaymentPersistanceRepository
   ) {}
 
-  async get ({ creditRequestId }: { creditRequestId: string }): Promise<AccountStatusModel> {
+  async get ({ creditRequestId, take }: { creditRequestId: string, take?: number }): Promise<AccountStatusModel> {
     if (typeof creditRequestId === 'undefined') {
       throw new BadRequestError({ message: 'Body of the request are null or invalid', core: 'account-status' })
     }
@@ -38,12 +40,22 @@ export default class GetAccountStatusUseCase {
       throw new ProcessError({ message: 'La informacion no se pudo procesar debido a que no existe la campaña especificada', core: 'account-status' })
     }
 
-    const payments: Payment[] = [
-      {
-        paymentAmount: 0,
-        transactionDateTime: new Date()
+    const paymentsToShowFound = await this.paymentPersistanceRepository.listPaymentsByCreditRequestId({ creditRequestId, take })
+    const totalPaymentsFound = await this.paymentPersistanceRepository.listPaymentsByCreditRequestId({ creditRequestId })
+
+    const paymentsToShow: Payment[] = paymentsToShowFound.map(payment => {
+      return {
+        paymentAmount: payment.paymentAmount,
+        transactionDateTime: payment.paymentDateTime
       }
-    ]
+    })
+
+    const payments: Payment[] = totalPaymentsFound.map(payment => {
+      return {
+        paymentAmount: payment.paymentAmount,
+        transactionDateTime: payment.paymentDateTime
+      }
+    })
 
     const interest = (campaignFound.campaignInterest / 100) * creditRequestFound.creditAmount
     const delinquentInterest = (campaignFound.campaignDelinquentInterest / 100) * creditRequestFound.creditAmount
@@ -57,7 +69,7 @@ export default class GetAccountStatusUseCase {
       amountDelivered,
       amountDeliveredPercentage,
       finalDebt,
-      payments,
+      payments: paymentsToShow,
       deliveries: deliveriesFound.map(delivery => {
         return {
           deliveryAmount: delivery.deliveryAmount,
