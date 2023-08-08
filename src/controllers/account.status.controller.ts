@@ -6,14 +6,16 @@ import GetAccountStatusUseCase from '../core/account-status/application/get.acco
 import CreditRequestPrimaRepository from '../core/credit-request/infrastructure/credit.request.prisma.repository'
 import DeliveryPrismaRepository from '../core/delivery/infrastructure/delivery.prisma.repository'
 import CampaignPrismaRepository from '../core/campaign/infraestructure/prisma/campaign.prisma.repository'
+import PaymentPrismaRepository from '../core/payment/infrastructure/payment.prisma.repository'
 
-const getAccountStatusUseCase = new GetAccountStatusUseCase(new CreditRequestPrimaRepository, new DeliveryPrismaRepository, new CampaignPrismaRepository)
+const getAccountStatusUseCase = new GetAccountStatusUseCase(new CreditRequestPrimaRepository, new DeliveryPrismaRepository, new CampaignPrismaRepository, new PaymentPrismaRepository)
 
 export const getAccountStatusHandler = async (req: Request, res: Response, next: NextFunction) => {
   const { creditRequestId } = req.params
+  const { take } = req.body
 
   try {
-    const accountStatus = await getAccountStatusUseCase.get({ creditRequestId })
+    const accountStatus = await getAccountStatusUseCase.get({ creditRequestId, take })
 
     new ResponseModel({
       statusCode: ResponseStatusCodes.SUCCESS_REQUEST,
