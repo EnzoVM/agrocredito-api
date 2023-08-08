@@ -5,6 +5,6 @@ import isAuthenticated from '../middlewares/isAuthenticated'
 const accountStatusRouter = Router()
 
 accountStatusRouter
-  .get('/:creditRequestId', isAuthenticated, getAccountStatusHandler)
+  .get('/:creditRequestId/:take', isAuthenticated, getAccountStatusHandler)
 
 export default accountStatusRouter
