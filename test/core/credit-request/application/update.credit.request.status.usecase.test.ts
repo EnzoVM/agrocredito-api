@@ -1,5 +1,6 @@
 import UpdateCreditRequestStatusUseCase from '../../../../src/core/credit-request/application/update.credit.request.status.usecase'
 import CreditRequestPrismaRepository from '../../../../src/core/credit-request/infrastructure/credit.request.prisma.repository'
+import DeliveryPrismaRepository from '../../../../src/core/delivery/infrastructure/delivery.prisma.repository'
 import BadRequestError from '../../../../src/utils/custom-errors/application-errors/bad.request.error'
 import CreditRequestDetail from '../../../../src/core/credit-request/domain/credit.request.detail.model'
 import NotFoundError from '../../../../src/utils/custom-errors/application-errors/not.found.error'
@@ -26,17 +27,23 @@ describe('Create Campaign module test suites', () => {
   }
 
   let creditRequestPersistanceRepository: CreditRequestPrismaRepository
+  let deliveryPrismaRepository: DeliveryPrismaRepository
   let updateCreditRequestStatusUseCase: UpdateCreditRequestStatusUseCase
 
   beforeAll(() => {
     creditRequestPersistanceRepository = new CreditRequestPrismaRepository()
+    deliveryPrismaRepository = new DeliveryPrismaRepository()
   })
 
   beforeEach(() => {
     jest.spyOn(creditRequestPersistanceRepository, 'getCreditRequestById').mockResolvedValue(mockCreditRequest)
+    jest.spyOn(deliveryPrismaRepository, 'countDeliveriesByCreditRequestId').mockResolvedValue(0)
     jest.spyOn(creditRequestPersistanceRepository, 'updateCreditRequestStatusById').mockResolvedValue('Update successfuly')
 
-    updateCreditRequestStatusUseCase = new UpdateCreditRequestStatusUseCase(creditRequestPersistanceRepository)
+    updateCreditRequestStatusUseCase = new UpdateCreditRequestStatusUseCase(
+      creditRequestPersistanceRepository,
+      deliveryPrismaRepository
+    )
   })
 
   describe('OPERATION SUCCESS', () => {
@@ -91,6 +98,21 @@ describe('Create Campaign module test suites', () => {
   describe('NOT FOUND', () => {
     test('Should throw not ofund error when try to get an unexisting credit request', async () => {
       jest.spyOn(creditRequestPersistanceRepository, 'getCreditRequestById').mockResolvedValue(null)
+
+      try {
+        await updateCreditRequestStatusUseCase.update({ 
+          creditRequestId: '162738393',
+          creditRequestStatus: CreditRequestStatusType.PENDING
+        })
+      } catch (error) {
+        expect(error).toBeInstanceOf(NotFoundError)
+      }
+    })
+  })
+
+  describe('PROCESS ERROR', () => {
+    test('Should throw process error when try to update a credit request with a delivery', async () => {
+      jest.spyOn(deliveryPrismaRepository, 'countDeliveriesByCreditRequestId').mockResolvedValue(1)
 
       try {
         await updateCreditRequestStatusUseCase.update({ 
