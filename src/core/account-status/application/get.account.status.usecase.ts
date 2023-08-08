@@ -52,7 +52,7 @@ export default class GetAccountStatusUseCase {
     const finalDebt = (creditRequestFound.creditAmount + interest + delinquentInterest) - totalPayment
     
     return {
-      campaignFinishDate: campaignFound.finishDate,
+      campaignFinishDate: `${campaignFound.finishDate}/${campaignFound.campaignYear}`,
       amountDelivered,
       amountDeliveredPercentage,
       finalDebt,
