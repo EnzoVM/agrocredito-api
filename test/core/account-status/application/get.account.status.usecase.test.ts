@@ -97,7 +97,7 @@ describe('Create Campaign module test suites', () => {
     "amountDeliveredPercentage": 100,
     "delinquentInterest": 0,
     "delinquentInterestPercentage": 30,
-    "finalDebt": 75,
+    "finalDebt": 1300,
     "payments": mockPayments.map(payment => {
       return {
         paymentAmount: payment.paymentAmount,
@@ -112,7 +112,7 @@ describe('Create Campaign module test suites', () => {
       }
     }),
     "interesPercentage": 25,
-    "totalPayment": 0,
+    "totalPayment": 200,
     "creditAmount": mockCreditRequest.creditAmount,
     farmerData: {
       farmerId: ''
@@ -154,7 +154,7 @@ describe('Create Campaign module test suites', () => {
     test('Get credit request by id successfully', async () => {
       const accountStatus = await getAccountStatusUseCase.get({ creditRequestId: '22929'})
 
-      //expect(accountStatus.finalDebt).toBe(mockAccountSatusModel.finalDebt) 
+      expect(accountStatus.finalDebt).toBe(mockAccountSatusModel.finalDebt) 
       expect(accountStatus.interest).toBe(mockAccountSatusModel.interest) 
       expect(accountStatus.totalPayment).toBe(mockAccountSatusModel.totalPayment) 
       expect(accountStatus.amountDelivered).toBe(mockAccountSatusModel.amountDelivered) 

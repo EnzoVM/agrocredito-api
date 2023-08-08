@@ -5,7 +5,6 @@ import CampaignPersistanceRepository from "../../campaign/domain/campaign.persis
 import CreditRequestPersistanceRepository from "../../credit-request/domain/credit.request.persistance.repository"
 import { CreditRequestStatusType } from "../../credit-request/domain/credit.request.status.type"
 import DeliveryPersistanceRepository from "../../delivery/domain/delivery.persistance.respository"
-import FarmerPersistanceRepository from "../../farmer/domain/farmer.persistance.repository"
 import PaymentPersistanceRepository from "../../payment/domain/payment.persistance.repository"
 import AccountStatusModel, { Payment } from "../domain/account.status.model"
 
