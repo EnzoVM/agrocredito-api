@@ -107,7 +107,6 @@ export default class CreateFarmerUseCase {
       throw new ProcessError({ message: `El agricultor con ${farmerFound.dni ? 'DNI' : 'RUC'} ${farmerFound.dni || farmerFound.ruc} ya existe`, core: 'farmer' })
     }
 
-
     const farmerCreated = await this.farmerPersistanceRepository.createFarmer({...farmer, correlative: farmerCorrelative, farmerId, propertyProjectId: projectFound.projectId})
 
     return `Agricultor ${farmerCreated.fullNames || farmerCreated.socialReason} con código ${farmerCreated.farmerId} creado exitósamente`

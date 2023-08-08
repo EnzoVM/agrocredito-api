@@ -11,8 +11,10 @@ import FarmerPrismaRepository from "../core/farmer/infrastructure/farmer.prisma.
 import GetCreditRequestUseCase from "../core/credit-request/application/get.credit.request.usecase"
 import UpdateCreditRequestStatusUseCase from "../core/credit-request/application/update.credit.request.status.usecase"
 import ListApprovedCreditRequestByFarmerUseCase from "../core/credit-request/application/list.approved.credit.request.by.farmer.usecase"
+import DeliveryPrismaRepository from "../core/delivery/infrastructure/delivery.prisma.repository"
 
 const creditRequestPrimaRepository = new CreditRequestPrimaRepository()
+const deliveryPrismaRepository = new DeliveryPrismaRepository()
 const listCreditRequestUseCase = new ListCreditRequestUseCase(creditRequestPrimaRepository)
 const createCreditRequestUseCase = new CreateCreditRequestUseCase(
   new CreditRequestPrimaRepository,
@@ -21,7 +23,7 @@ const createCreditRequestUseCase = new CreateCreditRequestUseCase(
   new FarmerPrismaRepository
 )
 const getCreditRequestUseCase = new GetCreditRequestUseCase(creditRequestPrimaRepository)
-const updateCreditRequestStatusUseCase = new UpdateCreditRequestStatusUseCase(creditRequestPrimaRepository) 
+const updateCreditRequestStatusUseCase = new UpdateCreditRequestStatusUseCase(creditRequestPrimaRepository, deliveryPrismaRepository) 
 const listApprovedCreditRequestByFarmerUseCase = new ListApprovedCreditRequestByFarmerUseCase(new CreditRequestPrimaRepository)
 
 export const listCreditRequestHandler = async (request: Request, response: Response, next: NextFunction) => {
