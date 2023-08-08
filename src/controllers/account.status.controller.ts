@@ -11,11 +11,10 @@ import PaymentPrismaRepository from '../core/payment/infrastructure/payment.pris
 const getAccountStatusUseCase = new GetAccountStatusUseCase(new CreditRequestPrimaRepository, new DeliveryPrismaRepository, new CampaignPrismaRepository, new PaymentPrismaRepository)
 
 export const getAccountStatusHandler = async (req: Request, res: Response, next: NextFunction) => {
-  const { creditRequestId } = req.params
-  const { take } = req.body
+  const { creditRequestId, take } = req.params
 
   try {
-    const accountStatus = await getAccountStatusUseCase.get({ creditRequestId, take })
+    const accountStatus = await getAccountStatusUseCase.get({ creditRequestId, take: take ? Number(take) : undefined })
 
     new ResponseModel({
       statusCode: ResponseStatusCodes.SUCCESS_REQUEST,
