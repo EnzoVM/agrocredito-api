@@ -80,7 +80,14 @@ export default class GetAccountStatusUseCase {
       delinquentInterest,
       delinquentInterestPercentage: campaignFound.campaignDelinquentInterest,
       totalPayment,
-      creditAmount: creditRequestFound.creditAmount
+      creditAmount: creditRequestFound.creditAmount,
+      farmerData: {
+        farmerId: creditRequestFound.farmerId,
+        fullNames: creditRequestFound.farmerFullNames,
+        socialReason: creditRequestFound.farmerSocialReason
+      },
+      campaignId: campaignFound.campaignId,
+      creditRequesId: creditRequestFound.creditRequestId
     }
   }
 }
