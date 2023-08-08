@@ -2,7 +2,7 @@ export default interface PaymentListModel {
   paymentId: number
   socialReason?: string
   fullNames?: string
-  deliveryDateTime: Date
+  paymentDateTime: Date
   financialSourceDescription: string
   currentAccountDescription: string
   paymentDescription: string

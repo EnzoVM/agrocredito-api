@@ -15,7 +15,7 @@ describe('Create Campaign module test suites', () => {
       {
         "paymentId": 1,
         "fullNames": "Martin Perez",
-        "deliveryDateTime": new Date(),
+        "paymentDateTime": new Date(),
         "financialSourceDescription": "Recuperaciones M.E.",
         "currentAccountDescription": "007251-1-32",
         "paymentDescription": "RELACION ABONOS 001",
@@ -24,7 +24,7 @@ describe('Create Campaign module test suites', () => {
       {
         "paymentId": 2,
         "fullNames": "Martin Perez",
-        "deliveryDateTime": new Date(),
+        "paymentDateTime": new Date(),
         "financialSourceDescription": "Recuperaciones M.E.",
         "currentAccountDescription": "007251-1-32",
         "paymentDescription": "RELACION ABONOS 001",
@@ -33,7 +33,7 @@ describe('Create Campaign module test suites', () => {
       {
         "paymentId": 3,
         "fullNames": "Martin Perez",
-        "deliveryDateTime": new Date(),
+        "paymentDateTime": new Date(),
         "financialSourceDescription": "Recuperaciones M.E.",
         "currentAccountDescription": "007251-1-32",
         "paymentDescription": "RELACION ABONOS 001",
