@@ -1,4 +1,5 @@
 export default interface AccountStatusModel {
+  campaignFinishDate: string
   amountDelivered: number
   amountDeliveredPercentage: number
   creditAmount: number
@@ -8,10 +9,16 @@ export default interface AccountStatusModel {
   delinquentInterestPercentage: number
   totalPayment: number
   finalDebt: number
-  payments: Payment[]
+  payments: Payment[],
+  deliveries: Delivery[]
 }
 
 export interface Payment {
   transactionDateTime: Date,
   paymentAmount: number
+}
+
+export interface Delivery {
+  deliveryDateTime: Date,
+  deliveryAmount: number
 }

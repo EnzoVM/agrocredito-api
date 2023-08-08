@@ -69,6 +69,7 @@ describe('Create Campaign module test suites', () => {
   ]
   
   const mockAccountSatusModel: AccountStatusModel = {
+    "campaignFinishDate": '26/08',
     "amountDelivered": 60,
     "amountDeliveredPercentage": 100,
     "delinquentInterest": 0,
@@ -78,6 +79,12 @@ describe('Create Campaign module test suites', () => {
       {
         "paymentAmount": 0,
         "transactionDateTime": date
+      }
+    ],
+    "deliveries": [
+      {
+        "deliveryAmount": 10,
+        "deliveryDateTime": date
       }
     ],
     "interest": 15,
@@ -149,6 +156,32 @@ describe('Create Campaign module test suites', () => {
   describe('PROCESS ERROR', () => {
     test('Should throw process error when try to get an unexisting campaign', async () => {
       jest.spyOn(campaignPersistanceRepository, 'getCampaignById').mockResolvedValue(null)
+
+      try {
+        await getAccountStatusUseCase.get({ creditRequestId: '22929'})
+      } catch (error) {
+        expect(error).toBeInstanceOf(ProcessError)
+      }
+    })
+
+    test('Should throw process error when try to get an unexisting campaign', async () => {
+      const mockPendingCreditRequest: CreditRequestDetail = {
+        "creditRequestId": "ff782db0-24b4-11ee-84bf-0ed08c7979f9",
+        "farmerId": "3.1.1",
+        "farmerFullNames": "Josué Emmanuel Medina García",
+        "campaignId": "ARR012023",
+        "hectareNumber": 1,
+        "creditReason": "Necesita credito para su siembra",
+        "creditAmount": 60,
+        "guaranteeDescription": "Su predio",
+        "guaranteeAmount": 25000,
+        "technicalName": "No requiere",
+        "assistanceTypeDescription": "INDEPENDIENTES",
+        "creditRequestStatus": "Pendiente",
+        "creditRequestObservation": "Sin observaciones",
+        "createDateTime": date
+      }
+      jest.spyOn(creditRequestPersistanceRepository, 'getCreditRequestById').mockResolvedValue(mockPendingCreditRequest)
 
       try {
         await getAccountStatusUseCase.get({ creditRequestId: '22929'})

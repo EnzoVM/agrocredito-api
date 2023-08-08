@@ -3,6 +3,7 @@ import NotFoundError from "../../../utils/custom-errors/application-errors/not.f
 import ProcessError from "../../../utils/custom-errors/application-errors/process.error"
 import CampaignPersistanceRepository from "../../campaign/domain/campaign.persistance.repository"
 import CreditRequestPersistanceRepository from "../../credit-request/domain/credit.request.persistance.repository"
+import { CreditRequestStatusType } from "../../credit-request/domain/credit.request.status.type"
 import DeliveryPersistanceRepository from "../../delivery/domain/delivery.persistance.respository"
 import AccountStatusModel, { Payment } from "../domain/account.status.model"
 
@@ -22,6 +23,10 @@ export default class GetAccountStatusUseCase {
 
     if (!creditRequestFound) {
       throw new NotFoundError({ message: 'La solicitud de crédito especificada no existe', core: 'account-status' })
+    }
+
+    if (creditRequestFound.creditRequestStatus === CreditRequestStatusType.PENDING) {
+      throw new ProcessError({ message: 'No se puede obtener el estado de cuenta debido a que la solicitud de crédito esta pendiende de aprobación', core: 'account-status' })
     }
 
     const deliveriesFound = await this.deliveryPersistanceRepository.listDeliveriesByCreditRequestId({ creditRequestId })
@@ -47,10 +52,17 @@ export default class GetAccountStatusUseCase {
     const finalDebt = (creditRequestFound.creditAmount + interest + delinquentInterest) - totalPayment
     
     return {
+      campaignFinishDate: campaignFound.finishDate,
       amountDelivered,
       amountDeliveredPercentage,
       finalDebt,
       payments,
+      deliveries: deliveriesFound.map(delivery => {
+        return {
+          deliveryAmount: delivery.deliveryAmount,
+          deliveryDateTime: delivery.deliveryDateTime
+        }
+      }),
       interest,
       interesPercentage: campaignFound!.campaignInterest,
       delinquentInterest,
