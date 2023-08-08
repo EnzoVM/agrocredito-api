@@ -36,6 +36,7 @@ export default class ListPaymentUseCase {
 
     let finalCount: number = 0
     let finalPayments: PaymentListModel[] = []
+    let finalTotalAmount: number = 0
 
     if (farmerType === FarmerType.INDIVIDUAL) {
       if (typeof fullNames === 'undefined') {
@@ -45,6 +46,7 @@ export default class ListPaymentUseCase {
       const { payments, count } = await this.paymentPersistanceRepository.listPayments({ campaignId, farmerType, fullNames })
       finalPayments = payments
       finalCount = count
+      finalTotalAmount = await this.paymentPersistanceRepository.getTotalAmountByCampaignId({ campaignId })
     }
 
     if (farmerType === FarmerType.ASSOCIATION) {
@@ -56,6 +58,7 @@ export default class ListPaymentUseCase {
   
       finalPayments = payments
       finalCount = count
+      finalTotalAmount = await this.paymentPersistanceRepository.getTotalAmountByCampaignId({ campaignId })
     }
 
     if (farmerType === FarmerType.ALL) {  
@@ -63,6 +66,7 @@ export default class ListPaymentUseCase {
   
       finalPayments = payments
       finalCount = count
+      finalTotalAmount = await this.paymentPersistanceRepository.getTotalAmountByCampaignId({ campaignId })
     }
 
     if (limit > 0) {
@@ -74,7 +78,8 @@ export default class ListPaymentUseCase {
 
     return {
       payments: finalPayments,
-      count: finalCount
+      count: finalCount,
+      totalAmount: finalTotalAmount
     }
   }
 }

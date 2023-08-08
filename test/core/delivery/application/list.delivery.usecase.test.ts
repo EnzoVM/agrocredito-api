@@ -9,7 +9,8 @@ jest.mock("../../../../src/core/delivery/infrastructure/delivery.prisma.reposito
 describe('Create Campaign module test suites', () => {
   const mockDeliveryList: {
     deliveries: DeliveryListModel[], 
-    count: number
+    count: number,
+    totalAmount: number
   } = {
     deliveries: [
       {
@@ -43,7 +44,8 @@ describe('Create Campaign module test suites', () => {
         deliveryAmount: 1440
       },
     ],
-    count: 3
+    count: 3,
+    totalAmount: 10
   }
 
   let deliveryPrismaRepository: DeliveryPrismaRepository
@@ -55,6 +57,7 @@ describe('Create Campaign module test suites', () => {
 
   beforeEach(() => {
     jest.spyOn(deliveryPrismaRepository, 'listDeliveries').mockResolvedValue(mockDeliveryList)
+    jest.spyOn(deliveryPrismaRepository, 'getTotalAmountByCampaignId').mockResolvedValue(10)
 
     listDeliveryUseCase = new ListDeliveryUseCase(deliveryPrismaRepository)
   })
