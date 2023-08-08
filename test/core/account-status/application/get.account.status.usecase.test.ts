@@ -90,7 +90,12 @@ describe('Create Campaign module test suites', () => {
     "interest": 15,
     "interesPercentage": 25,
     "totalPayment": 0,
-    "creditAmount": mockCreditRequest.creditAmount
+    "creditAmount": mockCreditRequest.creditAmount,
+    farmerData: {
+      farmerId: ''
+    },
+    campaignId: '',
+    creditRequesId: ''
   }
 
   let creditRequestPersistanceRepository: CreditRequestPrismaRepository

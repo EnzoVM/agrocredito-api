@@ -5,6 +5,7 @@ import CampaignPersistanceRepository from "../../campaign/domain/campaign.persis
 import CreditRequestPersistanceRepository from "../../credit-request/domain/credit.request.persistance.repository"
 import { CreditRequestStatusType } from "../../credit-request/domain/credit.request.status.type"
 import DeliveryPersistanceRepository from "../../delivery/domain/delivery.persistance.respository"
+import FarmerPersistanceRepository from "../../farmer/domain/farmer.persistance.repository"
 import AccountStatusModel, { Payment } from "../domain/account.status.model"
 
 export default class GetAccountStatusUseCase {
@@ -68,7 +69,14 @@ export default class GetAccountStatusUseCase {
       delinquentInterest,
       delinquentInterestPercentage: campaignFound.campaignDelinquentInterest,
       totalPayment,
-      creditAmount: creditRequestFound.creditAmount
+      creditAmount: creditRequestFound.creditAmount,
+      farmerData: {
+        farmerId: creditRequestFound.farmerId,
+        fullNames: creditRequestFound.farmerFullNames,
+        socialReason: creditRequestFound.farmerSocialReason
+      },
+      campaignId: campaignFound.campaignId,
+      creditRequesId: creditRequestFound.creditRequestId
     }
   }
 }
