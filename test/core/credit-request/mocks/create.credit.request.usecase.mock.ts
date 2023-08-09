@@ -36,6 +36,7 @@ export const farmerPrismaRepositoryMock = {
   getFarmerByDNI: jest.fn(),
   getFarmerByRUC: jest.fn(),
   deleteFarmerById: jest.fn(),
+  countFarmerMatchToProject: jest.fn()
 }
 
 export const departureDetailFoundMock: DepartureDetailList[] = [

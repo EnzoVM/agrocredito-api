@@ -48,6 +48,7 @@ model project {
   code                Int
   project_description String   @db.VarChar(255)
   sector_id           Int
+  
   farmers_address     farmer[] @relation("FarmerFarmerProject")
   farmers_property    farmer[] @relation("FarmerPropertyProject")
   sector              sector   @relation(fields: [sector_id], references: [sector_id])
