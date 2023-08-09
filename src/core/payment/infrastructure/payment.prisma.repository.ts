@@ -1,12 +1,14 @@
 import PrismaConnection from "../../../prisma/prisma.connection"
 import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error"
+import PaymentCreateModel from "../domain/payment.create.model"
 import PaymentListModel from "../domain/payment.list.model"
 import PaymentPersistanceRepository from "../domain/payment.persistance.repository"
+import PaymentResponseModel from "../domain/payment.response.model"
 
 const prisma = new PrismaConnection().connection
 
 export default class PaymentPrismaRepository implements PaymentPersistanceRepository {
- 
+   
   async listPayments ({ campaignId, farmerType, fullNames, socialReason }: { campaignId: string, farmerType: 'Individual' | 'Asociación' | 'All', fullNames?: string, socialReason?: string }): Promise<{ payments: PaymentListModel[], count: number }> {
     try {
       const payments = await prisma.payment.findMany({
@@ -113,6 +115,36 @@ export default class PaymentPrismaRepository implements PaymentPersistanceReposi
       })
     } catch (error: any) {
       throw new UnavailableError({ message: error.message, core: 'payment' })
+    }
+  }
+
+  async createPayment ({ payment }: { payment: PaymentCreateModel }): Promise<PaymentResponseModel> {
+    try {
+      const paymentAdded = await prisma.payment.create({
+        data: {
+          credit_request_id: payment.creditRequestId,
+          payment_datetime: payment.paymentDateTime,
+          financial_source_id: payment.financialSourceId,
+          current_account_id: payment.currentAccountId,
+          payment_description: payment.paymentDescription,
+          payment_amount_USD: payment.paymentAmountUSD,
+          payment_amount_PEN: payment.paymentAmountPEN
+        }
+      })
+
+      return {
+        paymentId: paymentAdded.payment_id,
+        creditRequestId: paymentAdded.credit_request_id,
+        paymentDateTime: String(paymentAdded.payment_datetime),
+        financialSourceId: paymentAdded.financial_source_id,
+        currentAccountId: paymentAdded.current_account_id,
+        paymentDescription: paymentAdded.payment_description,
+        paymentAmountUSD: Number(paymentAdded.payment_amount_USD),
+        paymentAmountPEN: Number(paymentAdded.payment_amount_PEN),
+      }
+      
+    } catch (error: any) {
+      throw new UnavailableError({ message: error.message, core: 'payment'})
     }
   }
 }
