@@ -9,8 +9,15 @@ export default interface AccountStatusModel {
   delinquentInterestPercentage: number
   totalPayment: number
   finalDebt: number
-  payments: Payment[],
+  payments: Payment[]
   deliveries: Delivery[]
+  farmerData: {
+    farmerId: string
+    fullNames?: string
+    socialReason?: string
+  }
+  campaignId: string
+  creditRequesId: string
 }
 
 export interface Payment {

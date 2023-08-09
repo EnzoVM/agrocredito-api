@@ -1,10 +1,10 @@
 import BadRequestError from "../../../utils/custom-errors/application-errors/bad.request.error"
 import { FarmerType } from "../../farmer/domain/farmer.type"
-import DeliveryListModel from "../domain/delivery.list.model"
-import DeliveryPersistanceRepository from "../domain/delivery.persistance.respository"
+import PaymentListModel from "../domain/payment.list.model"
+import PaymentPersistanceRepository from "../domain/payment.persistance.repository"
 
-export default class ListDeliveryUseCase {
-  constructor (private readonly deliveryPersistanceRepository: DeliveryPersistanceRepository) {}
+export default class ListPaymentUseCase {
+  constructor (private readonly paymentPersistanceRepository: PaymentPersistanceRepository) {}
 
   async list ({ 
     campaignId,
@@ -35,7 +35,7 @@ export default class ListDeliveryUseCase {
     }
 
     let finalCount: number = 0
-    let finalDeliveries: DeliveryListModel[] = []
+    let finalPayments: PaymentListModel[] = []
     let finalTotalAmount: number = 0
 
     if (farmerType === FarmerType.INDIVIDUAL) {
@@ -43,10 +43,10 @@ export default class ListDeliveryUseCase {
         throw new BadRequestError({ message: 'You must to specify a valid json', core: 'delivery' })
       }
 
-      const { deliveries, count } = await this.deliveryPersistanceRepository.listDeliveries({ campaignId, farmerType, fullNames })
-      finalDeliveries = deliveries
+      const { payments, count } = await this.paymentPersistanceRepository.listPayments({ campaignId, farmerType, fullNames })
+      finalPayments = payments
       finalCount = count
-      finalTotalAmount = await this.deliveryPersistanceRepository.getTotalAmountByCampaignId({ campaignId })
+      finalTotalAmount = await this.paymentPersistanceRepository.getTotalAmountByCampaignId({ campaignId })
     }
 
     if (farmerType === FarmerType.ASSOCIATION) {
@@ -54,30 +54,30 @@ export default class ListDeliveryUseCase {
         throw new BadRequestError({ message: 'You must to specify a valid json', core: 'delivery' })
       }
   
-      const { deliveries, count } = await this.deliveryPersistanceRepository.listDeliveries({ campaignId, farmerType, socialReason })
+      const { payments, count } = await this.paymentPersistanceRepository.listPayments({ campaignId, farmerType, socialReason })
   
-      finalDeliveries = deliveries
+      finalPayments = payments
       finalCount = count
-      finalTotalAmount = await this.deliveryPersistanceRepository.getTotalAmountByCampaignId({ campaignId })
+      finalTotalAmount = await this.paymentPersistanceRepository.getTotalAmountByCampaignId({ campaignId })
     }
 
     if (farmerType === FarmerType.ALL) {  
-      const { deliveries, count } = await this.deliveryPersistanceRepository.listDeliveries({ campaignId, farmerType })
+      const { payments, count } = await this.paymentPersistanceRepository.listPayments({ campaignId, farmerType })
   
-      finalDeliveries = deliveries
+      finalPayments = payments
       finalCount = count
-      finalTotalAmount = await this.deliveryPersistanceRepository.getTotalAmountByCampaignId({ campaignId })
+      finalTotalAmount = await this.paymentPersistanceRepository.getTotalAmountByCampaignId({ campaignId })
     }
 
     if (limit > 0) {
       const startIndex = (page - 1) * limit
       const endIndex = page * limit
   
-      finalDeliveries = finalDeliveries.slice(startIndex, endIndex)
+      finalPayments = finalPayments.slice(startIndex, endIndex)
     }
 
     return {
-      deliveries: finalDeliveries,
+      payments: finalPayments,
       count: finalCount,
       totalAmount: finalTotalAmount
     }
