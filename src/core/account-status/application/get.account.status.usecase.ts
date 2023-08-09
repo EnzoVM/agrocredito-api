@@ -39,7 +39,7 @@ export default class GetAccountStatusUseCase {
       throw new ProcessError({ message: 'La informacion no se pudo procesar debido a que no existe la campaña especificada', core: 'account-status' })
     }
 
-    const paymentsToShowFound = await this.paymentPersistanceRepository.listPaymentsByCreditRequestId({ creditRequestId, take })
+    const paymentsToShowFound = await this.paymentPersistanceRepository.listPaymentsByCreditRequestId({ creditRequestId, take: take ? Number(take) : undefined })
     const totalPaymentsFound = await this.paymentPersistanceRepository.listPaymentsByCreditRequestId({ creditRequestId })
 
     const paymentsToShow: Payment[] = paymentsToShowFound.map(payment => {
