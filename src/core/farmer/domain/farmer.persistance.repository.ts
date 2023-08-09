@@ -16,4 +16,5 @@ export default interface FarmerPersistanceRepository {
   getFarmerByDNI: ({ dni }: { dni: string }) => Promise<FarmerDetail | null>
   getFarmerByRUC: ({ ruc }: { ruc: string }) => Promise<FarmerDetail | null>
   deleteFarmerById: ({ farmerId }: { farmerId: string }) => Promise<string>
+  countFarmerMatchToProject: ({projectSectorId, projectCode}:{projectSectorId: number, projectCode: number}) => Promise<number>
 }

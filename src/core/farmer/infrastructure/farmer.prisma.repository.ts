@@ -10,6 +10,7 @@ import { FarmerType } from "../domain/farmer.type"
 const prisma = new PrismaConnection().connection
 
 export default class FarmerPrismaRepository implements FarmerPersistanceRepository {
+  
   async getFarmersByIncludeId ({ farmerId, farmerType }: { farmerId: string, farmerType: FarmerType }): Promise<{ farmers: FarmerList[], count: number }> {
     try {
       const farmersFound = await prisma.farmer.findMany({
@@ -400,6 +401,28 @@ export default class FarmerPrismaRepository implements FarmerPersistanceReposito
       return farmerDeleted.farmer_id
     } catch (error: any) {
       throw new UnavailableError({ message: error.message, core: 'farmer' })
+    }
+  }
+
+  async countFarmerMatchToProject ({ 
+    projectSectorId, 
+    projectCode 
+  }:{ 
+    projectSectorId: number; 
+    projectCode: number 
+  }): Promise<number>{
+    try {
+      const farmerCount = await prisma.farmer.count({
+        where: {
+          property_sector_id: projectSectorId,
+          property_project_code: projectCode
+        }
+      })
+
+      return farmerCount
+      
+    } catch (error: any) {
+      throw new UnavailableError({ message: error.message, core: 'farmer'})
     }
   }
 }
