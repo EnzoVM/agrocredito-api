@@ -27,11 +27,11 @@ export default class DeleteProjectByIdUseCase {
       projectCode: projectFound.projectCode
     })
     if(farmerCount !== 0){
-      throw new ProcessError({message: 'No se ha podido eliminar el proyecto, porque tiene usuarios asociados', core:'Project'})
+      throw new ProcessError({message: 'No se ha podido eliminar el proyecto, porque tiene agricultores asociados', core:'Project'})
     }
     
-    const projectDeleted = await this.projectPersistanceRepository.deleteProjectById({projectId})
+    const projectDeletedMessage = await this.projectPersistanceRepository.deleteProjectById({projectId})
     
-    return projectDeleted
+    return projectDeletedMessage
   }
 }

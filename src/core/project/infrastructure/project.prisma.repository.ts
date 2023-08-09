@@ -1,5 +1,4 @@
 import PrismaConnection from "../../../prisma/prisma.connection"
-import ProcessError from "../../../utils/custom-errors/application-errors/process.error"
 import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error"
 import ProjectListModel from "../domain/project.list.model"
 import Project from "../domain/project.model"

@@ -45,7 +45,7 @@ export default class ListAllProjectsUseCase {
     ) {
       throw new BadRequestError({ message: 'Se tiene que especificar los campos requeridos', core: 'Project'})
     }
-
+    
     let projectList: ProjectListModel[] = []
     let projectCount: number = 0
     
@@ -81,7 +81,8 @@ export default class ListAllProjectsUseCase {
       projectList = projects
       projectCount = count
     }
-
+    console.log(projectList)
+    
     const startIndex = (page - 1) * limit
     const endIndex = page * limit
 
