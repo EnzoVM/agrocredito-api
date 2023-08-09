@@ -3,7 +3,8 @@ import {
   getAllProjectsHandler, 
   getProjectsBySectorIdHandler,
   deleteProjectByIdHandle,
-  listAllProjectsHandle
+  listAllProjectsHandle,
+  createProjectHandle
 } from '../controllers/project.controller'
 import isAuthenticated from '../middlewares/isAuthenticated'
 
@@ -14,5 +15,6 @@ projectRouter
   .get('/:sectorId', isAuthenticated, getProjectsBySectorIdHandler)
   .get('/list/:filters', isAuthenticated, listAllProjectsHandle)
   .delete('/delete/:projectId', isAuthenticated, deleteProjectByIdHandle)
+  .post('/', isAuthenticated, createProjectHandle)
   
 export default projectRouter

@@ -1,5 +1,6 @@
 import PrismaConnection from "../../../prisma/prisma.connection"
 import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error"
+import ProjectCreateModel from "../domain/project.create.model"
 import ProjectListModel from "../domain/project.list.model"
 import Project from "../domain/project.model"
 import ProjectPersistanceRepository from "../domain/project.persistance.repository"
@@ -7,7 +8,7 @@ import ProjectPersistanceRepository from "../domain/project.persistance.reposito
 const prisma = new PrismaConnection().connection
 
 export default class ProjectPrismaRepository implements ProjectPersistanceRepository {
-    
+  
   async getAllProjects (): Promise<Project[]> {
     try {
       const projectsFound = await prisma.project.findMany()
@@ -212,6 +213,51 @@ export default class ProjectPrismaRepository implements ProjectPersistanceReposi
         count
       }
       
+    } catch (error: any) {
+      throw new UnavailableError({ message: error.message, core: 'project'})
+    }
+  }
+
+  async getLastProjectCodeBySector ({ sectorId }: { sectorId: number }): Promise<number | null> {
+    try {
+      const lastProject = await prisma.project.findFirst({
+        where: {
+          sector_id: sectorId
+        },
+        orderBy: {
+          code: "desc"
+        },
+        select: {
+          code: true
+        }
+      })
+
+      if(!lastProject) { return null }
+
+      return lastProject.code
+
+    } catch (error: any) {
+      throw new UnavailableError({ message: error.message, core: 'project'})
+    }
+  }
+  
+  async createProject ({ project }: { project: ProjectCreateModel }): Promise<Project> {
+    try {
+      const projectAdded = await prisma.project.create({
+        data: {
+          code: project.projectCode,
+          project_description: project.projectDescription,
+          sector_id: project.projectSectorId
+        }
+      })
+
+      return {
+        projectId: projectAdded.project_id,
+        projectCode: projectAdded.code,
+        projectDescription: projectAdded.project_description,
+        projectSectorId: projectAdded.sector_id
+      }
+
     } catch (error: any) {
       throw new UnavailableError({ message: error.message, core: 'project'})
     }

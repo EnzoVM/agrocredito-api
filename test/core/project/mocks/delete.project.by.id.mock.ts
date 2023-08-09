@@ -21,7 +21,9 @@ export const projectPrismaRepositoryMock = {
   listProjectsBySector: jest.fn(),
   listProjectsByName: jest.fn(),
   listProjectsBySectorAndName: jest.fn(),
-  listAllProjects: jest.fn()
+  listAllProjects: jest.fn(),
+  getLastProjectCodeBySector: jest.fn(),
+  createProject: jest.fn()
 }
 
 export const projectIdMock: number = 5

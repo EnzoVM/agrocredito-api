@@ -81,7 +81,6 @@ export default class ListAllProjectsUseCase {
       projectList = projects
       projectCount = count
     }
-    console.log(projectList)
     
     const startIndex = (page - 1) * limit
     const endIndex = page * limit

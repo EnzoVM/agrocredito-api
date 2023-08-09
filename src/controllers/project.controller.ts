@@ -3,6 +3,7 @@ import ListProjectUseCase from "../core/project/application/list.project.usecase
 import ProjectPrismaRepository from "../core/project/infrastructure/project.prisma.repository"
 import DeleteProjectByIdUseCase from "../core/project/application/delete.project.by.id.usecase"
 import ListAllProjectsUseCase from "../core/project/application/list.all.projects.usecase"
+import CreateProjectUseCase from "../core/project/application/create.project.usecase"
 import FarmerPrismaRepository from "../core/farmer/infrastructure/farmer.prisma.repository"
 import ResponseModel from "../utils/standar-response/response.model"
 import { ResponseCodes } from "../utils/standar-response/response.codes"
@@ -12,6 +13,7 @@ const projectPrismaRepository = new ProjectPrismaRepository()
 const listProjectUseCase = new ListProjectUseCase(projectPrismaRepository)
 const deleteProjectByIdUseCase = new DeleteProjectByIdUseCase(new ProjectPrismaRepository, new FarmerPrismaRepository)
 const listAllProjectsUseCase = new ListAllProjectsUseCase(new ProjectPrismaRepository)
+const createProjectUseCase = new CreateProjectUseCase(new ProjectPrismaRepository)
 
 export const getAllProjectsHandler = async (_request: Request, response: Response, next: NextFunction) => {
   try {
@@ -90,6 +92,24 @@ export const listAllProjectsHandle = async (req: Request, res: Response, next: N
       data: projectList
     }).send(res)
 
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const createProjectHandle = async (req: Request, res: Response, next: NextFunction) => {
+  const { projectDescription, sectorId } = req.body
+
+  try {
+    const projectAdded = await createProjectUseCase.invoke({projectDescription, sectorId})
+    
+    new ResponseModel({
+      code: ResponseCodes.SUCCESS_REQUEST,
+      statusCode: ResponseStatusCodes.SUCCESS_REQUEST,
+      message: 'The project has been created successfully',
+      data: projectAdded
+    }).send(res)
+    
   } catch (error) {
     next(error)
   }
