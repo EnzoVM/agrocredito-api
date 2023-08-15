@@ -1,6 +1,6 @@
-import ProcessError from "../../../utils/custom-errors/application-errors/process.error";
-import DepartureDetailList from "../domain/departure.detail.list.model";
-import DepartureDetailPersistanceRepository from "../domain/departure.detail.persistance.repository";
+import ProcessError from "../../../utils/custom-errors/application-errors/process.error"
+import DepartureDetailList from "../domain/departure.detail.list.model"
+import DepartureDetailPersistanceRepository from "../domain/departure.detail.persistance.repository"
 
 
 export default class ListDepartureDetailByCampaignId {

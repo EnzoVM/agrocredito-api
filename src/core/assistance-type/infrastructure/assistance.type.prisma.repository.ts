@@ -1,7 +1,7 @@
-import AssistanceTypeListModel from "../domain/assistance.type.list.model";
-import AssistanceTypePersistanceRepository from "../domain/assistance.type.persistance.repository";
+import AssistanceTypeListModel from "../domain/assistance.type.list.model"
+import AssistanceTypePersistanceRepository from "../domain/assistance.type.persistance.repository"
 import PrismaConnection from "../../../prisma/prisma.connection"
-import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error";
+import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error"
 
 const prisma = new PrismaConnection().connection
 

@@ -1,5 +1,5 @@
-import CurrentAccountList from "../domain/current.account.list.model";
-import CurrentAccountPersistanceRepository from "../domain/current.account.persistance.repository";
+import CurrentAccountList from "../domain/current.account.list.model"
+import CurrentAccountPersistanceRepository from "../domain/current.account.persistance.repository"
 
 export default class ListCurrentAccountUseCase {
   

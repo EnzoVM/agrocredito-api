@@ -1,6 +1,6 @@
-import BadRequestError from "../../../utils/custom-errors/application-errors/bad.request.error";
-import ProjectListModel from "../domain/project.list.model";
-import ProjectPersistanceRepository from "../domain/project.persistance.repository";
+import BadRequestError from "../../../utils/custom-errors/application-errors/bad.request.error"
+import ProjectListModel from "../domain/project.list.model"
+import ProjectPersistanceRepository from "../domain/project.persistance.repository"
 
 export default class ListAllProjectsUseCase {
   

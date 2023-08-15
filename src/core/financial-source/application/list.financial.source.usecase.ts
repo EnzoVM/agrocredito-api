@@ -1,5 +1,5 @@
-import FinancialSourceList from "../domain/financial.source.list.model";
-import FinancialSourcePersistanceRepository from "../domain/financial.source.persistance.repository";
+import FinancialSourceList from "../domain/financial.source.list.model"
+import FinancialSourcePersistanceRepository from "../domain/financial.source.persistance.repository"
 
 export default class ListFinancialSourceUseCase {
 

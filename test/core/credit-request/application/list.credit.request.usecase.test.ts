@@ -21,6 +21,7 @@ describe('Create Campaign module test suites', () => {
         createDateTime: new Date(),
         updateStatusDateTime: new Date(),
         creditRequestStatus: 'Rechazado',
+        farmerId: '1'
       },
       {
         creditRequestId: '1288823',
@@ -30,6 +31,7 @@ describe('Create Campaign module test suites', () => {
         createDateTime: new Date(),
         updateStatusDateTime: new Date(),
         creditRequestStatus: 'Rechazado',
+        farmerId: '1'
       },
       {
         creditRequestId: '1288824',
@@ -39,6 +41,7 @@ describe('Create Campaign module test suites', () => {
         createDateTime: new Date(),
         updateStatusDateTime: new Date(),
         creditRequestStatus: 'Rechazado',
+        farmerId: '1'
       },
     ],
     count: 3

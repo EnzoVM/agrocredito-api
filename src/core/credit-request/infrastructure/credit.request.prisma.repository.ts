@@ -83,6 +83,7 @@ export default class CreditRequestPrimaRepository implements CreditRequestPersis
       return {
         creditRequests: creaditRequestFound.map(creaditRequest => {
           return {
+            farmerId: creaditRequest.farmer_id,
             creditRequestId: creaditRequest.credit_request_id,
             campaignId: creaditRequest.campaign_id,
             fullNames: creaditRequest.farmer.full_names || undefined,
