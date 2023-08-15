@@ -94,6 +94,7 @@ export default class ListCreditRelationUseCase {
       const totalPayment = totalPaymentsFound.reduce((accum, payment) => accum + payment.paymentAmount, 0)
 
       return {
+        creditRequestId: creditRequest.creditRequestId,
         farmerId: creditRequest.farmerId,
         fullNames: creditRequest.fullNames,
         socialReason: creditRequest.socialReason,

@@ -1,4 +1,5 @@
 export default interface CreditRelation {
+  creditRequestId: string
   farmerId: string
   fullNames?: string
   socialReason?: string
