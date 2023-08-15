@@ -1,7 +1,7 @@
-import NotFoundError from "../../../utils/custom-errors/application-errors/not.found.error";
-import CreditRequestCreate from "../domain/credit.request.create.model";
-import CreditRequestListApproved from "../domain/credit.request.list.approved";
-import CreditRequestPersistanceRepository from "../domain/credit.request.persistance.repository";
+import NotFoundError from "../../../utils/custom-errors/application-errors/not.found.error"
+import CreditRequestCreate from "../domain/credit.request.create.model"
+import CreditRequestListApproved from "../domain/credit.request.list.approved"
+import CreditRequestPersistanceRepository from "../domain/credit.request.persistance.repository"
 
 export default class ListApprovedCreditRequestByFarmerUseCase {
   constructor(

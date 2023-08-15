@@ -1,6 +1,6 @@
-import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error";
-import FinancialSourceList from "../domain/financial.source.list.model";
-import FinancialSourcePersistanceRepository from "../domain/financial.source.persistance.repository";
+import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error"
+import FinancialSourceList from "../domain/financial.source.list.model"
+import FinancialSourcePersistanceRepository from "../domain/financial.source.persistance.repository"
 import PrismaConnection from "../../../prisma/prisma.connection"
 
 const prisma = new PrismaConnection().connection

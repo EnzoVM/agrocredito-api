@@ -1,7 +1,7 @@
-import NotFoundError from "../../../utils/custom-errors/application-errors/not.found.error";
-import ProcessError from "../../../utils/custom-errors/application-errors/process.error";
-import FarmerPersistanceRepository from "../../farmer/domain/farmer.persistance.repository";
-import ProjectPersistanceRepository from "../domain/project.persistance.repository";
+import NotFoundError from "../../../utils/custom-errors/application-errors/not.found.error"
+import ProcessError from "../../../utils/custom-errors/application-errors/process.error"
+import FarmerPersistanceRepository from "../../farmer/domain/farmer.persistance.repository"
+import ProjectPersistanceRepository from "../domain/project.persistance.repository"
 
 
 export default class DeleteProjectByIdUseCase {

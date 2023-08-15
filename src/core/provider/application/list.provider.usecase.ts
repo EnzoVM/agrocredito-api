@@ -1,5 +1,5 @@
-import ProviderList from "../domain/provider.list.modal";
-import ProviderPersistanceRepository from "../domain/provider.persistance.repository";
+import ProviderList from "../domain/provider.list.modal"
+import ProviderPersistanceRepository from "../domain/provider.persistance.repository"
 
 export default class ListProviderUseCase {
   

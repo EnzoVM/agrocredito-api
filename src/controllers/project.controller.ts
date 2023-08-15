@@ -78,11 +78,11 @@ export const listAllProjectsHandle = async (req: Request, res: Response, next: N
     } = JSON.parse(filters)
 
     const projectList = await listAllProjectsUseCase.invoke({
-     sectorId,
-     projectDescription,
-     page,
-     limit,
-     typeSearch 
+      sectorId,
+      projectDescription,
+      page,
+      limit,
+      typeSearch 
     })
     
     new ResponseModel({

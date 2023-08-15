@@ -1,6 +1,6 @@
-import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error";
-import ProviderList from "../domain/provider.list.modal";
-import ProviderPersistanceRepository from "../domain/provider.persistance.repository";
+import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error"
+import ProviderList from "../domain/provider.list.modal"
+import ProviderPersistanceRepository from "../domain/provider.persistance.repository"
 import PrismaConnection from "../../../prisma/prisma.connection"
 
 const prisma = new PrismaConnection().connection

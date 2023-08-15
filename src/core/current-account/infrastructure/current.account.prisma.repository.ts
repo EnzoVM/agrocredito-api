@@ -1,6 +1,6 @@
-import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error";
-import CurrentAccountList from "../domain/current.account.list.model";
-import CurrentAccountPersistanceRepository from "../domain/current.account.persistance.repository";
+import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error"
+import CurrentAccountList from "../domain/current.account.list.model"
+import CurrentAccountPersistanceRepository from "../domain/current.account.persistance.repository"
 import PrismaConnection from "../../../prisma/prisma.connection"
 
 const prisma = new PrismaConnection().connection

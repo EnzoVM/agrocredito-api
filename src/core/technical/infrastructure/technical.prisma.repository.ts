@@ -1,7 +1,7 @@
 import PrismaConnection from "../../../prisma/prisma.connection"
-import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error";
-import TechnicalList from "../domain/technical.list.model";
-import TechnicalPersistanceRepository from "../domain/technical.persistance.repository";
+import UnavailableError from "../../../utils/custom-errors/infrastructure-errors/unavailable.error"
+import TechnicalList from "../domain/technical.list.model"
+import TechnicalPersistanceRepository from "../domain/technical.persistance.repository"
 
 const prisma = new PrismaConnection().connection
 

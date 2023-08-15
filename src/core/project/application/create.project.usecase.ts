@@ -1,7 +1,7 @@
-import NotFoundError from "../../../utils/custom-errors/application-errors/not.found.error";
-import ProjectCreateModel from "../domain/project.create.model";
-import Project from "../domain/project.model";
-import ProjectPersistanceRepository from "../domain/project.persistance.repository";
+import NotFoundError from "../../../utils/custom-errors/application-errors/not.found.error"
+import ProjectCreateModel from "../domain/project.create.model"
+import Project from "../domain/project.model"
+import ProjectPersistanceRepository from "../domain/project.persistance.repository"
 
 export default class CreateProjectUseCase {
 

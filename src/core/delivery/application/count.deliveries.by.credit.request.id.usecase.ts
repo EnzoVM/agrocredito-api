@@ -1,4 +1,4 @@
-import DeliveryPersistanceRepository from "../domain/delivery.persistance.respository";
+import DeliveryPersistanceRepository from "../domain/delivery.persistance.respository"
 
 export default class CountDeliveriesByCreditRequestIdUseCase {
   
