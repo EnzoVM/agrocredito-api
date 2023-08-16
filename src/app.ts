@@ -27,6 +27,7 @@ import financialSourceRouter from './routes/financial.source.routes'
 import providerRouter from './routes/provider.routes'
 import paymentRouter from './routes/payment.routes'
 import creditRelationRouter from './routes/credit.relation.routes'
+import sectorRouter from './routes/sector.routes'
 
 dotenv.config()
 const app = express()
@@ -65,6 +66,7 @@ app.use('/api/v1/financial-source', financialSourceRouter)
 app.use('/api/v1/provider', providerRouter)
 app.use('/api/v1/payments', paymentRouter)
 app.use('/api/v1/credit-relations', creditRelationRouter)
+app.use('/api/v1/sectors', sectorRouter)
 
 app.use(notFound)
 app.use(responseError)
