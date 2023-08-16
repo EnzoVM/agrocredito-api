@@ -11,7 +11,7 @@ import {
 const listAllProjectsUseCase = new ListAllProjectsUseCase(projectPrismaRepositoryMock)
 
 describe('OPERATION SUCCESS', () => {
-  test('Should return a successful deletion message', async () => {
+  test('Should return a list of all projects', async () => {
     projectPrismaRepositoryMock.listAllProjects.mockResolvedValue(response)
 
     const {projectList, count} = await listAllProjectsUseCase.invoke({
@@ -24,7 +24,7 @@ describe('OPERATION SUCCESS', () => {
     expect(projectList).toHaveLength(5)
   })
 
-  test('Should return a successful deletion message', async () => {
+  test('Should return a list of projects by sector', async () => {
     projectPrismaRepositoryMock.listProjectsBySector.mockResolvedValue(response)
 
     const {projectList, count} = await listAllProjectsUseCase.invoke({
@@ -38,7 +38,7 @@ describe('OPERATION SUCCESS', () => {
     expect(projectList).toHaveLength(5)
   })
 
-  test('Should return a successful deletion message', async () => {
+  test('Should return a list of projects by name', async () => {
     projectPrismaRepositoryMock.listProjectsByName.mockResolvedValue(response)
 
     const {projectList, count} = await listAllProjectsUseCase.invoke({
@@ -52,7 +52,7 @@ describe('OPERATION SUCCESS', () => {
     expect(projectList).toHaveLength(5)
   })
 
-  test('Should return a successful deletion message', async () => {
+  test('Should return a list of projects by name and sector', async () => {
     projectPrismaRepositoryMock.listProjectsBySectorAndName.mockResolvedValue(response)
 
     const {projectList, count} = await listAllProjectsUseCase.invoke({
