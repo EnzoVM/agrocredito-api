@@ -1,10 +1,13 @@
 import CreateProjectUseCase from '../../../../src/core/project/application/create.project.usecase'
+import BadRequestError from '../../../../src/utils/custom-errors/application-errors/bad.request.error'
 import NotFoundError from '../../../../src/utils/custom-errors/application-errors/not.found.error'
 import { 
   projectPrismaRepositoryMock,
   lastProjectCodeMock,
   paramMock,
-  projectAddedMock
+  projectAddedMock,
+  paramMockEmpty,
+  paramMockWrong
 } from '../mocks/create.project.mock'
 
 const createProjectUseCase = new CreateProjectUseCase(projectPrismaRepositoryMock)
@@ -26,5 +29,25 @@ describe('NOT FOUND ERROR', () => {
     
     await expect(createProjectUseCase.invoke(paramMock)).rejects.toThrowError('No se ha encontrado el último código de los proyectos')
     await expect(createProjectUseCase.invoke(paramMock)).rejects.toBeInstanceOf(NotFoundError)
+  })
+})
+
+describe('BAD REQUEST ERROR', () => {
+  test('Should return an error when the params are empty', async () => {
+    for(const param of paramMockEmpty){
+      //@ts-ignore
+      await expect(createProjectUseCase.invoke(param)).rejects.toThrowError('Se tiene que especificar los campos requeridos')
+      //@ts-ignore
+      await expect(createProjectUseCase.invoke(param)).rejects.toBeInstanceOf(BadRequestError)
+    }
+  })
+
+  test('Should return an error when the params are wrong', async () => {
+    for(const param of paramMockWrong){
+      //@ts-ignore
+      await expect(createProjectUseCase.invoke(param)).rejects.toThrowError('Se tiene que especificar los campos requeridos')
+      //@ts-ignore
+      await expect(createProjectUseCase.invoke(param)).rejects.toBeInstanceOf(BadRequestError)
+    }
   })
 })
