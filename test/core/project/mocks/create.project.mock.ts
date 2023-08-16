@@ -16,8 +16,29 @@ export const paramMock = {
   sectorId: 4
 }
 
-export const lastProjectCodeMock = 20
+export const paramMockWrong = [
+  {
+    projectDescription: 4, // must be a string
+    sectorId: 4
+  },
+  {
+    projectDescription: 'Prueba',
+    sectorId: 'vevrvrvr'  // must be a number
+  }
+]
 
+export const paramMockEmpty = [
+  {
+    //projectDescription: 'Prueba',
+    sectorId: 4
+  },
+  {
+    projectDescription: 'Prueba',
+    //sectorId: 4
+  }
+]
+
+export const lastProjectCodeMock = 20
 
 export const projectAddedMock = {
   projectId: 32,

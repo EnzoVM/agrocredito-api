@@ -1,3 +1,4 @@
+import BadRequestError from "../../../utils/custom-errors/application-errors/bad.request.error"
 import NotFoundError from "../../../utils/custom-errors/application-errors/not.found.error"
 import ProcessError from "../../../utils/custom-errors/application-errors/process.error"
 import FarmerPersistanceRepository from "../../farmer/domain/farmer.persistance.repository"
@@ -16,6 +17,14 @@ export default class DeleteProjectByIdUseCase {
   }:{
     projectId: number
   }): Promise<string> {
+    
+    if(!projectId){
+      throw new BadRequestError({ message: 'Se tiene que especificar el id del proyecto a eliminar', core: 'Project'})
+    }
+
+    if(typeof projectId !== 'number'){
+      throw new BadRequestError({ message: 'El id del proyecto tiene que ser un número', core: 'Project'})
+    }
 
     const projectFound = await this.projectPersistanceRepository.getProjectById({projectId})
     if(!projectFound){

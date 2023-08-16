@@ -26,7 +26,17 @@ export const projectPrismaRepositoryMock = {
   createProject: jest.fn()
 }
 
-export const projectIdMock: number = 5
+export const projectIdMock = {
+  projectId: 5
+}
+
+export const projectIdMockWrong = {
+  projectId: 'grgrg'    // must be a number
+}
+
+export const projectIdMockEmpty = {
+  //projectId: 'grgrg'
+}
 
 export const projectFoundMock = {
   projectId: 1,
