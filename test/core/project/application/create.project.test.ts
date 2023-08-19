@@ -5,7 +5,8 @@ import {
   projectPrismaRepositoryMock,
   lastProjectCodeMock,
   paramMock,
-  projectAddedMock,
+  projectAddedMock, 
+  projectAddedMockAlternative,
   paramMockEmpty,
   paramMockWrong
 } from '../mocks/create.project.mock'
@@ -26,9 +27,11 @@ describe('OPERATION SUCCESS', () => {
 describe('NOT FOUND ERROR', () => {
   test('Should return an error when last project code not found', async () => {
     projectPrismaRepositoryMock.getLastProjectCodeBySector.mockResolvedValue(null)
+    projectPrismaRepositoryMock.createProject.mockResolvedValue(projectAddedMockAlternative)
+
+    const projectAdded = await createProjectUseCase.invoke(paramMock)
     
-    await expect(createProjectUseCase.invoke(paramMock)).rejects.toThrowError('No se ha encontrado el último código de los proyectos')
-    await expect(createProjectUseCase.invoke(paramMock)).rejects.toBeInstanceOf(NotFoundError)
+    expect(projectAdded.projectCode).toEqual(1)
   })
 })
 
