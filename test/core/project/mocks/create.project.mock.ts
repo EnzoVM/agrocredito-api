@@ -46,3 +46,10 @@ export const projectAddedMock = {
   projectDescription: "Prueba",
   projectSectorId: 4
 }
+
+export const projectAddedMockAlternative = {
+  projectId: 32,
+  projectCode: 1,
+  projectDescription: "Prueba",
+  projectSectorId: 4
+}

@@ -32,15 +32,18 @@ export default class CreateProjectUseCase {
       throw new BadRequestError({ message: 'Se tiene que especificar los campos requeridos', core: 'Project'})
     }
     
+    let newProjectCode: number = 0
     const lastProjectCode = await this.projectPersistanceRepository.getLastProjectCodeBySector({sectorId})
     if(!lastProjectCode){
-      throw new NotFoundError({message: 'No se ha encontrado el último código de los proyectos', core: 'Project'})
+      newProjectCode = 1
+    } else {
+      newProjectCode = lastProjectCode + 1
     }
 
     const newProject: ProjectCreateModel = {
       projectDescription,
       projectSectorId: sectorId,
-      projectCode: lastProjectCode + 1,
+      projectCode: newProjectCode,
     }
     
     const projectAdded = await this.projectPersistanceRepository.createProject({project: newProject})
