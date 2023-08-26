@@ -38,28 +38,26 @@ const financialMath = ({
   const factor = (1+porcentajeFinal/100)
   const periodoResultante = (periodo/360)
   const potencia = Math.pow(factor, periodoResultante) - 1
-  
   const interes = Number((capital*potencia).toFixed(2))
 
-  return {
-    interes
-  }
+  return interes
 }
 
-const interesGeneral = ({
+export const interesGeneral = ({
   camaignYear,
   finishDate,
   fechaEntrega,
+  fechaReporte,
   capital,
   porcentaje
 }: {
   camaignYear: string,
   finishDate: string,
-  fechaEntrega: Date
+  fechaEntrega: Date,
+  fechaReporte: Date
   capital: number,
   porcentaje: number
 }) => {
-  const fechaReporte = new Date()
   const fechaReporteFormateado = getDateFormat(fechaReporte)
   
   const fechaCampaña = `${camaignYear}-${finishDate.split('/').reverse().join('-')}`
@@ -85,14 +83,62 @@ const interesGeneral = ({
   return interes
 }
 
+export const interesMoratorio = ({
+  camaignYear,
+  finishDate,
+  capital,
+  porcentaje
+}: {
+  camaignYear: string,
+  finishDate: string,
+  capital: number,
+  porcentaje: number
+}) => {
+  const fechaReporte = new Date('2023-08-02T20:13:34.060Z')
+  const fechaReporteFormateado = getDateFormat(fechaReporte)
+  
+  const fechaCampaña = `${camaignYear}-${finishDate.split('/').reverse().join('-')}`
+  const fechaCampañaFormateada = new Date(fechaCampaña)
+
+  fechaCampañaFormateada.setDate(fechaCampañaFormateada.getDate() + 1)
+
+  let periodo: number 
+  if (fechaReporteFormateado > fechaCampañaFormateada) {
+    periodo = diferencia360Dias(fechaCampañaFormateada, fechaReporteFormateado)
+  }
+  else {
+    periodo = 0
+  }
+
+  const interes = financialMath({
+    capital,
+    porcentaje,
+    periodo,
+    tipo: 'Moratorio'
+  })
+
+  return interes
+}
+
 const interesGeneralResultado = interesGeneral({
   camaignYear: '2023',
   finishDate: '24/08',
   fechaEntrega: new Date('2023-02-07T20:13:34.060Z'),
+  fechaReporte: new Date(),
   capital: 7800,
   porcentaje: 19
 })
 
-console.log(interesGeneralResultado)
+const interesMoratorioResultado = interesMoratorio({
+  camaignYear: '2023',
+  finishDate: '31/07',
+  capital: 1200,
+  porcentaje: 20
+})
+
+console.log({
+  interesGeneralResultado,
+  interesMoratorioResultado
+})
 
 
