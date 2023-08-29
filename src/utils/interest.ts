@@ -94,7 +94,7 @@ export const interesMoratorio = ({
   capital: number,
   porcentaje: number
 }) => {
-  const fechaReporte = new Date('2023-08-02T20:13:34.060Z')
+  const fechaReporte = new Date()
   const fechaReporteFormateado = getDateFormat(fechaReporte)
   
   const fechaCampaña = `${camaignYear}-${finishDate.split('/').reverse().join('-')}`
