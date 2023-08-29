@@ -7,10 +7,11 @@ import CreatePaymentUseCase from "../core/payment/application/create.payment.use
 import PaymentPrismaRepository from "../core/payment/infrastructure/payment.prisma.repository"
 import CreditRequestPrimaRepository from "../core/credit-request/infrastructure/credit.request.prisma.repository"
 import CampaignPrismaRepository from "../core/campaign/infraestructure/prisma/campaign.prisma.repository"
+import DeliveryPrismaRepository from "../core/delivery/infrastructure/delivery.prisma.repository"
 
 const paymentPrismaRepository = new PaymentPrismaRepository()
 const listPaymentUseCase = new ListPaymentUseCase(paymentPrismaRepository)
-const createPaymentUseCase = new CreatePaymentUseCase(new PaymentPrismaRepository, new CreditRequestPrimaRepository, new CampaignPrismaRepository)
+const createPaymentUseCase = new CreatePaymentUseCase(new PaymentPrismaRepository, new CreditRequestPrimaRepository, new CampaignPrismaRepository, new DeliveryPrismaRepository)
 
 export const listPaymentHandler = async (request: Request, response: Response, next: NextFunction) => {
   const { filters } = request.params
@@ -52,7 +53,7 @@ export const createPaymentHandle = async (req: Request, res: Response, next: Nex
     financialSourceId,
     currentAccountId,
     paymentDescription,
-    paymentAmountPEN,
+    paymentAmountUSD,
     exchangeRate 
   } = req.body
 
@@ -63,7 +64,7 @@ export const createPaymentHandle = async (req: Request, res: Response, next: Nex
       financialSourceId,
       currentAccountId,
       paymentDescription,
-      paymentAmountPEN,
+      paymentAmountUSD,
       exchangeRate 
     })
 

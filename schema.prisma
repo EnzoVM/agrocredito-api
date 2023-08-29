@@ -86,7 +86,7 @@ model credit_request {
   farmer                     farmer     @relation(fields: [farmer_id], references: [farmer_id])
   technical                  technical  @relation(fields: [technical_id], references: [technical_id])
   delivery                   delivery[]
-  payment                     payment[]
+  payment                    payment[]
 
   @@index([campaign_id], map: "credit_request_campaign_id_fkey")
   @@index([farmer_id], map: "credit_request_farmer_id_fkey")

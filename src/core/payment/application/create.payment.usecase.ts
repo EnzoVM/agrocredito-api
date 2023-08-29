@@ -6,13 +6,17 @@ import PaymentPersistanceRepository from "../domain/payment.persistance.reposito
 import PaymentResponseModel from "../domain/payment.response.model"
 import ProcessError from "../../../utils/custom-errors/application-errors/process.error"
 import CampaignPersistanceRepository from "../../campaign/domain/campaign.persistance.repository"
+import { interesGeneral, interesMoratorio } from "../../../utils/interest"
+import DeliveryPersistanceRepository from "../../delivery/domain/delivery.persistance.respository"
+import { CreditRequestStatusType } from "../../credit-request/domain/credit.request.status.type"
 
 export default class CreatePaymentUseCase {
   
   constructor(
     private readonly paymentPersistanceRepository: PaymentPersistanceRepository,
     private readonly creditRequestPersistanceRepository: CreditRequestPersistanceRepository,
-    private readonly campaignPersistanceRepository: CampaignPersistanceRepository
+    private readonly campaignPersistanceRepository: CampaignPersistanceRepository,
+    private readonly deliveryPersistanceRepository: DeliveryPersistanceRepository
   ) {}
 
   async invoke ({
@@ -21,7 +25,7 @@ export default class CreatePaymentUseCase {
     financialSourceId,
     currentAccountId,
     paymentDescription,
-    paymentAmountPEN,
+    paymentAmountUSD,
     exchangeRate
   }:{
     creditRequestId: string
@@ -29,7 +33,7 @@ export default class CreatePaymentUseCase {
     financialSourceId: number
     currentAccountId: number
     paymentDescription: string
-    paymentAmountPEN: number
+    paymentAmountUSD: number
     exchangeRate: number
   }): Promise<PaymentResponseModel>{
 
@@ -39,7 +43,7 @@ export default class CreatePaymentUseCase {
       !financialSourceId ||
       !currentAccountId ||
       !paymentDescription ||
-      !paymentAmountPEN ||
+      !paymentAmountUSD ||
       !exchangeRate
     ){
       throw new BadRequestError({ message: 'Body of the request are null or invalid', core: 'Payment'})
@@ -51,34 +55,54 @@ export default class CreatePaymentUseCase {
       typeof financialSourceId !== 'number' ||
       typeof currentAccountId !== 'number' ||
       typeof paymentDescription !== 'string' ||
-      typeof paymentAmountPEN !== 'number' ||
+      typeof paymentAmountUSD !== 'number' ||
       typeof exchangeRate !== 'number' 
     ) {
       throw new BadRequestError({ message: 'Body of the request are null or invalid', core: 'Payment'})
     }
 
     const creditRequestFound = await this.creditRequestPersistanceRepository.getCreditRequestById({creditRequestId})
-    console.log(creditRequestFound)
-    if(!creditRequestFound){
-      throw new NotFoundError({ message: 'La solicitud de crédito especificado no existe', core: 'Payment'})
-    }
+    if(!creditRequestFound) throw new NotFoundError({ message: 'La solicitud de crédito especificado no existe', core: 'Payment'})
+
+    const deliveriesFound = await this.deliveryPersistanceRepository.listDeliveriesByCreditRequestId({creditRequestId})
+    if(deliveriesFound.length === 0) throw new NotFoundError({ message: 'No existe entregas asociadas a este pago', core: 'Payment'})
 
     const campaignFound = await this.campaignPersistanceRepository.getCampaignById(creditRequestFound.campaignId)
-    console.log(campaignFound)
-    if(!campaignFound){
-      throw new NotFoundError({ message: 'No se ha encontrado una campaña asociada', core: 'Payment'})
-    }
+    if(!campaignFound) throw new NotFoundError({ message: 'No se ha encontrado una campaña asociada', core: 'Payment'})
     
-    let suma: number = 0
+    let paymentSum: number = 0
     const paymentFound = await this.paymentPersistanceRepository.listPaymentsByCreditRequestId({creditRequestId})
-    console.log(paymentFound)
-    for(const payment of paymentFound) { suma += payment.paymentAmount}
+    for(const payment of paymentFound) paymentSum += payment.paymentAmount
 
-    const paymentAmountUSD: number = paymentAmountPEN/exchangeRate
-    const fullPayment: number = creditRequestFound.creditAmount+(campaignFound.campaignInterest*creditRequestFound.creditAmount)+(campaignFound.campaignDelinquentInterest*creditRequestFound.creditAmount)
+    const generalInterest = deliveriesFound
+      .map(delivery => {
+        return interesGeneral({
+          camaignYear: campaignFound.campaignYear,
+          finishDate: campaignFound.finishDate,
+          fechaEntrega: delivery.deliveryDateTime,
+          capital: delivery.deliveryAmount,
+          fechaReporte: new Date(),
+          porcentaje: campaignFound.campaignInterest
+        })
+      })
+      .reduce((accum, interest) => accum + interest, 0)
 
-    if(suma+paymentAmountUSD > fullPayment){
-      throw new ProcessError({ message: 'El monto ingresado superar el monto del crédito elegido', core: 'Payment'})
+    const lateInterest = interesMoratorio({
+      camaignYear: campaignFound.campaignYear,
+      finishDate: campaignFound.finishDate,
+      porcentaje: campaignFound.campaignDelinquentInterest,
+      capital: creditRequestFound.creditAmount - paymentSum
+    })
+
+    const fullPayment = creditRequestFound.creditAmount + generalInterest + lateInterest
+    if(paymentSum+paymentAmountUSD > fullPayment) throw new ProcessError({ message: 'El monto ingresado superar el monto del crédito elegido', core: 'Payment'})
+
+    if(paymentSum+paymentAmountUSD === fullPayment){
+      await this.creditRequestPersistanceRepository.updateCreditRequestStatusById({
+        creditRequestStatus: CreditRequestStatusType.PAID,
+        creditRequestId: creditRequestFound.creditRequestId,
+        updateStatusDateTime: new Date()
+      })
     }
     
     const newPayment: PaymentCreateModel = {
@@ -88,11 +112,10 @@ export default class CreatePaymentUseCase {
       currentAccountId,
       paymentDescription,
       paymentAmountUSD,
-      paymentAmountPEN, 
+      paymentAmountPEN: paymentAmountUSD*exchangeRate,
     }
 
     const paymentAdded = await this.paymentPersistanceRepository.createPayment({payment: newPayment})
-    console.log(paymentAdded)
     return paymentAdded
   }
 }
