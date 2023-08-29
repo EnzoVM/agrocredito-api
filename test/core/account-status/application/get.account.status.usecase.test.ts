@@ -97,14 +97,14 @@ describe('Create Campaign module test suites', () => {
     "amountDeliveredPercentage": 100,
     "delinquentInterest": 0,
     "delinquentInterestPercentage": 30,
-    "finalDebt": 1300,
+    "finalDebt": 1000,
     "payments": mockPayments.map(payment => {
       return {
         paymentAmount: payment.paymentAmount,
         transactionDateTime: payment.paymentDateTime
       }
     }),
-    "interest": 300,
+    "interest": 0,
     deliveries: mockDeliveryList.map(delivery => {
       return {
         deliveryAmount: delivery.deliveryAmount,
