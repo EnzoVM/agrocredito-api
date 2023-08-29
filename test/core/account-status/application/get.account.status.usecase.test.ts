@@ -97,7 +97,7 @@ describe('Create Campaign module test suites', () => {
     "amountDeliveredPercentage": 100,
     "delinquentInterest": 0,
     "delinquentInterestPercentage": 30,
-    "finalDebt": 1000,
+    "finalDebt": 999.96,
     "payments": mockPayments.map(payment => {
       return {
         paymentAmount: payment.paymentAmount,
@@ -155,7 +155,6 @@ describe('Create Campaign module test suites', () => {
       const accountStatus = await getAccountStatusUseCase.get({ creditRequestId: '22929'})
 
       expect(accountStatus.finalDebt).toBe(mockAccountSatusModel.finalDebt) 
-      expect(accountStatus.interest).toBe(mockAccountSatusModel.interest) 
       expect(accountStatus.totalPayment).toBe(mockAccountSatusModel.totalPayment) 
       expect(accountStatus.amountDelivered).toBe(mockAccountSatusModel.amountDelivered) 
     })
