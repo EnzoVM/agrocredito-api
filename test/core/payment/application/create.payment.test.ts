@@ -5,20 +5,23 @@ import {
   paymentPrismaRepositoryMock,
   campaignPrismaRepositoryMock,
   creditRequestPrimaRepositoryMock,
+  deliveryPrismaRepositoryMock,
   paramMock,
   paramEmptyMock,
   paramWrongMock,
   creditRequestFoundMock,
   campaignFoundMock,
   paymentFoundMock,
-  paymentAddedMock
+  paymentAddedMock,
+  deliveriesFoundMock
 } from '../mocks/create.payment.mock'
 
-const createPaymentUseCase = new CreatePaymentUseCase(paymentPrismaRepositoryMock, creditRequestPrimaRepositoryMock, campaignPrismaRepositoryMock)
+const createPaymentUseCase = new CreatePaymentUseCase(paymentPrismaRepositoryMock, creditRequestPrimaRepositoryMock, campaignPrismaRepositoryMock, deliveryPrismaRepositoryMock)
 
 describe('OPERATION SUCCESS', () => {
   test('Should return a payment object', async () => {
     creditRequestPrimaRepositoryMock.getCreditRequestById.mockResolvedValue(creditRequestFoundMock)
+    deliveryPrismaRepositoryMock.listDeliveriesByCreditRequestId.mockResolvedValue(deliveriesFoundMock)
     campaignPrismaRepositoryMock.getCampaignById.mockResolvedValue(campaignFoundMock)
     paymentPrismaRepositoryMock.listPaymentsByCreditRequestId.mockResolvedValue(paymentFoundMock)
     paymentPrismaRepositoryMock.createPayment.mockResolvedValue(paymentAddedMock)
@@ -37,8 +40,17 @@ describe('NOT FOUND ERROR', () => {
     await expect(createPaymentUseCase.invoke(paramMock)).rejects.toBeInstanceOf(NotFoundError)
   })
 
+  test('Should return an error when deliveries are not found', async () => {
+    creditRequestPrimaRepositoryMock.getCreditRequestById.mockResolvedValue(creditRequestFoundMock)
+    deliveryPrismaRepositoryMock.listDeliveriesByCreditRequestId.mockResolvedValue([])
+
+    await expect(createPaymentUseCase.invoke(paramMock)).rejects.toThrowError('No existe entregas asociadas a este pago')
+    await expect(createPaymentUseCase.invoke(paramMock)).rejects.toBeInstanceOf(NotFoundError)
+  })
+
   test('Should return an error when campaign is not found', async () => {
     creditRequestPrimaRepositoryMock.getCreditRequestById.mockResolvedValue(creditRequestFoundMock)
+    deliveryPrismaRepositoryMock.listDeliveriesByCreditRequestId.mockResolvedValue(deliveriesFoundMock)
     campaignPrismaRepositoryMock.getCampaignById.mockResolvedValue(null)
 
     await expect(createPaymentUseCase.invoke(paramMock)).rejects.toThrowError('No se ha encontrado una campaña asociada')

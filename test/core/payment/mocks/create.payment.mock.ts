@@ -26,13 +26,21 @@ export const campaignPrismaRepositoryMock = {
   getCampaignById: jest.fn()
 }
 
+export const deliveryPrismaRepositoryMock = {
+  listDeliveries: jest.fn(),
+  listDeliveriesByCreditRequestId: jest.fn(),
+  getTotalAmountByCampaignId: jest.fn(),
+  createDelivery: jest.fn(),
+  countDeliveriesByCreditRequestId: jest.fn()
+}
+
 export const paramMock = {
   creditRequestId: "87e47b9e-0e1c-4a00-ae20-f305c33d3d57",
   paymentDateTime: "11/05/2023",
   financialSourceId: 1,
   currentAccountId: 1,
   paymentDescription: "Prueba pago",
-  paymentAmountPEN: 6799.99985,
+  paymentAmountUSD: 1000,
   exchangeRate: 3.50
 }
 
@@ -104,7 +112,7 @@ export const creditRequestFoundMock = {
   campaignId: 'FRE012023',
   hectareNumber: 4,
   creditReason: 'siembra',
-  creditAmount: 4800,
+  creditAmount: 10000,
   guaranteeDescription: 'mi casa',
   guaranteeAmount: 9000,
   technicalName: 'Dioses Espinoza Rey Willy',
@@ -161,3 +169,25 @@ export const paymentAddedMock = {
   paymentAmountPEN: 2000
 }
 
+export const deliveriesFoundMock = [
+  {
+    deliveryId: 1,
+    fullNames: "Josue Emmanuel Medina Garcia",
+    deliveryDateTime: new Date(),
+    providerDescription: "BANCO DE LA NACIÓN",
+    financialSourceDescription: "Recuperaciones M.E.",
+    currentAccountDescription: "Descriptiuon",
+    gloss: "RELACION GIROS 001",
+    deliveryAmount: 5000
+  },
+  {
+    deliveryId: 2,
+    fullNames: "Josue Emmanuel Medina Garcia",
+    deliveryDateTime: new Date(),
+    providerDescription: "BANCO DE LA NACIÓN",
+    financialSourceDescription: "Recuperaciones M.E.",
+    currentAccountDescription: "Descriptiuon",
+    gloss: "RELACION GIROS 002",
+    deliveryAmount: 5000
+  }
+]
