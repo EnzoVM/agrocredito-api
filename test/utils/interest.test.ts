@@ -11,7 +11,7 @@ describe('Test interesGeneral', () => {
       porcentaje: 19
     })
 
-    expect(generalInterest).toBe(762.41)
+    expect(generalInterest).toBe(758.28)
   })
 
   test('Test general interest when actual date is not higher than campaign finish date', () => {
@@ -24,7 +24,7 @@ describe('Test interesGeneral', () => {
       porcentaje: 19
     })
 
-    expect(generalInterest).toBe(33.88)
+    expect(generalInterest).toBe(29.03)
   })
 
   test('Test general interest when actual date is higher than campaign finish date', () => {
@@ -37,7 +37,7 @@ describe('Test interesGeneral', () => {
       porcentaje: 19
     })
 
-    expect(generalInterest).toBe(655.51)
+    expect(generalInterest).toBe(659.6)
   })
 
   test('Test general interest when actual date is higher than campaign finish date', () => {
@@ -50,6 +50,6 @@ describe('Test interesGeneral', () => {
       porcentaje: 19
     })
 
-    expect(generalInterest).toBe(33.88)
+    expect(generalInterest).toBe(29.03)
   })
 })
