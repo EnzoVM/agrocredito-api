@@ -1,6 +1,7 @@
 import BadRequestError from "../../../utils/custom-errors/application-errors/bad.request.error"
 import NotFoundError from "../../../utils/custom-errors/application-errors/not.found.error"
 import ProcessError from "../../../utils/custom-errors/application-errors/process.error"
+import { interesGeneral, interesMoratorio } from "../../../utils/interest"
 import CampaignPersistanceRepository from "../../campaign/domain/campaign.persistance.repository"
 import CreditRequestPersistanceRepository from "../../credit-request/domain/credit.request.persistance.repository"
 import { CreditRequestStatusType } from "../../credit-request/domain/credit.request.status.type"
@@ -56,10 +57,28 @@ export default class GetAccountStatusUseCase {
       }
     })
 
-    const interest = (campaignFound.campaignInterest / 100) * creditRequestFound.creditAmount
-    const delinquentInterest = (campaignFound.campaignDelinquentInterest / 100) * creditRequestFound.creditAmount
-    const totalPayment = payments.reduce((accum, payment) => accum + payment.paymentAmount, 0)
     const amountDelivered = deliveriesFound.reduce((accum, delivery) => accum + delivery.deliveryAmount, 0)
+    const totalPayment = payments.reduce((accum, payment) => accum + payment.paymentAmount, 0)
+
+    const interestCalculate = deliveriesFound.map(delivery => {
+      return interesGeneral({
+        camaignYear: campaignFound.campaignYear,
+        fechaReporte: new Date(),
+        capital: delivery.deliveryAmount,
+        porcentaje: campaignFound.campaignInterest,
+        fechaEntrega: delivery.deliveryDateTime,
+        finishDate: campaignFound.finishDate
+      })
+    })
+
+    const interest = interestCalculate.reduce((accum, amount) => accum + amount, 0)
+    const delinquentInterest = interesMoratorio({
+      camaignYear: campaignFound.campaignYear,
+      capital: creditRequestFound.creditAmount - totalPayment,
+      finishDate: campaignFound.finishDate,
+      porcentaje: campaignFound.campaignDelinquentInterest
+    })
+
     const amountDeliveredPercentage = (Math.round(((amountDelivered / creditRequestFound.creditAmount) + Number.EPSILON) * 100) / 100) * 100
     const finalDebt = (creditRequestFound.creditAmount + interest + delinquentInterest) - totalPayment
     

@@ -119,26 +119,3 @@ export const interesMoratorio = ({
 
   return interes
 }
-
-const interesGeneralResultado = interesGeneral({
-  camaignYear: '2023',
-  finishDate: '24/08',
-  fechaEntrega: new Date('2023-02-07T20:13:34.060Z'),
-  fechaReporte: new Date(),
-  capital: 7800,
-  porcentaje: 19
-})
-
-const interesMoratorioResultado = interesMoratorio({
-  camaignYear: '2023',
-  finishDate: '31/07',
-  capital: 1200,
-  porcentaje: 20
-})
-
-console.log({
-  interesGeneralResultado,
-  interesMoratorioResultado
-})
-
-
