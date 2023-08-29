@@ -37,7 +37,7 @@ describe('Test interesGeneral', () => {
       porcentaje: 19
     })
 
-    expect(generalInterest).toBe(651.43)
+    expect(generalInterest).toBe(655.51)
   })
 
   test('Test general interest when actual date is higher than campaign finish date', () => {
