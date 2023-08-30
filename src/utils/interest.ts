@@ -1,23 +1,45 @@
+function parseFecha(fechaStr: string) {
+  const partes = fechaStr.split('-')
+  return {
+    año: parseInt(partes[0]),
+    mes: parseInt(partes[1]),
+    día: parseInt(partes[2])
+  }
+}
+
+const esMayorLaFecha = (fecha1_str: string, fecha2_str: string) => {
+  const fecha1 = parseFecha(fecha1_str)
+  const fecha2 = parseFecha(fecha2_str)
+
+  // Comparar las fechas
+  if (fecha1.año < fecha2.año || 
+    (fecha1.año === fecha2.año && fecha1.mes < fecha2.mes) || 
+    (fecha1.año === fecha2.año && fecha1.mes === fecha2.mes && fecha1.día < fecha2.día)) {
+    return false
+  } else if (fecha1.año > fecha2.año || 
+      (fecha1.año === fecha2.año && fecha1.mes > fecha2.mes) || 
+      (fecha1.año === fecha2.año && fecha1.mes === fecha2.mes && fecha1.día > fecha2.día)) {
+    return true
+  } else {
+    return false
+  }
+}
+
 const getDateFormat = (date: Date) => {
   const formatoFecha = new Intl.DateTimeFormat('es-PE', {
     year: "numeric",
     month: "numeric",
     day: "numeric"
   })
-  const formatoFinal = formatoFecha.format(date).split('/').reverse().join('-')
-  const fechaReporteFinal = new Date(formatoFinal)
-  return fechaReporteFinal
+  return formatoFecha.format(date).split('/').reverse().join('-')
 }
 
-function diferencia360Dias(fechaInicio: Date, fechaFin: Date) {
-  const diaInicio = fechaInicio.getDate()
-  const diaFin = fechaFin.getDate()
-  const mesInicio = fechaInicio.getMonth() + 1
-  const mesFin = fechaFin.getMonth() + 1
-  const añoInicio = fechaInicio.getFullYear()
-  const añoFin = fechaFin.getFullYear()
+function diferencia360Dias(fechaInicio: string, fechaFin: string) {
+  
+  const [añoInicio, mesInicio, diaInicio] = fechaInicio.split('-')
+  const [añoFin, mesFin, diaFin] = fechaFin.split('-')
 
-  const diferencia = (añoFin - añoInicio) * 360 + (mesFin - mesInicio) * 30 + (diaFin - diaInicio)
+  const diferencia = (Number(añoFin) - Number(añoInicio)) * 360 + (Number(mesFin) - Number(mesInicio)) * 30 + (Number(diaFin) - Number(diaInicio))
 
   return diferencia
 }
@@ -58,19 +80,17 @@ export const interesGeneral = ({
   capital: number,
   porcentaje: number
 }) => {
-  const fechaReporteFormateado = fechaReporte
-  
-  const fechaCampaña = `${camaignYear}-${finishDate.split('/').reverse().join('-')}`
-  const fechaCampañaFormateada = new Date(fechaCampaña)
-
-  fechaCampañaFormateada.setDate(fechaCampañaFormateada.getDate() + 1)
+  const fechaReporteFormateado = getDateFormat(fechaReporte)
+  const fechaFinalCampaña = `${camaignYear}-${finishDate.split('/').reverse().join('-')}`
+  const fechaEntregaFormateada = getDateFormat(fechaEntrega)
 
   let periodo: number 
-  if (fechaReporteFormateado > fechaCampañaFormateada) {
-    periodo = diferencia360Dias(fechaEntrega, fechaCampañaFormateada)
+  
+  if (esMayorLaFecha(fechaReporteFormateado, fechaFinalCampaña)) {
+    periodo = diferencia360Dias(fechaEntregaFormateada, fechaFinalCampaña)
   }
   else {
-    periodo = diferencia360Dias(fechaEntrega, fechaReporteFormateado)
+    periodo = diferencia360Dias(fechaEntregaFormateada, fechaReporteFormateado)
   }
 
   const interes = financialMath({
@@ -86,25 +106,22 @@ export const interesGeneral = ({
 export const interesMoratorio = ({
   camaignYear,
   finishDate,
+  fechaReporte,
   capital,
   porcentaje
 }: {
   camaignYear: string,
   finishDate: string,
+  fechaReporte: Date,
   capital: number,
   porcentaje: number
 }) => {
-  const fechaReporte = new Date()
-  const fechaReporteFormateado = getDateFormat(fechaReporte)
-  
+  const fechaReporteFormateado = getDateFormat(fechaReporte)  
   const fechaCampaña = `${camaignYear}-${finishDate.split('/').reverse().join('-')}`
-  const fechaCampañaFormateada = new Date(fechaCampaña)
-
-  fechaCampañaFormateada.setDate(fechaCampañaFormateada.getDate() + 1)
 
   let periodo: number 
-  if (fechaReporteFormateado > fechaCampañaFormateada) {
-    periodo = diferencia360Dias(fechaCampañaFormateada, fechaReporteFormateado)
+  if (esMayorLaFecha(fechaReporteFormateado, fechaCampaña)) {
+    periodo = diferencia360Dias(fechaCampaña, fechaReporteFormateado)
   }
   else {
     periodo = 0
