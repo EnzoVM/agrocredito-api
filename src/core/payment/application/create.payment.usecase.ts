@@ -90,6 +90,7 @@ export default class CreatePaymentUseCase {
     const lateInterest = interesMoratorio({
       camaignYear: campaignFound.campaignYear,
       finishDate: campaignFound.finishDate,
+      fechaReporte: new Date(),
       porcentaje: campaignFound.campaignDelinquentInterest,
       capital: creditRequestFound.creditAmount - paymentSum
     })
