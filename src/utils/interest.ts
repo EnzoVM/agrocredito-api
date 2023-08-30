@@ -58,12 +58,11 @@ export const interesGeneral = ({
   capital: number,
   porcentaje: number
 }) => {
-  const fechaReporteFormateado = getDateFormat(fechaReporte)
+  const fechaReporteFormateado = fechaReporte
   
   const fechaCampaña = `${camaignYear}-${finishDate.split('/').reverse().join('-')}`
   const fechaCampañaFormateada = new Date(fechaCampaña)
 
-  fechaReporteFormateado.setDate(fechaReporteFormateado.getDate() - 1)
   fechaCampañaFormateada.setDate(fechaCampañaFormateada.getDate() + 1)
 
   let periodo: number 
@@ -101,7 +100,6 @@ export const interesMoratorio = ({
   const fechaCampaña = `${camaignYear}-${finishDate.split('/').reverse().join('-')}`
   const fechaCampañaFormateada = new Date(fechaCampaña)
 
-  fechaReporteFormateado.setDate(fechaReporteFormateado.getDate() - 1)
   fechaCampañaFormateada.setDate(fechaCampañaFormateada.getDate() + 1)
 
   let periodo: number 
