@@ -104,6 +104,7 @@ describe('Create Campaign module test suites', () => {
         transactionDateTime: payment.paymentDateTime
       }
     }),
+    capital: 0,
     "interest": 0,
     deliveries: mockDeliveryList.map(delivery => {
       return {

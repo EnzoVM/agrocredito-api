@@ -32,11 +32,11 @@ const getDateFormat = (date: Date) => {
     month: "numeric",
     day: "numeric"
   })
+
   return formatoFecha.format(date).split('/').reverse().join('-')
 }
 
 function diferencia360Dias(fechaInicio: string, fechaFin: string) {
-  
   const [añoInicio, mesInicio, diaInicio] = fechaInicio.split('-')
   const [añoFin, mesFin, diaFin] = fechaFin.split('-')
 
@@ -84,8 +84,6 @@ export const interesGeneral = ({
   const fechaReporteFormateado = getDateFormat(fechaReporte)
   const fechaFinalCampaña = `${camaignYear}-${finishDate.split('/').reverse().join('-')}`
   const fechaEntregaFormateada = getDateFormat(fechaEntrega)
-  console.log(fechaEntregaFormateada)
-  console.log(fechaEntrega)
 
   let periodo: number 
   
@@ -102,8 +100,6 @@ export const interesGeneral = ({
     periodo,
     tipo: 'General'
   })
-
-  console.log(interes)
 
   return interes
 }
@@ -138,15 +134,6 @@ export const interesMoratorio = ({
     periodo,
     tipo: 'Moratorio'
   })
-  console.log(interes)
+
   return interes
 }
-
-interesGeneral({
-  camaignYear: '2023',
-  capital: 28000,
-  fechaEntrega: new Date('2023-08-01 22:34:00.000'),
-  fechaReporte: new Date(),
-  finishDate: '31/08',
-  porcentaje: 19
-})

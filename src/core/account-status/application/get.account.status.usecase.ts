@@ -71,7 +71,12 @@ export default class GetAccountStatusUseCase {
       })
     })
 
-    const interest = interestCalculate.reduce((accum, amount) => accum + amount, 0)
+    let interest = interestCalculate.reduce((accum, amount) => accum + amount, 0)
+
+    const residualInterest = interest - totalPayment
+
+    interest = residualInterest < 0 ? 0 : residualInterest
+
     const delinquentInterest = interesMoratorio({
       camaignYear: campaignFound.campaignYear,
       capital: creditRequestFound.creditAmount - totalPayment,
@@ -81,13 +86,13 @@ export default class GetAccountStatusUseCase {
     })
 
     const amountDeliveredPercentage = (Math.round(((amountDelivered / creditRequestFound.creditAmount) + Number.EPSILON) * 100) / 100) * 100
-    const finalDebt = (creditRequestFound.creditAmount + interest + delinquentInterest) - totalPayment
+    const finalDebt = (creditRequestFound.creditAmount + interestCalculate.reduce((accum, amount) => accum + amount, 0) + delinquentInterest) - totalPayment
     
     return {
       campaignFinishDate: `${campaignFound.finishDate}/${campaignFound.campaignYear}`,
       amountDelivered,
       amountDeliveredPercentage,
-      finalDebt,
+      finalDebt: Number(finalDebt.toFixed(2)),
       payments: paymentsToShow,
       deliveries: deliveriesFound.map(delivery => {
         return {
@@ -95,7 +100,8 @@ export default class GetAccountStatusUseCase {
           deliveryDateTime: delivery.deliveryDateTime
         }
       }),
-      interest,
+      capital: amountDelivered + (residualInterest > 0 ? 0 : residualInterest),
+      interest: Number(interest.toFixed(2)),
       interesPercentage: campaignFound.campaignInterest,
       delinquentInterest,
       delinquentInterestPercentage: campaignFound.campaignDelinquentInterest,

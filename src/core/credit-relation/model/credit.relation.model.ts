@@ -4,6 +4,7 @@ export default interface CreditRelation {
   fullNames?: string
   socialReason?: string
   totalDelivery: number
-  totalInterest: number
+  interest: number
+  delinquentInterest: number
   capital: number
 }
