@@ -7,7 +7,7 @@ function parseFecha(fechaStr: string) {
   }
 }
 
-const esMayorLaFecha = (fecha1_str: string, fecha2_str: string) => {
+export const esMayorLaFecha = (fecha1_str: string, fecha2_str: string) => {
   const fecha1 = parseFecha(fecha1_str)
   const fecha2 = parseFecha(fecha2_str)
 
@@ -25,7 +25,7 @@ const esMayorLaFecha = (fecha1_str: string, fecha2_str: string) => {
   }
 }
 
-const getDateFormat = (date: Date) => {
+export const getDateFormat = (date: Date) => {
   const formatoFecha = new Intl.DateTimeFormat('es-PE', {
     timeZone: 'America/Lima',
     year: "numeric",
