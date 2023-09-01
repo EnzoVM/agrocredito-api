@@ -1,7 +1,7 @@
 import BadRequestError from "../../../utils/custom-errors/application-errors/bad.request.error"
 import NotFoundError from "../../../utils/custom-errors/application-errors/not.found.error"
 import ProcessError from "../../../utils/custom-errors/application-errors/process.error"
-import { interesGeneral, interesMoratorio } from "../../../utils/interest"
+import { esMayorLaFecha, getDateFormat, interesGeneral, interesMoratorio } from "../../../utils/interest"
 import CampaignPersistanceRepository from "../../campaign/domain/campaign.persistance.repository"
 import CreditRequestPersistanceRepository from "../../credit-request/domain/credit.request.persistance.repository"
 import { CreditRequestStatusType } from "../../credit-request/domain/credit.request.status.type"
@@ -60,6 +60,20 @@ export default class GetAccountStatusUseCase {
     const amountDelivered = deliveriesFound.reduce((accum, delivery) => accum + delivery.deliveryAmount, 0)
     const totalPayment = payments.reduce((accum, payment) => accum + payment.paymentAmount, 0)
 
+    const totalPaymentInCampaignRange = payments.map(payment => {
+      const dateFormat = getDateFormat(payment.transactionDateTime)
+      const fechaFinalCampaña = `${campaignFound.campaignYear}-${campaignFound.finishDate.split('/').reverse().join('-')}`
+
+      if (esMayorLaFecha(dateFormat, fechaFinalCampaña)) {
+        return null
+      }
+      else {
+        return payment
+      }
+    })
+      .filter(payment => payment !== null)
+      .reduce((accum, payment) => accum + payment!.paymentAmount, 0)
+
     const interestCalculate = deliveriesFound.map(delivery => {
       return interesGeneral({
         camaignYear: campaignFound.campaignYear,
@@ -74,12 +88,13 @@ export default class GetAccountStatusUseCase {
     let interest = interestCalculate.reduce((accum, amount) => accum + amount, 0)
 
     const residualInterest = interest - totalPayment
+    const finalResidualInterest = interest - totalPaymentInCampaignRange
 
     interest = residualInterest < 0 ? 0 : residualInterest
 
     const delinquentInterest = interesMoratorio({
       camaignYear: campaignFound.campaignYear,
-      capital: amountDelivered + (residualInterest > 0 ? 0 : residualInterest),
+      capital: amountDelivered + (finalResidualInterest > 0 ? 0 : finalResidualInterest),
       fechaReporte: new Date(),
       finishDate: campaignFound.finishDate,
       porcentaje: campaignFound.campaignDelinquentInterest
@@ -100,7 +115,7 @@ export default class GetAccountStatusUseCase {
           deliveryDateTime: delivery.deliveryDateTime
         }
       }),
-      capital: amountDelivered + (residualInterest > 0 ? 0 : residualInterest),
+      capital: Number((amountDelivered + (residualInterest > 0 ? 0 : residualInterest)).toFixed(2)),
       interest: Number(interest.toFixed(2)),
       interesPercentage: campaignFound.campaignInterest,
       delinquentInterest,
