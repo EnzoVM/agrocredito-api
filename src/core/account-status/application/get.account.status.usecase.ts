@@ -1,7 +1,7 @@
 import BadRequestError from "../../../utils/custom-errors/application-errors/bad.request.error"
 import NotFoundError from "../../../utils/custom-errors/application-errors/not.found.error"
 import ProcessError from "../../../utils/custom-errors/application-errors/process.error"
-import { interesGeneral, interesMoratorio } from "../../../utils/interest"
+import { esMayorLaFecha, getDateFormat, interesGeneral, interesMoratorio } from "../../../utils/interest"
 import CampaignPersistanceRepository from "../../campaign/domain/campaign.persistance.repository"
 import CreditRequestPersistanceRepository from "../../credit-request/domain/credit.request.persistance.repository"
 import { CreditRequestStatusType } from "../../credit-request/domain/credit.request.status.type"
@@ -73,17 +73,34 @@ export default class GetAccountStatusUseCase {
 
     let interest = interestCalculate.reduce((accum, amount) => accum + amount, 0)
 
+    const fechaFinalCampaña = `${campaignFound.campaignYear}-${campaignFound.finishDate.split('/').reverse().join('-')}`
+
+    const totalPaymentsInCampaignRange = payments.map(payment => {
+      const dateFormated = getDateFormat(payment.transactionDateTime)
+      if (esMayorLaFecha(dateFormated, fechaFinalCampaña)) {
+        return null
+      }
+      else {
+        return payment
+      }
+    })
+      .filter(payment => payment !== null)
+      .reduce((accum, payment) => accum + payment!.paymentAmount, 0)
+
     const residualInterest = interest - totalPayment
+    const residualDelinquentInterest = interest - totalPaymentsInCampaignRange
 
     interest = residualInterest < 0 ? 0 : residualInterest
 
     const delinquentInterest = interesMoratorio({
       camaignYear: campaignFound.campaignYear,
-      capital: amountDelivered + (residualInterest > 0 ? 0 : residualInterest),
+      capital: amountDelivered + (residualDelinquentInterest > 0 ? 0 : residualDelinquentInterest),
       fechaReporte: new Date(),
       finishDate: campaignFound.finishDate,
       porcentaje: campaignFound.campaignDelinquentInterest
     })
+
+    const interesMoratorioResult = delinquentInterest + residualInterest - totalPayment
 
     const amountDeliveredPercentage = (Math.round(((amountDelivered / creditRequestFound.creditAmount) + Number.EPSILON) * 100) / 100) * 100
     const finalDebt = (creditRequestFound.creditAmount + interestCalculate.reduce((accum, amount) => accum + amount, 0) + delinquentInterest) - totalPayment
@@ -100,7 +117,7 @@ export default class GetAccountStatusUseCase {
           deliveryDateTime: delivery.deliveryDateTime
         }
       }),
-      capital: amountDelivered + (residualInterest > 0 ? 0 : residualInterest),
+      capital: amountDelivered + (interesMoratorioResult > 0 ? 0 : interesMoratorioResult),
       interest: Number(interest.toFixed(2)),
       interesPercentage: campaignFound.campaignInterest,
       delinquentInterest,
