@@ -73,7 +73,9 @@ export default class CreatePaymentUseCase {
     let paymentSum: number = 0
     const paymentFound = await this.paymentPersistanceRepository.listPaymentsByCreditRequestId({creditRequestId})
     for(const payment of paymentFound) paymentSum += payment.paymentAmount
-
+    
+    const amountDelivered = deliveriesFound.reduce((accum, delivery) => accum + delivery.deliveryAmount, 0)
+    
     const generalInterest = deliveriesFound
       .map(delivery => {
         return interesGeneral({
@@ -87,12 +89,14 @@ export default class CreatePaymentUseCase {
       })
       .reduce((accum, interest) => accum + interest, 0)
 
+    const residualInterest = generalInterest - paymentSum
+
     const lateInterest = interesMoratorio({
       camaignYear: campaignFound.campaignYear,
       finishDate: campaignFound.finishDate,
       fechaReporte: new Date(),
       porcentaje: campaignFound.campaignDelinquentInterest,
-      capital: creditRequestFound.creditAmount - paymentSum
+      capital: amountDelivered + (residualInterest > 0 ? 0 : residualInterest)
     })
 
     const fullPayment = creditRequestFound.creditAmount + generalInterest + lateInterest

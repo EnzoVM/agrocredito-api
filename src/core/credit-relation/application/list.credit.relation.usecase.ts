@@ -1,7 +1,6 @@
 import BadRequestError from "../../../utils/custom-errors/application-errors/bad.request.error"
 import ProcessError from "../../../utils/custom-errors/application-errors/process.error"
 import { interesGeneral, interesMoratorio } from "../../../utils/interest"
-import { Payment } from "../../account-status/domain/account.status.model"
 import CampaignPersistanceRepository from "../../campaign/domain/campaign.persistance.repository"
 import CreditRequestList from "../../credit-request/domain/credit.request.list.model"
 import CreditRequestPersistanceRepository from "../../credit-request/domain/credit.request.persistance.repository"
@@ -116,7 +115,7 @@ export default class ListCreditRelationUseCase {
 
       const delinquentInterest = interesMoratorio({
         camaignYear: campaignFound.campaignYear,
-        capital: creditRequest.creditAmount - totalPayment,
+        capital: amountDelivered + (residualInterest > 0 ? 0 : residualInterest),
         fechaReporte: new Date(),
         finishDate: campaignFound.finishDate,
         porcentaje: campaignFound.campaignDelinquentInterest

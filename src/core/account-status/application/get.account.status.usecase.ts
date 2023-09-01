@@ -79,7 +79,7 @@ export default class GetAccountStatusUseCase {
 
     const delinquentInterest = interesMoratorio({
       camaignYear: campaignFound.campaignYear,
-      capital: creditRequestFound.creditAmount - totalPayment,
+      capital: amountDelivered + (residualInterest > 0 ? 0 : residualInterest),
       fechaReporte: new Date(),
       finishDate: campaignFound.finishDate,
       porcentaje: campaignFound.campaignDelinquentInterest
