@@ -1,6 +1,7 @@
 import BadRequestError from "../../../utils/custom-errors/application-errors/bad.request.error"
 import ProcessError from "../../../utils/custom-errors/application-errors/process.error"
-import { interesGeneral, interesMoratorio } from "../../../utils/interest"
+import { esMayorLaFecha, getDateFormat, interesGeneral, interesMoratorio } from "../../../utils/interest"
+import { Payment } from "../../account-status/domain/account.status.model"
 import CampaignPersistanceRepository from "../../campaign/domain/campaign.persistance.repository"
 import CreditRequestList from "../../credit-request/domain/credit.request.list.model"
 import CreditRequestPersistanceRepository from "../../credit-request/domain/credit.request.persistance.repository"
@@ -89,12 +90,48 @@ export default class ListCreditRelationUseCase {
       const deliveries = await this.deliveryPersistanceRepository.listDeliveriesByCreditRequestId({ creditRequestId: creditRequest.creditRequestId })
       const campaignFound = await this.campaignPersistanceRepository.getCampaignById(creditRequest.campaignId)
       const totalPaymentsFound = await this.paymentPersistanceRepository.listPaymentsByCreditRequestId({ creditRequestId: creditRequest.creditRequestId })
-      const amountDelivered = deliveries.reduce((accum, delivery) => accum + delivery.deliveryAmount, 0)
 
       if (!campaignFound) {
         throw new ProcessError({ message: 'La informacion no se pudo procesar debido a que no existe la campaña especificada', core: 'account-status' })
       }
-      console.log(totalPaymentsFound)
+
+      const payments: Payment[] = totalPaymentsFound.map(payment => {
+        return {
+          paymentAmount: payment.paymentAmount,
+          transactionDateTime: payment.paymentDateTime
+        }
+      })
+
+      const amountDelivered = deliveries.reduce((accum, delivery) => accum + delivery.deliveryAmount, 0)
+      const totalPayment = Number(payments.reduce((accum, payment) => accum + payment.paymentAmount, 0).toFixed(2))
+
+      const totalPaymentsOutCampaignRange = payments.map(payment => {
+        const dateFormat = getDateFormat(payment.transactionDateTime)
+        const fechaFinalCampaña = `${campaignFound.campaignYear}-${campaignFound.finishDate.split('/').reverse().join('-')}`
+
+        if (esMayorLaFecha(dateFormat, fechaFinalCampaña)) {
+          return payment
+        }
+        else {
+          return null
+        }
+      })
+        .filter(payment => payment !== null)
+        .reduce((accum, payment) => accum + payment!.paymentAmount, 0)
+
+      const totalPaymentInCampaignRange = payments.map(payment => {
+        const dateFormat = getDateFormat(payment.transactionDateTime)
+        const fechaFinalCampaña = `${campaignFound.campaignYear}-${campaignFound.finishDate.split('/').reverse().join('-')}`
+  
+        if (esMayorLaFecha(dateFormat, fechaFinalCampaña)) {
+          return null
+        }
+        else {
+          return payment
+        }
+      })
+        .filter(payment => payment !== null)
+        .reduce((accum, payment) => accum + payment!.paymentAmount, 0)
 
       const interestCalculate = deliveries.map(delivery => {
         return interesGeneral({
@@ -107,29 +144,52 @@ export default class ListCreditRelationUseCase {
         })
       })
 
-      const totalPayment = totalPaymentsFound.reduce((accum, payment) => accum + payment.paymentAmount, 0)
       let interest = interestCalculate.reduce((accum, amount) => accum + amount, 0)
+
       const residualInterest = interest - totalPayment
+      const finalResidualInterest = interest - totalPaymentInCampaignRange
 
       interest = residualInterest < 0 ? 0 : residualInterest
 
       const delinquentInterest = interesMoratorio({
         camaignYear: campaignFound.campaignYear,
-        capital: amountDelivered + (residualInterest > 0 ? 0 : residualInterest),
+        capital: amountDelivered + (finalResidualInterest > 0 ? 0 : finalResidualInterest),
         fechaReporte: new Date(),
         finishDate: campaignFound.finishDate,
         porcentaje: campaignFound.campaignDelinquentInterest
       })
 
+      const finalDeliquentInterest = 
+      delinquentInterest -
+      totalPaymentsOutCampaignRange + 
+      interestCalculate.reduce((accum, amount) => accum + amount, 0)
+      
+      const resta = (delinquentInterest > totalPaymentsOutCampaignRange) 
+        ? 0
+        : delinquentInterest - totalPaymentsOutCampaignRange
+
+
+      const totalDelivery = Number((amountDelivered + (finalResidualInterest > 0 
+        ? 0 
+        : finalResidualInterest + resta)).toFixed(2))
+
+      const finalDelinquentInterest = Number((finalDeliquentInterest > delinquentInterest 
+        ? totalPaymentsOutCampaignRange > delinquentInterest 
+          ? 0 
+          : delinquentInterest - totalPaymentsOutCampaignRange
+        : finalDeliquentInterest < 0 
+          ? 0 
+          : finalDeliquentInterest).toFixed(2))
+        
       return {
         creditRequestId: creditRequest.creditRequestId,
         farmerId: creditRequest.farmerId,
         fullNames: creditRequest.fullNames,
         socialReason: creditRequest.socialReason,
-        totalDelivery: amountDelivered + (residualInterest > 0 ? 0 : residualInterest),
+        totalDelivery,
         interest: Number(interest.toFixed(2)),
-        delinquentInterest,
-        capital: (amountDelivered + (residualInterest > 0 ? 0 : residualInterest)) + (residualInterest < 0 ? 0 : residualInterest) + delinquentInterest
+        delinquentInterest: finalDelinquentInterest,
+        capital: totalDelivery + finalDelinquentInterest + Number(interest.toFixed(2))
       }
     })
 

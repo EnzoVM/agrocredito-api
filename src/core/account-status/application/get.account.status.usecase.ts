@@ -58,7 +58,21 @@ export default class GetAccountStatusUseCase {
     })
 
     const amountDelivered = deliveriesFound.reduce((accum, delivery) => accum + delivery.deliveryAmount, 0)
-    const totalPayment = payments.reduce((accum, payment) => accum + payment.paymentAmount, 0)
+    const totalPayment = Number(payments.reduce((accum, payment) => accum + payment.paymentAmount, 0).toFixed(2))
+
+    const totalPaymentsOutCampaignRange = payments.map(payment => {
+      const dateFormat = getDateFormat(payment.transactionDateTime)
+      const fechaFinalCampaña = `${campaignFound.campaignYear}-${campaignFound.finishDate.split('/').reverse().join('-')}`
+
+      if (esMayorLaFecha(dateFormat, fechaFinalCampaña)) {
+        return payment
+      }
+      else {
+        return null
+      }
+    })
+      .filter(payment => payment !== null)
+      .reduce((accum, payment) => accum + payment!.paymentAmount, 0)
 
     const totalPaymentInCampaignRange = payments.map(payment => {
       const dateFormat = getDateFormat(payment.transactionDateTime)
@@ -100,9 +114,32 @@ export default class GetAccountStatusUseCase {
       porcentaje: campaignFound.campaignDelinquentInterest
     })
 
+    const finalDeliquentInterest = 
+      delinquentInterest -
+      totalPaymentsOutCampaignRange + 
+      interestCalculate.reduce((accum, amount) => accum + amount, 0)
+
     const amountDeliveredPercentage = (Math.round(((amountDelivered / creditRequestFound.creditAmount) + Number.EPSILON) * 100) / 100) * 100
     const finalDebt = (creditRequestFound.creditAmount + interestCalculate.reduce((accum, amount) => accum + amount, 0) + delinquentInterest) - totalPayment
     
+    const resta = (delinquentInterest > totalPaymentsOutCampaignRange) 
+      ? 0
+      : delinquentInterest - totalPaymentsOutCampaignRange
+
+    // console.log({
+    //   delinquentInterest,
+    //   restas: (delinquentInterest > totalPaymentsOutCampaignRange) 
+    //     ? 0
+    //     : delinquentInterest - totalPaymentsOutCampaignRange,
+    //   capital: Number((amountDelivered + (finalResidualInterest > 0 
+    //     ? 0 
+    //     : finalResidualInterest + resta)).toFixed(2)),
+    //   interest: Number(interest.toFixed(2)),
+    //   finalDeliquentInterest: Number((finalDeliquentInterest > delinquentInterest 
+    //     ? totalPaymentsOutCampaignRange > delinquentInterest ? 0 : delinquentInterest - totalPaymentsOutCampaignRange
+    //     : finalDeliquentInterest < 0 ? 0 : finalDeliquentInterest).toFixed(2))
+    // })
+
     return {
       campaignFinishDate: `${campaignFound.finishDate}/${campaignFound.campaignYear}`,
       amountDelivered,
@@ -115,10 +152,18 @@ export default class GetAccountStatusUseCase {
           deliveryDateTime: delivery.deliveryDateTime
         }
       }),
-      capital: Number((amountDelivered + (residualInterest > 0 ? 0 : residualInterest)).toFixed(2)),
+      capital: Number((amountDelivered + (finalResidualInterest > 0 
+        ? 0 
+        : finalResidualInterest + resta)).toFixed(2)),
       interest: Number(interest.toFixed(2)),
       interesPercentage: campaignFound.campaignInterest,
-      delinquentInterest,
+      delinquentInterest: Number((finalDeliquentInterest > delinquentInterest 
+        ? totalPaymentsOutCampaignRange > delinquentInterest 
+          ? 0 
+          : delinquentInterest - totalPaymentsOutCampaignRange
+        : finalDeliquentInterest < 0 
+          ? 0 
+          : finalDeliquentInterest).toFixed(2)),
       delinquentInterestPercentage: campaignFound.campaignDelinquentInterest,
       totalPayment,
       creditAmount: creditRequestFound.creditAmount,
