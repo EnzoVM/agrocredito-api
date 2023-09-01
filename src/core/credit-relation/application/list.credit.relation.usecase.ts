@@ -1,7 +1,6 @@
 import BadRequestError from "../../../utils/custom-errors/application-errors/bad.request.error"
 import ProcessError from "../../../utils/custom-errors/application-errors/process.error"
 import { interesGeneral, interesMoratorio } from "../../../utils/interest"
-import { Payment } from "../../account-status/domain/account.status.model"
 import CampaignPersistanceRepository from "../../campaign/domain/campaign.persistance.repository"
 import CreditRequestList from "../../credit-request/domain/credit.request.list.model"
 import CreditRequestPersistanceRepository from "../../credit-request/domain/credit.request.persistance.repository"
