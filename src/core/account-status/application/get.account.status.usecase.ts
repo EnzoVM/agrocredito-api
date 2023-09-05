@@ -126,25 +126,13 @@ export default class GetAccountStatusUseCase {
       ? 0
       : delinquentInterest - totalPaymentsOutCampaignRange
 
-    // console.log({
-    //   delinquentInterest,
-    //   restas: (delinquentInterest > totalPaymentsOutCampaignRange) 
-    //     ? 0
-    //     : delinquentInterest - totalPaymentsOutCampaignRange,
-    //   capital: Number((amountDelivered + (finalResidualInterest > 0 
-    //     ? 0 
-    //     : finalResidualInterest + resta)).toFixed(2)),
-    //   interest: Number(interest.toFixed(2)),
-    //   finalDeliquentInterest: Number((finalDeliquentInterest > delinquentInterest 
-    //     ? totalPaymentsOutCampaignRange > delinquentInterest ? 0 : delinquentInterest - totalPaymentsOutCampaignRange
-    //     : finalDeliquentInterest < 0 ? 0 : finalDeliquentInterest).toFixed(2))
-    // })
+    const isCreditRequestPayed = creditRequestFound.creditRequestStatus === CreditRequestStatusType.PAID
 
     return {
       campaignFinishDate: `${campaignFound.finishDate}/${campaignFound.campaignYear}`,
       amountDelivered,
       amountDeliveredPercentage,
-      finalDebt: Number(finalDebt.toFixed(2)),
+      finalDebt: isCreditRequestPayed ? 0 : Number(finalDebt.toFixed(2)),
       payments: paymentsToShow,
       deliveries: deliveriesFound.map(delivery => {
         return {
@@ -152,12 +140,12 @@ export default class GetAccountStatusUseCase {
           deliveryDateTime: delivery.deliveryDateTime
         }
       }),
-      capital: Number((amountDelivered + (finalResidualInterest > 0 
+      capital: isCreditRequestPayed ? 0 : Number((amountDelivered + (finalResidualInterest > 0 
         ? 0 
         : finalResidualInterest + resta)).toFixed(2)),
-      interest: Number(interest.toFixed(2)),
+      interest: isCreditRequestPayed ? 0 : Number(interest.toFixed(2)),
       interesPercentage: campaignFound.campaignInterest,
-      delinquentInterest: Number((finalDeliquentInterest > delinquentInterest 
+      delinquentInterest: isCreditRequestPayed ? 0 : Number((finalDeliquentInterest > delinquentInterest 
         ? totalPaymentsOutCampaignRange > delinquentInterest 
           ? 0 
           : delinquentInterest - totalPaymentsOutCampaignRange

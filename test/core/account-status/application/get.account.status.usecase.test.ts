@@ -32,7 +32,7 @@ describe('Create Campaign module test suites', () => {
     "guaranteeAmount": 25000,
     "technicalName": "No requiere",
     "assistanceTypeDescription": "INDEPENDIENTES",
-    "creditRequestStatus": "Pagado",
+    "creditRequestStatus": "Aprobado",
     "creditRequestObservation": "Sin observaciones",
     "createDateTime": date
   }
