@@ -5,6 +5,7 @@ import { Payment } from "../../account-status/domain/account.status.model"
 import CampaignPersistanceRepository from "../../campaign/domain/campaign.persistance.repository"
 import CreditRequestList from "../../credit-request/domain/credit.request.list.model"
 import CreditRequestPersistanceRepository from "../../credit-request/domain/credit.request.persistance.repository"
+import { CreditRequestStatusType } from "../../credit-request/domain/credit.request.status.type"
 import DeliveryPersistanceRepository from "../../delivery/domain/delivery.persistance.respository"
 import { FarmerType } from "../../farmer/domain/farmer.type"
 import PaymentPersistanceRepository from "../../payment/domain/payment.persistance.repository"
@@ -181,15 +182,17 @@ export default class ListCreditRelationUseCase {
           ? 0 
           : finalDeliquentInterest).toFixed(2))
         
+      const isCreditRequestPayed = creditRequest.creditRequestStatus === CreditRequestStatusType.PAID
+      
       return {
         creditRequestId: creditRequest.creditRequestId,
         farmerId: creditRequest.farmerId,
         fullNames: creditRequest.fullNames,
         socialReason: creditRequest.socialReason,
-        totalDelivery,
-        interest: Number(interest.toFixed(2)),
-        delinquentInterest: finalDelinquentInterest,
-        capital: totalDelivery + finalDelinquentInterest + Number(interest.toFixed(2))
+        totalDelivery: isCreditRequestPayed ? 0 : totalDelivery,
+        interest: isCreditRequestPayed ? 0 : Number(interest.toFixed(2)),
+        delinquentInterest: isCreditRequestPayed ? 0 : finalDelinquentInterest,
+        capital: isCreditRequestPayed ? 0 : totalDelivery + finalDelinquentInterest + Number(interest.toFixed(2))
       }
     })
 
