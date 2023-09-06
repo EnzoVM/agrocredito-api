@@ -5,17 +5,21 @@ import AccountStatusModel from '../../../../src/core/account-status/domain/accou
 import NotFoundError from '../../../../src/utils/custom-errors/application-errors/not.found.error'
 import DeliveryPrismaRepository from '../../../../src/core/delivery/infrastructure/delivery.prisma.repository'
 import CampaignPrismaRepository from '../../../../src/core/campaign/infraestructure/prisma/campaign.prisma.repository'
+import LogRecordMongoDBRepository from '../../../../src/core/log-record/infrastructure/log.record.mongodb.repository'
 import CreditRequestDetail from '../../../../src/core/credit-request/domain/credit.request.detail.model'
 import PaymentPrismaRepository from '../../../../src/core/payment/infrastructure/payment.prisma.repository'
 import Campaign from '../../../../src/core/campaign/domain/campaign.model'
 import DeliveryListModel from '../../../../src/core/delivery/domain/delivery.list.model'
 import ProcessError from '../../../../src/utils/custom-errors/application-errors/process.error'
 import PaymentListModel from '../../../../src/core/payment/domain/payment.list.model'
+import LogRecordPersistanceRepository from '../../../../src/core/log-record/domain/log.record.persistance.repository'
 
 jest.mock('../../../../src/core/credit-request/infrastructure/credit.request.prisma.repository')
 jest.mock('../../../../src/core/delivery/domain/delivery.persistance.respository')
 jest.mock('../../../../src/core/campaign/domain/campaign.persistance.repository')
 jest.mock('../../../../src/core/payment/infrastructure/payment.prisma.repository')
+jest.mock('../../../../src/core/payment/infrastructure/payment.prisma.repository')
+
 
 describe('Create Campaign module test suites', () => {
   const date = new Date()
@@ -126,6 +130,7 @@ describe('Create Campaign module test suites', () => {
   let deliveryPersistanceRepository: DeliveryPrismaRepository
   let campaignPersistanceRepository: CampaignPrismaRepository
   let paymentPrismaRepository: PaymentPrismaRepository
+  let logRecordMongoDBRepository: LogRecordMongoDBRepository
 
   let getAccountStatusUseCase: GetAccountStatusUseCase
 
@@ -134,7 +139,7 @@ describe('Create Campaign module test suites', () => {
     deliveryPersistanceRepository = new DeliveryPrismaRepository()
     campaignPersistanceRepository = new CampaignPrismaRepository()
     paymentPrismaRepository = new PaymentPrismaRepository()
-
+    logRecordMongoDBRepository = new LogRecordMongoDBRepository()
   })
 
   beforeEach(() => {
@@ -142,12 +147,15 @@ describe('Create Campaign module test suites', () => {
     jest.spyOn(deliveryPersistanceRepository, 'listDeliveriesByCreditRequestId').mockResolvedValue(mockDeliveryList)
     jest.spyOn(campaignPersistanceRepository, 'getCampaignById').mockResolvedValue(mockCampaign)
     jest.spyOn(paymentPrismaRepository, 'listPaymentsByCreditRequestId').mockResolvedValue(mockPayments)
+    jest.spyOn(logRecordMongoDBRepository, 'createNewRecord').mockResolvedValue('3939i4-349343')
+    jest.spyOn(logRecordMongoDBRepository, 'setEndRequestTimeRecordById').mockResolvedValue('3939i4-349343')
 
     getAccountStatusUseCase = new GetAccountStatusUseCase(
       creditRequestPersistanceRepository,
       deliveryPersistanceRepository,
       campaignPersistanceRepository,
-      paymentPrismaRepository
+      paymentPrismaRepository,
+      logRecordMongoDBRepository
     )
   })
 
