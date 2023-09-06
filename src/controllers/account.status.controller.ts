@@ -7,8 +7,9 @@ import CreditRequestPrimaRepository from '../core/credit-request/infrastructure/
 import DeliveryPrismaRepository from '../core/delivery/infrastructure/delivery.prisma.repository'
 import CampaignPrismaRepository from '../core/campaign/infraestructure/prisma/campaign.prisma.repository'
 import PaymentPrismaRepository from '../core/payment/infrastructure/payment.prisma.repository'
+import LogRecordMongoDBRepository from '../core/log-record/infrastructure/log.record.mongodb.repository'
 
-const getAccountStatusUseCase = new GetAccountStatusUseCase(new CreditRequestPrimaRepository, new DeliveryPrismaRepository, new CampaignPrismaRepository, new PaymentPrismaRepository)
+const getAccountStatusUseCase = new GetAccountStatusUseCase(new CreditRequestPrimaRepository, new DeliveryPrismaRepository, new CampaignPrismaRepository, new PaymentPrismaRepository, new LogRecordMongoDBRepository)
 
 export const getAccountStatusHandler = async (req: Request, res: Response, next: NextFunction) => {
   const { creditRequestId, take } = req.params

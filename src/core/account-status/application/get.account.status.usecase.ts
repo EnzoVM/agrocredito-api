@@ -6,6 +6,7 @@ import CampaignPersistanceRepository from "../../campaign/domain/campaign.persis
 import CreditRequestPersistanceRepository from "../../credit-request/domain/credit.request.persistance.repository"
 import { CreditRequestStatusType } from "../../credit-request/domain/credit.request.status.type"
 import DeliveryPersistanceRepository from "../../delivery/domain/delivery.persistance.respository"
+import LogRecordPersistanceRepository from "../../log-record/domain/log.record.persistance.repository"
 import PaymentPersistanceRepository from "../../payment/domain/payment.persistance.repository"
 import AccountStatusModel, { Payment } from "../domain/account.status.model"
 
@@ -14,7 +15,8 @@ export default class GetAccountStatusUseCase {
     private readonly creditRequestPersistanceRepository: CreditRequestPersistanceRepository,
     private readonly deliveryPersistanceRepository: DeliveryPersistanceRepository,
     private readonly campaignPersistanceRepository: CampaignPersistanceRepository,
-    private readonly paymentPersistanceRepository: PaymentPersistanceRepository
+    private readonly paymentPersistanceRepository: PaymentPersistanceRepository,
+    private readonly logRecordPersistanceRepository: LogRecordPersistanceRepository
   ) {}
 
   async get ({ creditRequestId, take }: { creditRequestId: string, take?: number }): Promise<AccountStatusModel> {
@@ -39,6 +41,12 @@ export default class GetAccountStatusUseCase {
     if (!campaignFound) {
       throw new ProcessError({ message: 'La informacion no se pudo procesar debido a que no existe la campaña especificada', core: 'account-status' })
     }
+
+    const recordId = await this.logRecordPersistanceRepository.createNewRecord({
+      initRequestTime: new Date(),
+      method: 'GET',
+      resource: 'calculate-interest'
+    })
 
     const paymentsToShowFound = await this.paymentPersistanceRepository.listPaymentsByCreditRequestId({ creditRequestId, take: take ? Number(take) : undefined })
     const totalPaymentsFound = await this.paymentPersistanceRepository.listPaymentsByCreditRequestId({ creditRequestId })
@@ -126,7 +134,10 @@ export default class GetAccountStatusUseCase {
       ? 0
       : delinquentInterest - totalPaymentsOutCampaignRange
 
-    console.log('finalResidualInterest', finalResidualInterest)
+    await this.logRecordPersistanceRepository.setEndRequestTimeRecordById({
+      recordId,
+      endRequestTime: new Date()
+    })
 
     // console.log({
     //   delinquentInterest,
