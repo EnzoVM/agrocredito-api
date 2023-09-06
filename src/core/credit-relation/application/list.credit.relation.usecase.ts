@@ -169,9 +169,8 @@ export default class ListCreditRelationUseCase {
         ? 0
         : delinquentInterest - totalPaymentsOutCampaignRange
 
-
       const totalDelivery = Number((amountDelivered + (finalResidualInterest > 0 
-        ? 0 
+        ? resta
         : finalResidualInterest + resta)).toFixed(2))
 
       const finalDelinquentInterest = Number((finalDeliquentInterest > delinquentInterest 
@@ -189,10 +188,10 @@ export default class ListCreditRelationUseCase {
         farmerId: creditRequest.farmerId,
         fullNames: creditRequest.fullNames,
         socialReason: creditRequest.socialReason,
-        totalDelivery: isCreditRequestPayed ? 0 : totalDelivery,
+        totalDelivery: isCreditRequestPayed ? 0 : Number(totalDelivery.toFixed(2)),
         interest: isCreditRequestPayed ? 0 : Number(interest.toFixed(2)),
-        delinquentInterest: isCreditRequestPayed ? 0 : finalDelinquentInterest,
-        capital: isCreditRequestPayed ? 0 : totalDelivery + finalDelinquentInterest + Number(interest.toFixed(2))
+        delinquentInterest: isCreditRequestPayed ? 0 : Number(finalDelinquentInterest.toFixed(2)),
+        capital: isCreditRequestPayed ? 0 : Number((totalDelivery + finalDelinquentInterest + interest).toFixed(2))
       }
     })
 
