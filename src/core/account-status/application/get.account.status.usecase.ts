@@ -126,6 +126,22 @@ export default class GetAccountStatusUseCase {
       ? 0
       : delinquentInterest - totalPaymentsOutCampaignRange
 
+    console.log('finalResidualInterest', finalResidualInterest)
+
+    // console.log({
+    //   delinquentInterest,
+    //   restas: (delinquentInterest > totalPaymentsOutCampaignRange) 
+    //     ? 0
+    //     : delinquentInterest - totalPaymentsOutCampaignRange,
+    //   capital: Number((amountDelivered + (finalResidualInterest > 0 
+    //     ? resta
+    //     : finalResidualInterest + resta)).toFixed(2)),
+    //   interest: Number(interest.toFixed(2)),
+    //   finalDeliquentInterest: Number((finalDeliquentInterest > delinquentInterest 
+    //     ? totalPaymentsOutCampaignRange > delinquentInterest ? 0 : delinquentInterest - totalPaymentsOutCampaignRange
+    //     : finalDeliquentInterest < 0 ? 0 : finalDeliquentInterest).toFixed(2))
+    // })
+
     const isCreditRequestPayed = creditRequestFound.creditRequestStatus === CreditRequestStatusType.PAID
 
     return {
@@ -140,9 +156,11 @@ export default class GetAccountStatusUseCase {
           deliveryDateTime: delivery.deliveryDateTime
         }
       }),
-      capital: isCreditRequestPayed ? 0 : Number((amountDelivered + (finalResidualInterest > 0 
+      capital: isCreditRequestPayed 
         ? 0 
-        : finalResidualInterest + resta)).toFixed(2)),
+        : Number((amountDelivered + (finalResidualInterest > 0 
+          ? resta
+          : finalResidualInterest + resta)).toFixed(2)),
       interest: isCreditRequestPayed ? 0 : Number(interest.toFixed(2)),
       interesPercentage: campaignFound.campaignInterest,
       delinquentInterest: isCreditRequestPayed ? 0 : Number((finalDeliquentInterest > delinquentInterest 
