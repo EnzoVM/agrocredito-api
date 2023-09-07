@@ -6,7 +6,7 @@ import PaymentPersistanceRepository from "../domain/payment.persistance.reposito
 import PaymentResponseModel from "../domain/payment.response.model"
 import ProcessError from "../../../utils/custom-errors/application-errors/process.error"
 import CampaignPersistanceRepository from "../../campaign/domain/campaign.persistance.repository"
-import { interesGeneral, interesMoratorio } from "../../../utils/interest"
+import { esMayorLaFecha, getDateFormat, interesGeneral, interesMoratorio } from "../../../utils/interest"
 import DeliveryPersistanceRepository from "../../delivery/domain/delivery.persistance.respository"
 import { CreditRequestStatusType } from "../../credit-request/domain/credit.request.status.type"
 
@@ -66,15 +66,13 @@ export default class CreatePaymentUseCase {
 
     const deliveriesFound = await this.deliveryPersistanceRepository.listDeliveriesByCreditRequestId({creditRequestId})
     if(deliveriesFound.length === 0) throw new NotFoundError({ message: 'No existe entregas asociadas a este pago', core: 'Payment'})
+    const amountDelivered = deliveriesFound.reduce((accum, delivery) => accum + delivery.deliveryAmount, 0)
 
     const campaignFound = await this.campaignPersistanceRepository.getCampaignById(creditRequestFound.campaignId)
     if(!campaignFound) throw new NotFoundError({ message: 'No se ha encontrado una campaña asociada', core: 'Payment'})
     
-    let paymentSum: number = 0
     const paymentFound = await this.paymentPersistanceRepository.listPaymentsByCreditRequestId({creditRequestId})
-    for(const payment of paymentFound) paymentSum += payment.paymentAmount
-    
-    const amountDelivered = deliveriesFound.reduce((accum, delivery) => accum + delivery.deliveryAmount, 0)
+    const paymentSum = paymentFound.reduce((accum, payment) => accum + payment.paymentAmount, 0)
     
     const generalInterest = deliveriesFound
       .map(delivery => {
@@ -89,8 +87,23 @@ export default class CreatePaymentUseCase {
       })
       .reduce((accum, interest) => accum + interest, 0)
 
-    const residualInterest = generalInterest - paymentSum
-
+    const totalPaymentInCampaignRange = paymentFound
+      .map(payment => {
+        const dateFormat = getDateFormat(payment.paymentDateTime)
+        const fechaFinalCampaña = `${campaignFound.campaignYear}-${campaignFound.finishDate.split('/').reverse().join('-')}`
+  
+        if (esMayorLaFecha(dateFormat, fechaFinalCampaña)) {
+          return null
+        }
+        else {
+          return payment
+        }
+      })
+      .filter(payment => payment !== null)
+      .reduce((accum, payment) => accum + payment!.paymentAmount, 0)
+        
+    const residualInterest = generalInterest - totalPaymentInCampaignRange
+    
     const lateInterest = interesMoratorio({
       camaignYear: campaignFound.campaignYear,
       finishDate: campaignFound.finishDate,

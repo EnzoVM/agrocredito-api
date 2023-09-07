@@ -51,7 +51,7 @@ export const paramEmptyMock = [
     financialSourceId: 1,
     currentAccountId: 1,
     paymentDescription: "Prueba pago",
-    paymentAmountPEN: 6799.99985,
+    paymentAmountUSD: 6799.99985,
     exchangeRate: 3.50
   },
   {
@@ -60,7 +60,7 @@ export const paramEmptyMock = [
     financialSourceId: 1,
     currentAccountId: 1,
     paymentDescription: "Prueba pago",
-    paymentAmountPEN: 6799.99985,
+    paymentAmountUSD: 6799.99985,
     exchangeRate: 3.50
   },
   {
@@ -140,7 +140,7 @@ export const paymentFoundMock = [
     paymentId: 14,
     fullNames: 'Martin Perez',
     socialReason: undefined,
-    paymentDateTime: "2023-11-05T05:00:00.000Z",
+    paymentDateTime: new Date("2023-09-06 19:22:00.000"),
     financialSourceDescription: 'Recuperaciones M.E.',
     currentAccountDescription: '007251-1-32',
     paymentDescription: 'Prueba pago',
@@ -150,7 +150,7 @@ export const paymentFoundMock = [
     paymentId: 15,
     fullNames: 'Martin Perez',
     socialReason: undefined,
-    paymentDateTime: "2023-11-05T05:00:00.000Z",
+    paymentDateTime: new Date("2023-09-07 19:22:00.000"),
     financialSourceDescription: 'Recuperaciones M.E.',
     currentAccountDescription: '007251-1-32',
     paymentDescription: 'Prueba pago',
