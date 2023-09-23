@@ -1,14 +1,6 @@
-import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import ConnectionError from '../../../utils/custom-errors/infrastructure-errors/unavailable.error'
-
-dotenv.config()
-
-if (process.env.DATABASE_MONGODB_URI == null) {
-  throw new Error('Error e')
-}
-
-mongoose.connect(process.env.DATABASE_MONGODB_URI)
+mongoose.connect('mongodb+srv://agrocreditopebpt:p9S5aKJoLs599D94@agrocredito.xtviico.mongodb.net/agrocredito-log-dev')
   .then(() => {
     console.log('MongoDB connection successful')
   })
